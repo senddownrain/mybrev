@@ -8,12 +8,14 @@
         :disabled="set.status !== 'active'"
         @change="toggle(set.id, $event.target.checked)"
       >
-      {{ set.name }} · <code>{{ set.id }}</code>
+      {{ displayAccessSetName(set) }}
     </label>
   </fieldset>
 </template>
 
 <script setup>
+import { displayAccessSetName } from '@/utils/prayerAccessPresentation.mjs';
+
 const props = defineProps({
   sets: { type: Array, required: true },
   selected: { type: Array, required: true },

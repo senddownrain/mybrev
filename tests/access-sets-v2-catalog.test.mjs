@@ -208,7 +208,7 @@ test('paged S1 reads deduplicate each kind, omit unknown bindings, and share one
   assert.equal(first.content, second.content);
   const assembled = assembleCanonicalCatalog(data, first.content);
   assert.deepEqual(assembled.prayers.map((row) => row.id).sort(), ['one', 'public', 'three', 'two']);
-  assert.deepEqual(assembled.categories.map((row) => row.id).sort(), ['inner', 'public']);
+  assert.deepEqual(assembled.categories.map((row) => row.id).sort(), ['inner', 'public', 'two']);
   assert.equal((await session.readPrayer('one', data)).id, 'one');
   assert.equal(await session.readPrayer('orphan', data), null);
   assert.equal(confirmations, 1);

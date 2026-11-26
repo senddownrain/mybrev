@@ -4,7 +4,7 @@
       <h2 id="sets-heading">Наборы малітваў</h2>
       <ul class="access-admin__list">
         <li v-for="set in rows" :key="set.id">
-          <div><strong>{{ set.name }}</strong> · <code>{{ set.id }}</code> · {{ set.status === 'active' ? 'Актыўны' : 'Невядомы статус' }}</div>
+          <div><strong>{{ displayAccessSetName(set) }}</strong> · {{ set.status === 'active' ? 'Актыўны' : 'Невядомы статус' }}</div>
           <button type="button" :disabled="busy || set.status !== 'active'" @click="edit(set)">Змяніць назву</button>
         </li>
       </ul>
@@ -33,6 +33,8 @@
 </template>
 
 <script setup>
+import { displayAccessSetName } from '@/utils/prayerAccessPresentation.mjs';
+
 import { nextTick, onMounted, ref } from 'vue';
 import { useAdminAction, useRegistryPage } from './useRegistryPage';
 import RegistryControls from './RegistryControls.vue';

@@ -4,7 +4,7 @@
       <router-link
         v-if="selectedCategory"
         class="category-parent-link"
-        :to="categoryNavigation.parent ? categoryLocation(categoryNavigation.parent) : { name: 'Prayers' }"
+        :to="categoryNavigation.parent ? categoryLocation(categoryNavigation.parent) : { name: catalogRoute }"
         @click="clearPersonalCategory"
       >
         <PhArrowLeft :size="20" aria-hidden="true" />
@@ -12,7 +12,7 @@
       </router-link>
       <div class="prayers-page-eyebrow">Малітоўнік</div>
       <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
-      <v-select v-if="authStore.isAdmin" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
+      <v-select v-if="editorial" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
 
@@ -76,7 +76,9 @@
 
           <v-list-item-title class="prayer-title-text">
             <span>{{ getTitle(prayer) }}</span>
-            <v-icon v-if="authStore.isAdmin && accessPolicy.prayerRestricted(prayer)" icon="mdi-key" size="small" aria-label="Толькі для святароў" />
+            <v-chip v-if="editorial" size="x-small" variant="tonal" :prepend-icon="storedPrayerAccess(prayer) ? 'mdi-key' : undefined">
+              {{ prayerAccessLabel(storedPrayerAccess(prayer), sets) }}
+            </v-chip>
             <v-chip
               v-if="authStore.isAdmin && prayer.verified === true"
               color="success"
@@ -206,28 +208,33 @@ import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategor
 import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
-import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
+import { useAdminPrayerCatalog } from '@/composables/useAdminPrayerCatalog';
+import { matchesPrayerAccessFilter, prayerAccessFilters, prayerAccessLabel, storedPrayerAccess } from '@/utils/prayerAccessPresentation.mjs';
 import { hasV2ContentFields, isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 
+const { editorial } = defineProps({ editorial: Boolean });
 const router = useRouter();
 const route = useRoute();
-const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
+const catalog = editorial ? useAdminPrayerCatalog() : usePrayers();
+const { prayers, isLoading, getTitle, getText, error, deletePrayer } = catalog;
 const categoriesStore = usePrayerCategoriesStore();
-usePrayerCatalog();
-const accessPolicy = computed(() => prayerAccessPolicy(prayers.value, categoriesStore.categories));
+if (!editorial) usePrayerCatalog();
+const categories = editorial ? catalog.categories : computed(() => categoriesStore.categories);
+const sets = editorial ? catalog.sets : ref([]);
+const catalogRoute = editorial ? 'AdminPrayers' : 'Prayers';
 const accessFilter = ref('all');
-const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
+const accessFilters = computed(() => prayerAccessFilters(sets.value));
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
 const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters();
 const categoryHeading = ref(null);
-const categoryTree = computed(() => buildCategoryTree(buildPrayerCategoryMenu(
-  categoriesStore.categories, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, true,
+const categoryTree = computed(() => buildCategoryTree(editorial ? categories.value : buildPrayerCategoryMenu(
+  categories.value, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, true,
 )));
 const categoryNavigation = computed(() => selectedCategory.value?.scope === 'global'
   ? categoryPageNavigation(categoryTree.value, selectedCategory.value.id) : { parent: null, children: [] });
-const categoryLocation = (category) => ({ name: 'Prayers', query: { category: category.id } });
+const categoryLocation = (category) => ({ name: catalogRoute, query: { category: category.id } });
 function rememberChild(category, event) {
   if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
   categoryReturnFocus.value = { ...categoryReturnFocus.value, [selectedCategory.value.id]: category.id };
@@ -237,9 +244,9 @@ function clearPersonalCategory(event) {
   if (selectedCategory.value?.scope !== 'global') setSelectedCategory(null);
 }
 // The existing /prayers route accepts an optional stable ID; old URLs still work.
-watch(() => [route.query.category, categoriesStore.categories], ([id]) => {
+watch(() => [route.query.category, categories.value], ([id]) => {
   if (id) {
-    const category = categoriesStore.categories.find((c) => c.id === id);
+    const category = categories.value.find((c) => c.id === id);
     const next = category ? { ...category, key: `global-${category.id}`, scope: 'global' } : { id, name: 'Катэгорыя недаступная', tags: [], prayerIds: [], scope: 'global' };
     if (selectedCategory.value?.scope === 'global' && selectedCategory.value.id === id) selectedCategory.value = next;
     else setSelectedCategory(next);
@@ -254,7 +261,7 @@ onBeforeUnmount(() => { document.title = previousTitle; });
 let focusedPage = null;
 let restoringPrayerFocus = Boolean(lastOpenedPrayerId.value);
 watch([() => route.fullPath, isLoading, () => categoriesStore.isLoading], async () => {
-  if (isLoading.value || categoriesStore.isLoading || focusedPage === route.fullPath) return;
+  if (isLoading.value || (!editorial && categoriesStore.isLoading) || focusedPage === route.fullPath) return;
   focusedPage = route.fullPath;
   await nextTick();
   if (restoringPrayerFocus || lastOpenedPrayerId.value) { restoringPrayerFocus = false; return; }
@@ -282,10 +289,10 @@ const filteredPrayers = computed(() => {
   }
   
   let filtered = [...prayersArray];
-  if (authStore.isAdmin && accessFilter.value !== 'all') filtered = filtered.filter((p) => accessPolicy.value.prayerRestricted(p) === (accessFilter.value === 'priest'));
+  if (editorial) filtered = filtered.filter((prayer) => matchesPrayerAccessFilter(prayer, accessFilter.value));
   
   const category = selectedCategory.value?.scope === 'global'
-    ? categoriesStore.categories.find((c) => c.id === selectedCategory.value.id) : selectedCategory.value;
+    ? categories.value.find((c) => c.id === selectedCategory.value.id) : selectedCategory.value;
   if (selectedCategory.value) filtered = category ? filtered.filter((p) => prayerCategoryMatch(p, category).matches) : [];
   if (selectedTags.value && selectedTags.value.length > 0) {
     filtered = filtered.filter((prayer) => matchesPrayerTags(prayer.tags, selectedTags.value));

@@ -45,6 +45,7 @@ const editors = [
     icon: 'mdi-book-open-page-variant',
     to: { name: 'AdminParsedReadingEditor', params: { id: 'new' } },
   },
+  { title: 'Каталог малітваў', description: 'Пошук і рэдагаванне агульнадаступных малітваў і малітваў з асаблівым доступам.', icon: 'mdi-book-open-variant', to: { name: 'AdminPrayers' } },
   {
     title: 'Стварыць малітву',
     description: 'Стварыць новую малітву ў калекцыі prayers.',

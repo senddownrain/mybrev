@@ -5,9 +5,9 @@
       <ul class="access-admin__list">
         <li v-for="profile in rows" :key="profile.id">
           <div>
-            <strong>{{ profile.name }}</strong> · <code>{{ profile.id }}</code>
+            <strong>{{ profile.name }}</strong>
             <div>{{ PROFILE_STATUSES[profile.status] || 'Невядомы статус' }} · Рэвізія {{ profile.revision }}</div>
-            <div>Наборы: {{ profile.allowedSets?.join(', ') || 'няма' }}</div>
+            <div>Наборы: {{ formatSets(profile.allowedSets) }}</div>
           </div>
           <button type="button" :disabled="busy || profile.status === 'revoked'" @click="edit(profile)">Рэдагаваць</button>
         </li>
@@ -32,8 +32,8 @@
       <div v-if="draft.allowedSets.length">
         <p>Выбраныя наборы з усіх старонак</p>
         <div class="access-admin__actions">
-          <button v-for="id in draft.allowedSets" :key="id" type="button" :aria-label="'Выдаліць набор ' + id" :disabled="busy" @click="draft.allowedSets = draft.allowedSets.filter(value => value !== id)">
-            {{ id }} <span aria-hidden="true">×</span>
+          <button v-for="id in draft.allowedSets" :key="id" type="button" :aria-label="'Выдаліць набор ' + nameForSet(id)" :disabled="busy" @click="draft.allowedSets = draft.allowedSets.filter(value => value !== id)">
+            {{ nameForSet(id) }} <span aria-hidden="true">×</span>
           </button>
         </div>
       </div>
@@ -51,7 +51,7 @@
       <v-card v-if="pending" data-sentry-block>
         <v-card-title id="profile-impact-title">Доступ паводле профілю</v-card-title>
         <v-card-text>
-          <p><strong>{{ pending.profile.name }}</strong> ({{ pending.id }})</p>
+          <p><strong>{{ pending.profile.name }}</strong> </p>
           <p>Статус: {{ previous ? PROFILE_STATUSES[previous.status] : 'Новы профіль' }} → {{ PROFILE_STATUSES[pending.profile.status] }}</p>
           <dl class="profile-diff">
             <dt>Да змены</dt><dd>{{ formatSets(pending.impact.before) }}</dd>
@@ -59,7 +59,7 @@
             <dt>Дадаецца</dt><dd>{{ formatSets(pending.impact.added) }}</dd>
             <dt>Выдаляецца</dt><dd>{{ formatSets(pending.impact.removed) }}</dd>
           </dl>
-          <p class="mt-3">Змены закрануць усе прылады з кодамі гэтага профілю пры наступнай праверцы доступу. Іншыя профілі і legacy-дазволы дзейнічаюць асобна.</p>
+          <p class="mt-3">Змены закрануць усе прылады з кодамі гэтага профілю пры наступнай праверцы доступу. Іншыя профілі і дазволы паводле ранейшых кодаў дзейнічаюць асобна.</p>
           <p v-if="pending.profile.status === 'revoked'" class="mt-2 font-weight-bold">Профіль будзе адкліканы назаўсёды.</p>
           <p v-else-if="!pending.impact.after.length" class="mt-2">Гэты профіль не будзе даваць доступу ні да аднаго набору.</p>
         </v-card-text>
@@ -73,7 +73,8 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
+import { accessSetName } from '@/utils/prayerAccessPresentation.mjs';
 import { errorMessage, PROFILE_STATUSES, profileImpact, profileInput } from './model.mjs';
 import { useAdminAction, useRegistryPage } from './useRegistryPage';
 import RegistryControls from './RegistryControls.vue';
@@ -91,7 +92,20 @@ const draft = ref(emptyProfile());
 const previous = ref(null);
 const pending = ref(null);
 const saved = ref(null);
-const formatSets = ids => ids.join(', ') || 'няма';
+const knownSets = ref([]);
+const nameForSet = (id) => accessSetName(id, knownSets.value);
+const formatSets = (ids = []) => [...new Set(ids.map(nameForSet))].join(', ') || 'няма';
+watch([rows, setRows], async ([profiles, current], _, onCleanup) => {
+  let active = true;
+  onCleanup(() => { active = false; });
+  const known = new Map([...knownSets.value, ...current].map((set) => [set.id, set]));
+  const required = new Set(profiles.flatMap((profile) => profile.allowedSets || []));
+  await Promise.all([...required].filter((id) => !known.has(id)).map(async (id) => {
+    const set = await client.read('sets', id).catch(() => null);
+    if (set) known.set(id, set);
+  }));
+  if (active) knownSets.value = [...known.values()];
+}, { immediate: true });
 
 function reset() {
   draft.value = emptyProfile();

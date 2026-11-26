@@ -1,6 +1,6 @@
 <template>
   <section class="settings-section priest-settings" aria-labelledby="priest-access-title" data-sentry-block>
-    <h2 id="priest-access-title">Доступ для святароў</h2>
+    <h2 id="priest-access-title">Асаблівы доступ</h2>
     <template v-if="accessSetsSession.active">
       <p class="mt-3"><v-icon icon="mdi-key" size="small" /> Доступ актываваны</p>
       <p>Паўторна ўводзіць код не трэба.</p>

@@ -2,13 +2,13 @@
   <section class="access-admin__section" aria-labelledby="devices-heading">
     <div class="access-admin__box">
       <h2 id="devices-heading">Прылады</h2>
-      <p>Паказаны пацверджаны серверам стан дазволу. Для V2 фактычны доступ таксама залежыць ад статусу профілю і яго набораў.</p>
+      <p>Паказаны пацверджаны серверам стан дазволу. Для асаблівага доступу дзейныя правы таксама залежыць ад статусу профілю і яго набораў.</p>
       <p v-if="legacyAllowed"><router-link :to="{ name: 'AdminPriestAccess' }">Код і налады legacy-доступу</router-link></p>
       <form class="access-admin__filters" @submit.prevent="search">
         <label v-if="legacyAllowed">Тып дазволу
           <select v-model="input.kind" :disabled="busy">
-            <option value="v2">V2</option>
-            <option value="legacy">Legacy</option>
+            <option value="v2">Асаблівы доступ</option>
+            <option value="legacy">Святары (ранейшыя коды)</option>
           </select>
         </label>
         <label>Статус дазволу
@@ -37,7 +37,7 @@
                 <div><code>{{ device.id }}</code></div>
                 <div>{{ [device.client, device.platform].filter(Boolean).join(' · ') }}</div>
               </td>
-              <td role="cell">{{ kind === 'v2' ? 'V2' : 'Legacy' }}</td>
+              <td role="cell">{{ kind === 'v2' ? 'Асаблівы доступ' : 'Святары (ранейшыя коды)' }}</td>
               <td role="cell">{{ GRANT_STATUSES[device.status] || 'Статус не пацверджаны' }}</td>
               <td role="cell">
                 <button type="button" :disabled="busy || device.status !== 'active'" :aria-label="'Адклікаць ' + device.id"
@@ -68,7 +68,7 @@
       <v-card v-if="pending" data-sentry-block>
         <v-card-title id="revoke-title">Адклікаць дазволы прылад?</v-card-title>
         <v-card-text>
-          <p>Тып: {{ kind === 'v2' ? 'V2' : 'Legacy' }}. Выбрана прылад: {{ pending.length }}.</p>
+          <p>Тып: {{ kind === 'v2' ? 'Асаблівы доступ' : 'Святары (ранейшыя коды)' }}. Выбрана прылад: {{ pending.length }}.</p>
           <p>Адкліканне канчатковае для кожнага выбранага дазволу. Стан будзе правераны асобна для кожнай прылады.</p>
         </v-card-text>
         <v-card-actions>

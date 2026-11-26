@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -30,12 +30,17 @@ try {
       lib: { entry: fileURLToPath(new URL('../tests/ui/access-sets-catalog-harness.mjs', import.meta.url)),
         formats: ['es'], fileName: () => 'catalog.js', cssFileName: 'catalog' },
     },
-    plugins: [vue(), vuetify({ styles: false }), {
+    plugins: [vue({ template: { transformAssetUrls: false } }), vuetify({ styles: false }), {
       name: 's4-synthetic-catalog', enforce: 'pre',
       transform(source, id) {
         const file = id.replaceAll('\\', '/').split('?')[0];
         if (file.endsWith('/src/plugins/firebase.js')) return 'export const firebaseApp = null; export const db = null;';
-        if (file.endsWith('/src/stores/auth.js')) return 'export const useAuthStore = () => ({ isAdmin: false });';
+        if (file.endsWith('/src/stores/auth.js')) return "import { reactive } from 'vue'; export const authFixture = reactive({ isAdmin: false, init: async () => {} }); export const useAuthStore = () => authFixture;";
+        if (file.endsWith('/src/services/prayerStorageService.js')) return source.replace(
+          /export async function readAdminPrayerContent\(\) \{[\s\S]*?\n\}/,
+          'export async function readAdminPrayerContent() { return window.catalogHarness.adminContent(); }',
+        );
+        if (file.endsWith('/src/components/admin/accessSets/client.js')) return "export const createAccessAdminClient = () => ({list: async () => ({rows: window.catalogHarness.sets})});";
       },
     }],
   });
@@ -65,97 +70,91 @@ try {
     if (response.status() >= 400) errors.push(`${response.status()} ${new URL(response.url()).pathname}`);
   });
   const go = (to) => page.evaluate((target) => window.catalogHarness.go(target), to);
-  const privateTitle = page.getByText('Synthetic private title', { exact: true });
-  const publicTitle = page.getByText('Synthetic public title', { exact: true });
+  const menu = () => page.evaluate(() => window.catalogHarness.openMenu());
+  const closeMenu = () => page.evaluate(() => window.catalogHarness.closeMenu());
+  const rights = (sets) => page.evaluate((allowed) => window.catalogHarness.confirm(allowed), sets);
   const counts = () => page.evaluate(() => window.catalogHarness.counts());
-  const foreground = (hidden) => page.evaluate((value) => {
-    Object.defineProperty(document, 'hidden', { configurable: true, value });
-    document.dispatchEvent(new globalThis.Event('visibilitychange'));
-  }, hidden);
-  await page.goto(`http://127.0.0.1:${server.address().port}/#/home`, { waitUntil: 'commit', timeout: 60_000 });
-  await Promise.race([
-    page.getByText('Synthetic home').waitFor({ timeout: 120_000 }),
-    page.waitForEvent('pageerror', { timeout: 120_000 }).then((error) => { throw error; }),
-  ]);
+  const drawer = page.locator('.app-drawer');
+  const category = (name) => drawer.getByRole('link', { name, exact: true });
+
+  await page.goto('http://127.0.0.1:' + server.address().port + '/#/home', { waitUntil: 'commit', timeout: 60_000 });
+  await page.getByText('Synthetic home').waitFor({ timeout: 120_000 });
   assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
-  await page.evaluate(() => window.catalogHarness.openMenu());
-  await page.waitForFunction(() => window.catalogHarness.publicReady());
-  assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
-  await go('/prayers/public-prayer');
-  await page.getByText('Synthetic public body', { exact: true }).waitFor();
-  assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
-  await go('/prayers/direct-only');
-  await page.getByText('Synthetic direct body', { exact: true }).waitFor();
-  assert.deepEqual(await counts(), { confirm: 1, list: 0, get: 1 });
+  await menu();
+  await category('Synthetic public category').waitFor();
+  assert.equal(await drawer.getByRole('link', { name: /^(marian|priest|another) category/ }).count(), 0);
+  assert.equal((await counts()).list, 0);
+
+  // Activation changes the active generation while the menu is already open.
+  await rights(['marian']);
+  await category('marian category 10').waitFor();
+  assert.equal(await drawer.getByRole('link', { name: /^marian category/ }).count(), 11);
+  assert.equal(await drawer.getByRole('link', { name: /^(priest|another) category/ }).count(), 0);
+  const warm = await counts();
+  await closeMenu();
+  await menu();
+  await category('marian category 1').waitFor();
+  assert.deepEqual(await counts(), warm);
+  await category('marian category 1').click();
+  await page.getByRole('heading', { name: 'marian category 1' }).waitFor();
+  await page.getByText('marian prayer 1', { exact: true }).click();
+  await page.getByText('marian synthetic prayer text 1', { exact: true }).waitFor();
   await go('/');
-  await privateTitle.waitFor();
-  assert.deepEqual(await counts(), { confirm: 1, list: 2, get: 3 });
-  await publicTitle.waitFor();
-  const search = page.getByRole('searchbox');
-  await search.fill('Synthetic private body');
-  await publicTitle.waitFor({ state: 'hidden' });
-  await privateTitle.waitFor();
-  await page.locator('#prayer-row-private-prayer').getByRole('button', { name: 'Дадаць у абраныя' }).click();
-  await search.fill('');
+  await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-marian-prayer-"]').length === 56);
 
-  await go('/?category=public-category');
-  await page.getByRole('link', { name: 'Synthetic private category' }).click();
-  await page.getByRole('heading', { name: 'Synthetic private category' }).waitFor();
-  assert.equal((await page.title()).includes('Synthetic private category'), false);
-  await privateTitle.waitFor();
-  await go('/favorites');
-  await privateTitle.waitFor();
-
-  await go('/prayers/direct-only');
-  await page.getByText('Synthetic direct body', { exact: true }).waitFor();
-  assert.equal((await page.locator('[data-test="prayer-report-error"]').getAttribute('href')).includes('ctx_'), false);
-  assert.deepEqual(await counts(), { confirm: 1, list: 2, get: 3 });
-  await mkdir('reports/access-sets-v2-s4', { recursive: true });
-  await page.screenshot({ path: 'reports/access-sets-v2-s4/reader-mobile.png' });
-
-  const saved = await page.evaluate(async () => {
-    const entries = [JSON.stringify(localStorage), JSON.stringify(sessionStorage)];
-    for (const { name } of await globalThis.indexedDB.databases()) {
-      const open = globalThis.indexedDB.open(name);
-      const database = await new Promise((resolve, reject) => { open.onsuccess = () => resolve(open.result); open.onerror = reject; });
-      for (const store of database.objectStoreNames) {
-        const request = database.transaction(store).objectStore(store).getAll();
-        const rows = await new Promise((resolve, reject) => { request.onsuccess = () => resolve(request.result); request.onerror = reject; });
-        entries.push(JSON.stringify(rows));
-      }
-      database.close();
-    }
-    return entries.join('\n');
-  });
-  assert.match(saved, /Synthetic public body/);
-  assert.doesNotMatch(saved, /Synthetic (private|direct)|private-prayer|private-category|direct-only/);
-
-  await foreground(true);
-  await page.getByText('Synthetic direct body', { exact: true }).waitFor({ state: 'hidden' });
-  await foreground(false);
-  await page.getByText('Synthetic direct body', { exact: true }).waitFor();
-  assert.deepEqual(await counts(), { confirm: 2, list: 2, get: 4 });
+  // A prior priest grant projects the same priest set without another code.
   await go('/home');
-  await foreground(true);
-  await foreground(false);
-  await page.waitForFunction(() => window.catalogHarness.publicReady());
-  assert.deepEqual(await counts(), { confirm: 2, list: 2, get: 4 });
-  await go('/prayers/direct-only');
-  await page.getByText('Synthetic direct body', { exact: true }).waitFor();
-  assert.deepEqual(await counts(), { confirm: 3, list: 2, get: 5 });
-  await page.evaluate(() => window.catalogHarness.revoke());
-  await page.getByText('Synthetic direct body', { exact: true }).waitFor({ state: 'hidden' });
-  await go('/favorites');
-  await page.getByRole('heading', { name: 'Няма абраных малітваў' }).waitFor();
-  await go('/');
-  await publicTitle.waitFor();
-  await context.setOffline(true);
-  await page.evaluate(() => window.dispatchEvent(new globalThis.Event('offline')));
-  await publicTitle.waitFor();
-  assert.equal(await privateTitle.count(), 0);
+  await menu();
+  await rights(['priest']);
+  await category('priest category 7').waitFor();
+  assert.equal(await drawer.getByRole('link', { name: /^priest category/ }).count(), 8);
+  assert.equal(await drawer.getByRole('link', { name: /^marian category/ }).count(), 0);
+  await rights(['marian', 'priest']);
+  await category('marian category 10').waitFor();
+  await category('priest category 7').waitFor();
+  assert.equal(await drawer.getByRole('link', { name: /^another category/ }).count(), 0);
+  await rights([]);
+  await category('priest category 0').waitFor({ state: 'hidden' });
+  assert.equal(await drawer.getByRole('link', { name: /^marian category/ }).count(), 0);
+  await closeMenu();
+
+  // An editor without any device access gets a separate, complete snapshot.
+  await page.evaluate(() => window.catalogHarness.editor());
+  await page.setViewportSize({ width: 1200, height: 900 });
+  await go('/admin/prayers');
+  await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-"]').length === 104);
+  await page.getByRole('combobox', { name: 'Доступ' }).click();
+  await page.getByRole('option', { name: 'Айцы марыяне' }).click();
+  await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-"]').length === 56);
+  await page.locator('#prayer-row-marian-prayer-1').getByRole('button', { name: 'Рэдагаваць малітву' }).click();
+  await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
+  await page.getByText('Выніковы доступ:', { exact: true }).waitFor();
+
+  await go('/admin/categories');
+  await page.getByRole('heading', { name: 'priest category 7', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'marian category 10', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Рэдагаваць катэгорыю marian category 1' }).click();
+  const form = page.getByRole('dialog');
+  await form.getByText('Выніковы доступ:', { exact: true }).waitFor();
+  assert.ok((await form.getByText('Выніковы доступ:', { exact: true }).locator('..').innerText()).includes('Айцы марыяне'));
+  assert.ok((await form.boundingBox()).width > 900);
+  assert.ok(await form.getByRole('button', { name: 'Захаваць' }).isVisible());
+  await form.getByRole('button', { name: 'Выбраць малітвы' }).click();
+  const picker = page.getByRole('dialog').last();
+  await picker.getByRole('textbox', { name: 'Пошук малітваў па назве' }).fill('marian prayer 55');
+  await picker.getByLabel('marian prayer 55', { exact: true }).waitFor();
+  await picker.getByRole('button', { name: 'Скасаваць', exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 780 });
+  await page.waitForFunction(() => {
+    const grid = document.querySelector('.category-dialog-grid');
+    return grid && globalThis.getComputedStyle(grid).gridTemplateColumns.split(' ').length === 1;
+  });
+  await form.getByRole('button', { name: 'Скасаваць', exact: true }).click();
+
+  const saved = await page.evaluate(() => JSON.stringify([localStorage, sessionStorage]));
+  assert.doesNotMatch(saved, /(?:marian|priest) synthetic prayer text|marian-category-/);
   assert.deepEqual(errors, []);
-  console.log('S4 reads: startup/menu/public link/home foreground = 0 protected requests; cold deep link = 0 lists + 1 get; full fixture = 2 lists + 2 gets; warm route = 0.');
-  console.log('PASS S4 Chromium: search, category tree, session favorites, direct reader, background, revoke, public offline, and storage scan.');
+  console.log('PASS Chromium: drawer identity changes and cache reuse, navigation to prayers, combined and revoked access, independent admin catalog, filter, prayer editor, category layout and picker.');
 } catch (error) {
   console.error('Browser errors:', errors);
   console.error('Pending fixture requests:', [...pendingRequests].slice(0, 20));

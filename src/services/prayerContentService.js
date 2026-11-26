@@ -67,15 +67,14 @@ const withProtected = (publicRows, protectedRows) => [...new Map(
 
 export async function getPrayerContent(publicData) {
   if (!Array.isArray(publicData?.prayers) || !Array.isArray(publicData?.categories)) publicData = await getPublicPrayerContent();
-  const generation = prayerCatalogAccess.generation;
   const privateData = await prayerCatalogAccess.catalog();
-  if (!privateData || generation !== prayerCatalogAccess.generation) return publicData;
+  if (!privateData || privateData.generation !== prayerCatalogAccess.generation) return publicData;
   if (privateData.mode === 'canonical') return assembleCanonicalCatalog(publicData, privateData.content);
   const legacy = privateData.content;
   // A row physically present in the legacy mirror remains private even if
   // its payload predates the compatibility flags.
   return permittedPrayerContent(withProtected(publicData.prayers, legacy.prayers.map((row) => ({ ...row, priestOnly: true }))),
-    withProtected(publicData.categories, legacy.categories.map((row) => ({ ...row, priestOnly: true }))), true);
+    withProtected(publicData.categories, legacy.categories.map((row) => ({ ...row, priestOnly: true }))), true, { keepEmptyProtected: true });
 }
 
 export async function getPrayerForDeepLink(id, editorUid) {

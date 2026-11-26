@@ -1,4 +1,5 @@
 import { prayerAccessPolicy } from './priestPolicy.mjs';
+import { isProtectedPrayerRow } from './accessSetsV2Policy.mjs';
 import { directCategoryPrayers } from './prayerCategoryMembership.mjs';
 
 export function buildPrayerCategoryMenu(
@@ -8,7 +9,7 @@ export function buildPrayerCategoryMenu(
   const policy = prayerAccessPolicy(permittedPrayers || [], globalCategories);
   const globalNames = new Set();
   const items = globalCategories
-    .filter((c) => !hiddenIds.has(c.id) && (permittedPrayers === null || allowRestricted || !policy.categoryRestricted(c.id)))
+    .filter((c) => !hiddenIds.has(c.id) && (permittedPrayers === null || allowRestricted || (!isProtectedPrayerRow(c) && !policy.categoryRestricted(c.id))))
     .map((c) => {
       globalNames.add(c.name.toLocaleLowerCase('be'));
       return { ...c, tags: c.tags || [], prayerIds: c.prayerIds || [], key: `global-${c.id}`, scope: 'global',
@@ -16,7 +17,7 @@ export function buildPrayerCategoryMenu(
     });
   // Keep empty folders only when they lead to visible content. Preserve each ID,
   // including same-name nodes in different branches. Personal categories stay flat.
-  const visible = new Set(items.filter((c) => permittedPrayers === null || c.directCount > 0).map((c) => c.id));
+  const visible = new Set(items.filter((c) => permittedPrayers === null || c.directCount > 0 || (allowRestricted && isProtectedPrayerRow(c))).map((c) => c.id));
   const byId = new Map(items.map((c) => [c.id, c]));
   for (const id of [...visible]) {
     let parent = byId.get(id)?.parentId;

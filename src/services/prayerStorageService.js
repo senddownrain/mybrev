@@ -1,19 +1,17 @@
-import { collection, doc, getDocFromServer, getDocsFromServer, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { collection as liteCollection, doc as liteDoc, getDoc as getLiteDoc, getDocs as getLiteDocs } from 'firebase/firestore/lite';
 import { getPriestEditorDb, getPriestEditorWriteDb } from '@/plugins/priestFirebase';
 import { PRAYER_STORAGE } from '@/utils/prayerStoragePlan.mjs';
 import { createPrayerContentWriter } from '@/utils/prayerContentWriter.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
 import { quotaSafeTransaction } from '@/utils/retry';
-import { noteFirestoreError, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
+import { withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
 import { normalizePrayerSource, normalizePrayerSourceFields } from '@/utils/prayerSource.mjs';
 import { prayerAccessPolicy } from '@/utils/priestPolicy.mjs';
 import { assertPrayerSaveConfirmed } from '@/utils/prayerSaveVerification.mjs';
 import { createAccessSetsV2Gateway } from './accessSetsV2Gateway.mjs';
 
-const collectionNames = Object.entries(PRAYER_STORAGE).flat();
-const protectedCollections = new Set(Object.values(PRAYER_STORAGE));
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
 const firestoreFns = { doc, collection, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp };
 
@@ -33,8 +31,8 @@ export function createCanonicalPrayerSaveApi(invoke) {
   };
 }
 
-export async function getCatalogEditorMode() {
-  const db = await getPriestEditorWriteDb();
+export async function getCatalogEditorMode(db) {
+  db ??= await getPriestEditorWriteDb();
   return withFirestoreQuota(() => createAccessSetsV2Gateway(db).readMode()).catch((error) => {
     if (error?.code === 'permission-denied') return 'legacy'; // Rules still gate the legacy writer.
     throw error;
@@ -69,18 +67,37 @@ export async function commitCanonicalCatalog({ edits, draft }) {
   return receipt;
 }
 
-export async function readCanonicalEditorContent() {
-  const db = await getPriestEditorWriteDb();
-  const read = async (name) => rows(await withFirestoreQuota(() => getLiteDocs(liteCollection(db, name))));
+async function readEditorContent(db, privatePaths) {
+  const read = (name) => withFirestoreQuota(() => getLiteDocs(liteCollection(db, name))).then(rows);
   const [publicPrayers, privatePrayers, publicCategories, privateCategories] = await Promise.all([
-    read('prayers'), read('protectedPrayers'), read('prayerCategories'), read('protectedCategories'),
+    read('prayers'), read(privatePaths.prayers), read('prayerCategories'), read(privatePaths.prayerCategories),
   ]);
-  return { prayers: [...publicPrayers, ...privatePrayers], categories: [...publicCategories, ...privateCategories] };
+  const legacy = privatePaths === PRAYER_STORAGE;
+  const merge = (publicRows, protectedRows) => [...new Map(
+    [...publicRows, ...protectedRows.map((row) => legacy ? { ...row, effectivePriestOnly: true } : row)]
+      .map((row) => [row.id, row]),
+  ).values()];
+  return { prayers: merge(publicPrayers, privatePrayers), categories: merge(publicCategories, privateCategories) };
+}
+
+const canonicalPaths = { prayers: 'protectedPrayers', prayerCategories: 'protectedCategories' };
+
+export async function readCanonicalEditorContent() {
+  return readEditorContent(await getPriestEditorWriteDb(), canonicalPaths);
+}
+
+// Only editor views consume this server snapshot. No reader overlay, device
+// grant, persistent cache, or nonempty-folder filtering participates.
+export async function readAdminPrayerContent() {
+  const db = await getPriestEditorWriteDb();
+  const mode = await getCatalogEditorMode(db);
+  const privatePaths = mode === 'legacy' ? PRAYER_STORAGE : canonicalPaths;
+  return { ...(await readEditorContent(db, privatePaths)), mode };
 }
 
 export async function readStoredPrayerForEditor(id) {
   const db = await getPriestEditorWriteDb();
-  if (await getCatalogEditorMode() === 'canonical') {
+  if (await getCatalogEditorMode(db) !== 'legacy') {
     const protectedRow = await withFirestoreQuota(() => createAccessSetsV2Gateway(db).readContent('prayers', id));
     if (protectedRow) return protectedRow;
     const publicRow = await withFirestoreQuota(() => getLiteDoc(liteDoc(db, 'prayers', id)));
@@ -149,58 +166,4 @@ export async function removeStoredPrayer(id) {
     content.categories = content.categories.map((c) => (c.prayerIds || []).includes(id)
       ? { ...c, prayerIds: c.prayerIds.filter((value) => value !== id), updatedAt: serverTimestamp() } : c);
   });
-}
-
-// One shared subscription for both admin stores. Protected documents never
-// enter the primary persistent Firestore cache.
-const observers = new Set();
-let stop, pending, lastContent;
-export function subscribeAdminPrayerContent(callback, onError) {
-  const observer = { callback, onError };
-  observers.add(observer);
-  if (lastContent && stop) callback(lastContent);
-  if (!pending && !stop) {
-    pending = Promise.all([getPriestEditorDb(), getCatalogEditorMode()]).then(([db, mode]) => {
-      if (!observers.size) return;
-      const activeCollections = mode === 'canonical'
-        ? ['prayers', 'prayerCategories', 'protectedPrayers', 'protectedCategories'] : collectionNames;
-      const contentPaths = mode === 'canonical'
-        ? { prayers: 'protectedPrayers', prayerCategories: 'protectedCategories' } : PRAYER_STORAGE;
-      let active = true;
-      let failed = false;
-      const latest = new Map();
-      const unsubscribers = activeCollections.map((name) => onSnapshot(collection(db, name), { includeMetadataChanges: true }, (snapshot) => {
-        if (!active || failed || snapshot.metadata.fromCache || snapshot.metadata.hasPendingWrites) return;
-        const items = rows(snapshot);
-        latest.set(name, protectedCollections.has(name)
-          ? items.map((row) => ({ ...row, effectivePriestOnly: true })) : items);
-        if (latest.size === activeCollections.length) {
-          // Atomic transfers can arrive through separate listeners in either
-          // order. Admin-only presentation deduplicates with private priority.
-          const content = { prayers: [], categories: [] };
-          for (const [publicName, privateName] of Object.entries(contentPaths)) {
-            const items = new Map([...latest.get(publicName), ...latest.get(privateName)].map((item) => [item.id, item]));
-            content[publicName === 'prayers' ? 'prayers' : 'categories'] = [...items.values()];
-          }
-          lastContent = content;
-          for (const item of observers) item.callback(content);
-        }
-      }, (error) => {
-        if (!active || failed) return;
-        failed = true;
-        latest.clear();
-        lastContent = null;
-        noteFirestoreError(error);
-        for (const item of observers) item.onError?.(error);
-      }));
-      stop = () => {
-        active = false;
-        latest.clear();
-        unsubscribers.forEach((unsubscribe) => unsubscribe());
-        stop = null;
-        lastContent = null;
-      };
-    }).catch((error) => { for (const item of observers) item.onError?.(error); }).finally(() => { pending = null; });
-  }
-  return () => { observers.delete(observer); if (!observers.size) stop?.(); };
 }
