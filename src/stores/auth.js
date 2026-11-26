@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDocFromServer } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
@@ -16,8 +16,6 @@ export const useAuthStore = defineStore('auth', () => {
   /** 'admin' | 'superadmin' | null — resolved by resolveAdminAccess() only. */
   const role = ref(null);
   const isSuperAdmin = ref(false);
-  const canManagePriestAccess = ref(false);
-  const canManageAccessSetsV2 = ref(false);
   let authReadyPromise = null;
   let accessCheckId = 0;
 
@@ -25,8 +23,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAdmin.value = access.isAdmin;
     role.value = access.role;
     isSuperAdmin.value = access.isSuperAdmin;
-    canManagePriestAccess.value = access.canManagePriestAccess;
-    canManageAccessSetsV2.value = access.canManageAccessSetsV2;
   }
 
   /**
@@ -36,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
    */
   async function fetchAccess(uid) {
     try {
-      const adminDoc = await getDoc(doc(db, 'admins', uid));
+      const adminDoc = await getDocFromServer(doc(db, 'admins', uid));
       return resolveAdminAccess(uid, {
         exists: adminDoc.exists(),
         data: adminDoc.data(),
@@ -118,5 +114,5 @@ export const useAuthStore = defineStore('auth', () => {
     await router.push('/');
   };
 
-  return { user, loading, isAdmin, role, isSuperAdmin, canManagePriestAccess, canManageAccessSetsV2, init, login, logout };
+  return { user, loading, isAdmin, role, isSuperAdmin, init, login, logout };
 });

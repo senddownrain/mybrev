@@ -90,7 +90,7 @@ import { useAdminAction, useRegistryPage } from './useRegistryPage';
 
 const { client } = defineProps({ client: { type: Object, required: true } });
 const auth = useAuthStore();
-const legacyAllowed = computed(() => auth.canManagePriestAccess);
+const legacyAllowed = computed(() => auth.isAdmin);
 const input = reactive({ kind: 'v2', status: '', id: '' });
 const kind = ref('v2');
 const appliedStatus = ref('');

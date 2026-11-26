@@ -59,8 +59,7 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   const seed = db.batch();
   for (const [path, data] of documents) seed.set(db.doc(path), data);
   for (const [id, data] of sets) seed.set(db.doc('accessSetsV2/' + id), data);
-  seed.set(db.doc('admins/' + manager.uid), { role: 'admin', accessSetsV2: true });
-  seed.set(db.doc('admins/' + deniedEditor.uid), { role: 'admin', priestAccess: true });
+  seed.set(db.doc('admins/' + manager.uid), { role: 'admin' });
   seed.set(db.doc('priestDeviceGrants/' + legacyReader.uid), { uid: legacyReader.uid, status: 'active' });
   seed.set(db.doc('accessDeviceGrantsV2/' + v2Reader.uid), { uid: v2Reader.uid, status: 'active', codeId: 'ABCDEFGHJKLMNPQR' });
   seed.set(db.doc('accessCodesV2/ABCDEFGHJKLMNPQR'), { profileId: 's4-both' });
@@ -97,6 +96,10 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   await assert.rejects(legacySet(mirrorPath, 2), { code: 'permission-denied' });
   await assert.rejects(preview(edits, deniedEditor.uid), { code: 'permission-denied' });
   await db.doc('admins/' + deniedEditor.uid).set({ role: null, accessSetsV2: true });
+  await assert.rejects(preview(edits, deniedEditor.uid), { code: 'permission-denied' });
+  await db.doc('admins/' + deniedEditor.uid).set({ name: 'Legacy admin fixture' });
+  assert.equal((await preview(edits, deniedEditor.uid)).version, 1);
+  await db.doc('admins/' + deniedEditor.uid).delete();
   await assert.rejects(preview(edits, deniedEditor.uid), { code: 'permission-denied' });
   await assert.rejects(writer.call({ data: { action: 'preview', edits } }), { code: 'unauthenticated' });
   const review = await preview(edits);

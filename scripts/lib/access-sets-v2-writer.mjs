@@ -1,4 +1,5 @@
 import { FieldValue } from 'firebase-admin/firestore';
+import { resolveAdminRole } from '../../src/utils/adminAccess.js';
 import { catalogError } from '../../src/utils/accessSetsV2Policy.mjs';
 import { CONTENT_CONTROL, MAX_ATOMIC_CONTENT_WRITES } from '../../src/utils/prayerStoragePlan.mjs';
 import {
@@ -12,11 +13,6 @@ import { draftAuditPath, prepareDraftPublication, validatePublication, writeDraf
 const MAX_CATALOG_SCAN_READS = 2500;
 const fail = (code) => { throw catalogError(code); };
 
-export function canManageCanonicalCatalog(admin) {
-  const role = admin && (Object.hasOwn(admin, 'role') ? admin.role : 'admin');
-  return role === 'superadmin' || (role === 'admin' && admin.accessSetsV2 === true);
-}
-
 // Admin Firestore instance, owned by a trusted operator/service. No default
 // app initialization or endpoint registration happens when importing S4.
 export function createCanonicalCatalogWriter(db) {
@@ -24,7 +20,7 @@ export function createCanonicalCatalogWriter(db) {
     const [role, rollout, control] = await transaction.getAll(
       db.collection('admins').doc(uid), db.doc(CATALOG_ROLLOUT), db.doc(CONTENT_CONTROL),
     );
-    if (!canManageCanonicalCatalog(role.data())) fail('permission-denied');
+    if (!resolveAdminRole(uid, role.data())) fail('permission-denied');
     if (rollout.data()?.mode !== 'canonical' || control.data()?.lockUid !== '') fail('canonical-writer-locked');
     const storedVersion = control.data()?.version;
     const version = typeof storedVersion === 'bigint' ? Number(storedVersion) : storedVersion;

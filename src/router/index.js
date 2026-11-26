@@ -201,12 +201,10 @@ const routes = [
       {
         path: 'priest-access', name: 'AdminPriestAccess',
         component: () => import('@/views/admin/PriestAccess.vue'),
-        meta: { requiresPriestAdmin: true },
       },
       {
         path: 'access-sets', name: 'AdminAccessSets',
         component: () => import('@/views/admin/AccessSets.vue'),
-        meta: { requiresAccessSetsV2: true },
       },
       {
         path: 'day-editor/:id',

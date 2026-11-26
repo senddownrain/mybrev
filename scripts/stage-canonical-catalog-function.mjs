@@ -15,6 +15,8 @@ const inputs = [
   'src/utils/accessSetsV2Code.mjs',
   'src/utils/accessSetsV2Paths.mjs',
   'src/utils/accessSetsV2Policy.mjs',
+  'src/utils/adminAccess.js',
+  'src/constants/admin.js',
   'src/utils/prayerCategoryMembership.mjs',
   'src/utils/prayerDraftModel.mjs',
   'src/utils/prayerSource.mjs',

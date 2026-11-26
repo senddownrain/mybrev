@@ -51,8 +51,8 @@ test('Access Sets V2 authorization in local Auth and Firestore emulators', {
   const [guest, ordinary, oldPriest, priest, marian, combined, manager, editor, wrong, afterRotation] =
     await Promise.all([client(false), ...Array.from({ length: 9 }, () => client())]);
   await Promise.all([
-    seed.doc('admins/' + manager.uid).set({ role: 'admin', accessSetsV2: true }),
-    seed.doc('admins/' + editor.uid).set({ role: 'admin', priestAccess: true }),
+    seed.doc('admins/' + manager.uid).set({ role: 'admin' }),
+    seed.doc('admins/' + editor.uid).set({ name: 'Legacy admin fixture' }),
     seed.doc('priestDeviceGrants/' + oldPriest.uid).set({ uid: oldPriest.uid, status: 'active' }),
   ]);
   const admin = createAccessSetsV2Admin(manager.db);
@@ -199,8 +199,10 @@ test('Access Sets V2 authorization in local Auth and Firestore emulators', {
       batch.set(doc(manager.db, 'accessProfilesV2/malformed/client/entitlements'), { allowedSets, revision: 1 });
       await deny(batch.commit());
     }
-    await deny(get(editor, 'accessProfilesV2/marian'));
-    await deny(get(editor, 'accessCodesV2/' + marianCode.codeId));
+    assert.ok((await get(editor, 'accessProfilesV2/marian')).exists());
+    assert.ok((await get(editor, 'accessCodesV2/' + marianCode.codeId)).exists());
+    await deny(setDoc(doc(manager.db, 'admins', manager.uid), { role: 'superadmin' }));
+    await deny(setDoc(doc(manager.db, 'admins', ordinary.uid), { role: 'admin' }));
     await deny(setDoc(doc(editor.db, 'protectedPrayers', 's1-direct-write'), { effectiveAccessSets: ['marian'] }));
     await deny(setDoc(doc(manager.db, 'priestContentControl/accessSetsV2'), { mode: 'suspended' }));
     for (const path of ['prayers', 'prayerCategories', 'priestProtectedPrayers', 'priestProtectedCategories']) {
