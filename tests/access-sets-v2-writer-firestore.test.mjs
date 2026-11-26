@@ -128,7 +128,11 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
 
   const concurrent = await Promise.allSettled([call(saveRequest(edits, review)), call(saveRequest(edits, review))]);
   assert.equal(concurrent.filter((result) => result.status === 'fulfilled').length, 1);
-  assert.equal(concurrent.find((result) => result.status === 'rejected').reason.code, 'content-snapshot-drift');
+  // The emulator can exhaust Firestore's transaction attempts under contention.
+  // After the winning commit, a fresh request must still reject the stale review.
+  const conflict = concurrent.find((result) => result.status === 'rejected').reason.code;
+  assert.ok(['content-snapshot-drift', 10].includes(conflict));
+  await assert.rejects(call(saveRequest(edits, review)), { code: 'content-snapshot-drift' });
   assert.deepEqual(await call({ action: 'verify', expectedVersion: 2, afterDigest: review.afterDigest }), { version: 2, parity: 'verified' });
   const mirror = (await db.doc(mirrorPath).get()).data();
   const canonical = (await db.doc(canonicalPath).get()).data();
