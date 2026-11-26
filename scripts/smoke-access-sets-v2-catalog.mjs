@@ -82,41 +82,55 @@ try {
   assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
   await menu();
   await category('Synthetic public category').waitFor();
-  assert.equal(await drawer.getByRole('link', { name: /^(marian|priest|another) category/ }).count(), 0);
+  const protectedLinks = () => drawer.getByRole('link', { name: /Для святароў|Для марыянаў|Трэці зборнік|^(marian|priest|another) category/ });
+  assert.equal(await protectedLinks().count(), 0);
   assert.equal((await counts()).list, 0);
 
   // Activation changes the active generation while the menu is already open.
   await rights(['marian']);
-  await category('marian category 10').waitFor();
-  assert.equal(await drawer.getByRole('link', { name: /^marian category/ }).count(), 11);
-  assert.equal(await drawer.getByRole('link', { name: /^(priest|another) category/ }).count(), 0);
+  await category('Для марыянаў').waitFor();
+  assert.equal(await protectedLinks().count(), 1);
   const warm = await counts();
   await closeMenu();
   await menu();
-  await category('marian category 1').waitFor();
+  await category('Для марыянаў').waitFor();
   assert.deepEqual(await counts(), warm);
-  await category('marian category 1').click();
-  await page.getByRole('heading', { name: 'marian category 1' }).waitFor();
+  await category('Для марыянаў').click();
+  await page.getByRole('heading', { name: 'Для марыянаў' }).waitFor();
+  const marianRows = page.locator('[id^="prayer-row-marian-prayer-"]');
+  await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-marian-prayer-"]').length === 56);
+  assert.deepEqual(await marianRows.evaluateAll((rows) => rows.map((row) => row.id)),
+    Array.from({ length: 56 }, (_, i) => 'prayer-row-marian-prayer-' + i));
+  assert.equal(await page.locator('.subcategory-link').count(), 0);
   await page.getByText('marian prayer 1', { exact: true }).click();
   await page.getByText('marian synthetic prayer text 1', { exact: true }).waitFor();
-  await go('/');
-  await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-marian-prayer-"]').length === 56);
 
-  // A prior priest grant projects the same priest set without another code.
+  // The legacy path and the canonical priest set expose the same collection.
   await go('/home');
   await menu();
+  await rights('legacy');
+  await category('Для святароў').waitFor();
+  assert.equal(await protectedLinks().count(), 1);
   await rights(['priest']);
-  await category('priest category 7').waitFor();
-  assert.equal(await drawer.getByRole('link', { name: /^priest category/ }).count(), 8);
-  assert.equal(await drawer.getByRole('link', { name: /^marian category/ }).count(), 0);
+  await category('Для святароў').waitFor();
+  assert.equal(await protectedLinks().count(), 1);
+  await category('Для святароў').click();
+  await page.getByRole('heading', { name: 'Для святароў' }).waitFor();
+  await page.getByRole('link', { name: 'priest category 7' }).waitFor();
+  assert.equal(await page.locator('.subcategory-link').count(), 7);
+  await menu();
   await rights(['marian', 'priest']);
-  await category('marian category 10').waitFor();
-  await category('priest category 7').waitFor();
-  assert.equal(await drawer.getByRole('link', { name: /^another category/ }).count(), 0);
+  await category('Для марыянаў').waitFor();
+  await category('Для святароў').waitFor();
+  assert.equal(await protectedLinks().count(), 2);
+  await rights(['another']);
+  await category('Трэці зборнік').waitFor();
+  assert.equal(await protectedLinks().count(), 1);
   await rights([]);
-  await category('priest category 0').waitFor({ state: 'hidden' });
-  assert.equal(await drawer.getByRole('link', { name: /^marian category/ }).count(), 0);
+  await category('Трэці зборнік').waitFor({ state: 'hidden' });
+  assert.equal(await protectedLinks().count(), 0);
   await closeMenu();
+  await go('/home');
 
   // An editor without any device access gets a separate, complete snapshot.
   await page.evaluate(() => window.catalogHarness.editor());
@@ -132,8 +146,8 @@ try {
 
   await go('/admin/categories');
   await page.getByRole('heading', { name: 'priest category 7', exact: true }).waitFor();
-  await page.getByRole('heading', { name: 'marian category 10', exact: true }).waitFor();
-  await page.getByRole('button', { name: 'Рэдагаваць катэгорыю marian category 1', exact: true }).click();
+  await page.getByRole('heading', { name: 'Для марыянаў', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Рэдагаваць катэгорыю Для марыянаў', exact: true }).click();
   const form = page.getByRole('dialog');
   await form.getByText('Выніковы доступ:', { exact: true }).waitFor();
   assert.ok((await form.getByText('Выніковы доступ:', { exact: true }).locator('..').innerText()).includes('Айцы марыяне'));
@@ -155,7 +169,7 @@ try {
   const saved = await page.evaluate(() => JSON.stringify([localStorage, sessionStorage]));
   assert.doesNotMatch(saved, /(?:marian|priest) synthetic prayer text|marian-category-/);
   assert.deepEqual(errors, []);
-  console.log('PASS Chromium: drawer identity changes and cache reuse, navigation to prayers, combined and revoked access, independent admin catalog, filter, prayer editor, category layout and picker.');
+  console.log('PASS Chromium: closed collection roots, 56 ordered Marian prayers, priest hierarchy, legacy and canonical access, guest isolation, and admin catalog.');
 } catch (error) {
   console.error('Browser errors:', errors);
   console.error('Pending fixture requests:', [...pendingRequests].slice(0, 20));

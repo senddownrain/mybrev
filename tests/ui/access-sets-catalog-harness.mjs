@@ -24,16 +24,17 @@ const sets = [
 ];
 const publicPrayer = { id: 'public-prayer', title: 'Synthetic public title', text: 'Synthetic public body', categoryId: 'public-category' };
 const publicCategory = { id: 'public-category', name: 'Synthetic public category' };
-const categories = sets.flatMap(({ id: set }, n) => Array.from({ length: [8, 11, 1][n] }, (_, i) => content(
+const categories = sets.flatMap(({ id: set }, n) => Array.from({ length: [8, 1, 2][n] }, (_, i) => content(
   set + '-category-' + i, set, {
-    name: set + ' category ' + i, order: i,
-    ...(i === 1 && { parentId: set + '-category-0', accessSets: [] }),
+    name: i ? set + ' category ' + i : ['Для святара', 'Для марыянаў', 'Трэці зборнік'][n], order: i,
+    ...(i && { parentId: set + '-category-0', accessSets: [] }),
+    ...(set === 'marian' && { prayerIds: Array.from({ length: 56 }, (_, i) => 'marian-prayer-' + i) }),
   },
 )));
 const prayers = sets.flatMap(({ id: set }, n) => Array.from({ length: [46, 56, 1][n] }, (_, i) => content(
   set + '-prayer-' + i, set, {
     title: set + ' prayer ' + i, text: set + ' synthetic prayer text ' + i,
-    categoryId: set + '-category-' + (i % (n === 0 ? 7 : n === 1 ? 10 : 1)),
+    categoryId: set + '-category-' + (n === 0 ? i % 7 : 0),
   },
 )));
 const calls = { confirm: 0, list: 0, get: 0 };
@@ -52,8 +53,16 @@ const gateway = {
 };
 let allowedSets = [];
 let invalidate;
+let legacy = false;
 installPrayerCatalogEntitlements({
-  async confirm() { calls.confirm++; return { mode: 'canonical', uid: 'synthetic', allowedSets, gateway }; },
+  async confirm() {
+    calls.confirm++;
+    if (legacy) return { mode: 'legacy', legacyActive: true, readLegacy: async () => ({
+      prayers: prayers.filter((row) => row.effectiveAccessSets.includes('priest')),
+      categories: categories.filter((row) => row.effectiveAccessSets.includes('priest')),
+    }) };
+    return { mode: 'canonical', uid: 'synthetic', allowedSets, gateway };
+  },
   subscribe(callback) { invalidate = callback; return () => { invalidate = undefined; }; },
 });
 
@@ -74,7 +83,7 @@ const router = createRouter({ history: createWebHashHistory(), routes: [
 ] });
 window.catalogHarness = {
   go: (to) => router.push(to),
-  confirm(allowed) { allowedSets = allowed; invalidate(); },
+  confirm(allowed) { legacy = allowed === 'legacy'; allowedSets = legacy ? [] : allowed; invalidate(); },
   counts: () => ({ ...calls }),
   editor() { Object.assign(authFixture, { isAdmin: true, user: { uid: 'synthetic-editor' }, canManageAccessSetsV2: true }); },
   sets,

@@ -8,10 +8,10 @@
         @click="clearPersonalCategory"
       >
         <PhArrowLeft :size="20" aria-hidden="true" />
-        <span>{{ categoryNavigation.parent?.name || 'Усе малітвы' }}</span>
+        <span>{{ categoryName(categoryNavigation.parent) || 'Усе малітвы' }}</span>
       </router-link>
       <div class="prayers-page-eyebrow">Малітоўнік</div>
-      <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
+      <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ categoryName(selectedCategory) || 'Малітвы' }}</h1>
       <v-select v-if="editorial" v-model="accessFilter" data-test="prayer-access-filter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
@@ -204,7 +204,7 @@ import { prayerCategoryMatch } from '@/utils/prayerCategoryMembership.mjs';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX, PhArrowLeft, PhCaretRight } from '@phosphor-icons/vue';
 import CategoryIcon from './CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
-import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { buildPrayerCategoryMenu, readerPrayerCategoryName } from '@/utils/prayerCategoryMenu.js';
 import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
 import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
@@ -224,6 +224,7 @@ if (!editorial) usePrayerCatalog();
 const categories = editorial ? catalog.categories : computed(() => categoriesStore.categories);
 const sets = editorial ? catalog.sets : ref([]);
 const catalogRoute = editorial ? 'AdminPrayers' : 'Prayers';
+const categoryName = (category) => editorial ? category?.name : readerPrayerCategoryName(category);
 const accessFilter = ref('all');
 const accessFilters = computed(() => prayerAccessFilters(sets.value));
 const settings = useSettingsStore();
@@ -295,6 +296,10 @@ const filteredPrayers = computed(() => {
   const category = selectedCategory.value?.scope === 'global'
     ? categories.value.find((c) => c.id === selectedCategory.value.id) : selectedCategory.value;
   if (selectedCategory.value) filtered = category ? filtered.filter((p) => prayerCategoryMatch(p, category).matches) : [];
+  // A closed collection with complete explicit membership uses its saved sequence.
+  const explicitOrder = !editorial && isProtectedPrayerRow(category) && !category.parentId && category.prayerIds?.length
+    ? new Map(category.prayerIds.map((id, position) => [id, position])) : null;
+  const useExplicitOrder = explicitOrder && filtered.every(({ id }) => explicitOrder.has(id));
   if (selectedTags.value && selectedTags.value.length > 0) {
     filtered = filtered.filter((prayer) => matchesPrayerTags(prayer.tags, selectedTags.value));
   }
@@ -310,8 +315,8 @@ const filteredPrayers = computed(() => {
     });
   }
   
-  // Сортировка: избранные молитвы вверху, затем по алфавиту
   filtered.sort((a, b) => {
+    if (useExplicitOrder) return explicitOrder.get(a.id) - explicitOrder.get(b.id);
     const aIsFavorite = isFavorite(a.id);
     const bIsFavorite = isFavorite(b.id);
 

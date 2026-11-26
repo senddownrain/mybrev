@@ -135,8 +135,7 @@
       <v-list-item
         v-for="category in menuCategories"
         :key="category.key"
-        :title="category.name"
-        :style="{ marginInlineStart: category.depth ? Math.min(category.depth, 3) * 12 + 'px' : undefined }"
+        :title="readerPrayerCategoryName(category)"
         :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
         :active="isPrayersPage && selectedCategory?.key === category.key"
         @click="selectCategory(category, $event)"
@@ -235,10 +234,9 @@ import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
-import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { buildPrayerCategoryMenu, prayerCollectionMenu, readerPrayerCategoryName } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
-import { buildCategoryTree, flattenCategoryTree } from '@/utils/prayerCategoryTree.mjs';
 import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { usePrayersStore } from '@/stores/prayers';
@@ -277,13 +275,13 @@ usePrayerCatalog(isDrawerOpen);
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 
 const menuCategories = computed(() => {
-  return flattenCategoryTree(buildCategoryTree(buildPrayerCategoryMenu(
+  return prayerCollectionMenu(buildPrayerCategoryMenu(
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
     true,
-  ))).filter((category) => !category.depth || isProtectedPrayerRow(category));
+  ));
 });
 
 const isPrayersPage = computed(() =>

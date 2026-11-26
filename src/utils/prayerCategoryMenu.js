@@ -1,6 +1,17 @@
 import { prayerAccessPolicy } from './priestPolicy.mjs';
-import { isProtectedPrayerRow } from './accessSetsV2Policy.mjs';
+import { isPriestMirror, isProtectedPrayerRow } from './accessSetsV2Policy.mjs';
 import { directCategoryPrayers } from './prayerCategoryMembership.mjs';
+import { buildCategoryTree } from './prayerCategoryTree.mjs';
+
+export function readerPrayerCategoryName(category) {
+  if (category?.name === 'Для святара' && !category.parentId && (category.priestOnly === true
+    || category.effectivePriestOnly === true || isPriestMirror(category.effectiveAccessSets))) return 'Для святароў';
+  return category?.name;
+}
+
+export function prayerCollectionMenu(categories) {
+  return buildCategoryTree(categories).filter((category) => !isProtectedPrayerRow(category) || !category.parentId);
+}
 
 export function buildPrayerCategoryMenu(
   globalCategories = [], personalCategories = [], hiddenGlobalCategoryIds = [], permittedPrayers = null, allowRestricted = false,
