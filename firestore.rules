@@ -265,7 +265,7 @@ service cloud.firestore {
     // Only a release operator can change mode. Legacy clients retain reads.
     function legacyCatalogEditing() {
       let rollout = get(/databases/$(database)/documents/priestContentControl/accessSetsV2);
-      return rollout == null || rollout.data.mode == 'legacy';
+      return rollout == null || (rollout.data.mode == 'legacy' && rollout.data.get('legacyWritesFrozen', false) == false);
     }
     function accessV2GrantPath(uid) {
       return /databases/$(database)/documents/accessDeviceGrantsV2/$(uid);

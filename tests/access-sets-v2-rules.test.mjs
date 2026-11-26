@@ -87,6 +87,22 @@ test('Access Sets V2 authorization in local Auth and Firestore emulators', {
     await deny(get(oldPriest, 'protectedPrayers/s1-priest'));
     await assert.rejects(priest.gateway.activate(priest.uid, priestCode.code, device), { code: 'activation-denied' });
     assert.equal(await priest.gateway.readGrant(priest.uid), null);
+    const publicPrayer = doc(editor.db, 'prayers/s1-public');
+    const state = doc(editor.db, 'priestContentControl/state');
+    const legacyWrite = (version) => {
+      const batch = writeBatch(editor.db);
+      batch.update(publicPrayer, { text: 'Synthetic revised prayer' });
+      batch.set(state, { version, lockUid: '', updatedAt: serverTimestamp() });
+      return batch.commit();
+    };
+    await legacyWrite(1);
+    await seed.doc('priestContentControl/accessSetsV2').set({ mode: 'legacy', legacyWritesFrozen: true });
+    assert.equal(await oldPriest.gateway.readMode(), 'legacy');
+    assert.ok((await get(oldPriest, 'priestProtectedPrayers/s1-priest')).exists());
+    assert.ok((await get(guest, 'prayers/s1-public')).exists());
+    await deny(legacyWrite(2));
+    await setMode('legacy');
+    await legacyWrite(2);
     await setMode('canonical');
     assert.equal(await oldPriest.gateway.readMode(), 'canonical');
   });
