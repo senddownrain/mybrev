@@ -311,7 +311,7 @@ async function runCanonicalAdminSmoke() {
   await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
   page.once('dialog', confirm);
   await button(dialog(page), 'Захаваць').click();
-  await hasText(page, 'Катэгорыя захавана');
+  await dialog(page).waitFor({ state: 'hidden' });
   assert.deepEqual((await seed.doc('protectedCategories/synthetic-category').get()).data().effectiveAccessSets, ['marian']);
   assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
   await button(page, 'Новая катэгорыя').click();
