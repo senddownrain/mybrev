@@ -168,11 +168,6 @@ export function createS2AccessSession({
     removePending(uid);
   }
 
-  function refresh() {
-    if (snapshot.value.active) clearPrivateSession();
-    return check();
-  }
-
   function watch(uid, s1, profileId, expected) {
     const key = JSON.stringify([uid, s1, profileId]);
     if (subscriptions?.key === key) {
@@ -383,5 +378,5 @@ export function createS2AccessSession({
     return { mode: 'canonical', uid: currentUid, allowedSets: access.allowedSets, gateway: v2() };
   }
 
-  return { access, activate, check, clearPrivateSession, confirmCatalog, disable, refresh, storageChanged };
+  return { access, activate, check, clearPrivateSession, confirmCatalog, disable, refresh: check, storageChanged };
 }

@@ -84,8 +84,9 @@ export async function getPrayerForDeepLink(id, editorUid) {
   const publicData = await getPublicPrayerContent();
   const existing = publicData.prayers.find((row) => row.id === id);
   if (existing) return existing;
+  if (generation !== prayerCatalogAccess.generation || !canReadPrayerCatalog()) return null;
   if (!editorUid) return prayerCatalogAccess.readPrayer(id, publicData);
-  if (epoch !== editorEpoch || generation !== prayerCatalogAccess.generation || !canReadPrayerCatalog()) return null;
+  if (epoch !== editorEpoch) return null;
   const row = await readEditorPrayer(id, editorUid, generation, epoch);
   return epoch === editorEpoch && generation === prayerCatalogAccess.generation && canReadPrayerCatalog() ? row : null;
 }

@@ -35,6 +35,7 @@ const prayers = sets.flatMap(({ id: set }, n) => Array.from({ length: [46, 56, 1
   set + '-prayer-' + i, set, {
     title: set + ' prayer ' + i, text: set + ' synthetic prayer text ' + i,
     categoryId: set + '-category-' + (n === 0 ? i % 7 : 0),
+    ...(set === 'marian' && i === 2 && { text: 'Л. За нашую краіну\nУ. Пане, пачуй нас.\n\n_Прыёмка рубрыкі._', textFormat: 'mybrev-markdown' }),
   },
 )));
 const calls = { confirm: 0, list: 0, get: 0 };
@@ -54,7 +55,13 @@ const gateway = {
 let allowedSets = [];
 let invalidate;
 let legacy = false;
+let finishRefresh;
+let resumeChecks = 0;
 installPrayerCatalogEntitlements({
+  refresh() {
+    resumeChecks++;
+    return new Promise((resolve) => { finishRefresh = resolve; });
+  },
   async confirm() {
     calls.confirm++;
     if (legacy) return { mode: 'legacy', legacyActive: true, readLegacy: async () => ({
@@ -83,6 +90,13 @@ const router = createRouter({ history: createWebHashHistory(), routes: [
 ] });
 window.catalogHarness = {
   go: (to) => router.push(to),
+  theme: (name) => vuetify.theme.change(name),
+  visibility(hidden) {
+    Object.defineProperty(document, 'hidden', { value: hidden, configurable: true });
+    document.dispatchEvent(new globalThis.Event('visibilitychange'));
+  },
+  resumeChecks: () => resumeChecks,
+  finishRefresh: () => finishRefresh?.(),
   confirm(allowed) { legacy = allowed === 'legacy'; allowedSets = legacy ? [] : allowed; invalidate(); },
   counts: () => ({ ...calls }),
   editor() { Object.assign(authFixture, { isAdmin: true, user: { uid: 'synthetic-editor' }, canManageAccessSetsV2: true }); },

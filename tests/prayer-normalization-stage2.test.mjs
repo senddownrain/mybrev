@@ -45,6 +45,15 @@ test('multiline emphasis and label-only dialogue preserve authored emphasis and 
   assert.match(renderPrayerMarkdown(source, 'mybrev-markdown'), /<strong>Першы радок,<br>\nдругі радок\.<\/strong>/);
 });
 
+test('reader labels short litany invocations followed by the assembly without reclassifying standalone initials', () => {
+  const source = 'Л. За нашую краіну\nУ. Пане, пачуй нас.';
+  const html = renderPrayerMarkdown(source, 'mybrev-markdown');
+  assert.match(html, /data-role="reader">Л\.<\/span> За нашую краіну/);
+  assert.match(html, /data-role="all">У\.<\/span> Пане, пачуй нас\./);
+  assert.equal(prayerMarkdownToPlainText(source, 'mybrev-markdown'), source);
+  assert.doesNotMatch(renderPrayerMarkdown('Л. Імя Прозвішча', 'mybrev-markdown'), /prayer-speaker/);
+});
+
 test('quoted source stays unchanged; quoted wrappers, code, initials and named narrative stay protected', () => {
   const bareQuote = '> Н.: І з духам тваім.\n> > V. Пан з вамі.';
   assert.equal(normalizePrayerLegacyMarkdown(bareQuote).markdown, bareQuote);

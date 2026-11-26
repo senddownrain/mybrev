@@ -30,6 +30,7 @@ export const usePrayersStore = defineStore('prayers', () => {
 
   let stopAuthWatch = null;
   let loadSequence = 0;
+  let protectedRevision;
 
   function refreshAllTags() {
     const tagsArray = prayers.value.flatMap(prayer => prayer.tags || []);
@@ -38,8 +39,6 @@ export const usePrayersStore = defineStore('prayers', () => {
 
   async function loadPrayers(includeProtected) {
     const sequence = ++loadSequence;
-    prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
-    refreshAllTags();
     isLoading.value = includeProtected || !prayers.value.length;
     try {
       const publicData = await getPublicPrayerContent();
@@ -63,8 +62,18 @@ export const usePrayersStore = defineStore('prayers', () => {
     const authStore = useAuthStore();
     if (stopAuthWatch) return;
     const stopEditor = watch([() => authStore.isAdmin, () => authStore.user?.uid, prayerCatalogRevision], clearEditorPrayerReads, { flush: 'sync' });
-    const stopLoad = watch([() => prayerCatalogDemand.value > 0, prayerCatalogRevision], ([requested]) =>
-      loadPrayers(requested && canReadPrayerCatalog()), { immediate: true, flush: 'sync' });
+    const stopLoad = watch([() => prayerCatalogDemand.value > 0, prayerCatalogRevision], ([requested, revision], [, previous]) => {
+      const changed = revision !== previous;
+      if (changed) {
+        prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
+        refreshAllTags();
+      }
+      if (requested && canReadPrayerCatalog()) {
+        if (protectedRevision === revision) return;
+        protectedRevision = revision;
+        void loadPrayers(true);
+      } else if (changed) void loadPrayers(false);
+    }, { immediate: true, flush: 'sync' });
     stopAuthWatch = () => { stopEditor(); stopLoad(); clearEditorPrayerReads(); };
   }
 
@@ -130,6 +139,7 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   function cleanup() {
     loadSequence += 1;
+    protectedRevision = undefined;
     prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
     refreshAllTags();
     if (stopAuthWatch) { stopAuthWatch(); stopAuthWatch = null; }

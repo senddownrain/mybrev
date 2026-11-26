@@ -145,14 +145,14 @@ export function startS2Access() {
   const refresh = () => s2Session.refresh().catch(() => {});
   window.addEventListener('online', refresh);
   window.addEventListener('offline', s2Session.clearPrivateSession);
-  window.addEventListener('focus', refresh);
-  window.addEventListener('pageshow', event => { if (event.persisted) refresh(); });
+  window.addEventListener('focus', () => {
+    if (!s2Session.access.mode || s2Session.access.profileUnavailable) refresh();
+  });
   window.addEventListener('storage', event => {
     if (event.key === null || event.key === S2_PENDING_DISABLE || event.key === S2_LEGACY_PENDING_DISABLE) {
       s2Session.storageChanged().catch(() => {});
     }
   });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
   // A disabled profile denies even the projection listen. Recheck only that
   // case in a foreground tab so a profile can recover without a second code.
   window.setInterval(() => {

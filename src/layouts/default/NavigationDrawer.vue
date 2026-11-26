@@ -136,12 +136,16 @@
         v-for="category in menuCategories"
         :key="category.key"
         :title="readerPrayerCategoryName(category)"
+        :class="{ 'drawer-collection--protected': isProtectedPrayerRow(category), 'drawer-collection--separator': category.key === firstProtectedCollection }"
         :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
         :active="isPrayersPage && selectedCategory?.key === category.key"
         @click="selectCategory(category, $event)"
       >
         <template #prepend>
           <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
+        </template>
+        <template v-if="isProtectedPrayerRow(category)" #append>
+          <PhLockSimple :size="15" class="drawer-collection-lock" aria-hidden="true" />
         </template>
       </v-list-item>
 
@@ -244,7 +248,7 @@ import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart,
-  PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
+  PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhLockSimple, PhCalendarDots,
 } from '@phosphor-icons/vue';
 
 const ORDO_ROUTE_NAMES = ['Ordo', 'OrdoByDate'];
@@ -275,14 +279,16 @@ usePrayerCatalog(isDrawerOpen);
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 
 const menuCategories = computed(() => {
-  return prayerCollectionMenu(buildPrayerCategoryMenu(
+  const categories = prayerCollectionMenu(buildPrayerCategoryMenu(
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
     true,
   ));
+  return [...categories.filter((category) => !isProtectedPrayerRow(category)), ...categories.filter(isProtectedPrayerRow)];
 });
+const firstProtectedCollection = computed(() => menuCategories.value.find(isProtectedPrayerRow)?.key);
 
 const isPrayersPage = computed(() =>
   route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView',
@@ -517,6 +523,20 @@ onBeforeUnmount(() => {
 
 .drawer-list :deep(.v-list-item--active .drawer-icon) {
   color: var(--chrome-accent);
+}
+
+.drawer-list :deep(.drawer-collection--protected),
+.drawer-collection--protected .drawer-icon {
+  color: color-mix(in srgb, var(--nav-on-surface) 63%, var(--devotional-accent) 37%);
+}
+
+.drawer-collection--separator {
+  margin-top: 7px;
+}
+
+.drawer-collection-lock {
+  margin-inline: 8px 1px;
+  opacity: 0.72;
 }
 
 .drawer-section-label {

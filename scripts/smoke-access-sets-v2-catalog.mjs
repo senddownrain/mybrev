@@ -18,6 +18,7 @@ const outDir = await mkdtemp(join(tmpdir(), 'mybrev-s4-browser-'));
 let server;
 let browser;
 let page;
+let documentRequests = 0;
 const errors = [];
 const pendingRequests = new Set();
 try {
@@ -63,7 +64,10 @@ try {
   await context.route(/https?:\/\//, (route) => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
   page = await context.newPage();
   page.on('pageerror', (error) => errors.push(error.message));
-  page.on('request', (request) => pendingRequests.add(request.url()));
+  page.on('request', (request) => {
+    pendingRequests.add(request.url());
+    if (request.resourceType() === 'document') documentRequests++;
+  });
   page.on('requestfinished', (request) => pendingRequests.delete(request.url()));
   page.on('requestfailed', (request) => pendingRequests.delete(request.url()));
   page.on('response', (response) => {
@@ -84,12 +88,22 @@ try {
   await category('Synthetic public category').waitFor();
   const protectedLinks = () => drawer.getByRole('link', { name: /Для святароў|Для марыянаў|Трэці зборнік|^(marian|priest|another) category/ });
   assert.equal(await protectedLinks().count(), 0);
+  assert.equal(await drawer.locator('.drawer-collection-lock, .drawer-collection--separator').count(), 0);
   assert.equal((await counts()).list, 0);
 
   // Activation changes the active generation while the menu is already open.
   await rights(['marian']);
   await category('Для марыянаў').waitFor();
   assert.equal(await protectedLinks().count(), 1);
+  assert.equal(await category('Для марыянаў').locator('.drawer-collection-lock').count(), 1);
+  assert.equal(await drawer.locator('.drawer-collection--separator').count(), 1);
+  assert.equal(await category('Synthetic public category').locator('.drawer-collection-lock').count(), 0);
+  for (const theme of ['light', 'dark', 'marian']) {
+    await page.evaluate((name) => window.catalogHarness.theme(name), theme);
+    await page.locator(`.app-drawer.v-theme--${theme}`).waitFor();
+    const ink = (name) => category(name).evaluate((row) => globalThis.getComputedStyle(row).color);
+    assert.notEqual(await ink('Для марыянаў'), await ink('Synthetic public category'));
+  }
   const warm = await counts();
   await closeMenu();
   await menu();
@@ -104,6 +118,35 @@ try {
   assert.equal(await page.locator('.subcategory-link').count(), 0);
   await page.getByText('marian prayer 1', { exact: true }).click();
   await page.getByText('marian synthetic prayer text 1', { exact: true }).waitFor();
+  await page.locator('.prayer-text').evaluate((element) => { element.dataset.focusProbe = 'same-document'; });
+  await page.evaluate(() => window.dispatchEvent(new globalThis.Event('focus')));
+  assert.equal(await page.locator('.prayer-text').getAttribute('data-focus-probe'), 'same-document');
+  assert.deepEqual(await counts(), warm);
+
+  await go({ name: 'Prayers', query: { category: 'marian-category-0' } });
+  await page.getByText('marian prayer 2', { exact: true }).click();
+  await page.locator('.prayer-text [data-role="reader"]').waitFor();
+  await page.locator('.prayer-text [data-role="all"]').waitFor();
+  await page.locator('.prayer-text em').waitFor();
+  await page.evaluate(() => window.catalogHarness.visibility(true));
+  await page.locator('.prayer-text').waitFor({ state: 'hidden' });
+  await page.evaluate(() => {
+    window.catalogHarness.visibility(false);
+    window.dispatchEvent(new globalThis.Event('focus'));
+  });
+  await page.waitForFunction(() => window.catalogHarness.resumeChecks() === 1);
+  assert.equal(await page.locator('.prayer-text').count(), 0);
+  await page.getByText('Загрузка малітвы...', { exact: true }).waitFor();
+  await page.evaluate(() => window.catalogHarness.finishRefresh());
+  await page.locator('.prayer-text [data-role="all"]').waitFor();
+  assert.equal(await page.evaluate(() => window.catalogHarness.resumeChecks()), 1);
+  assert.equal(documentRequests, 1);
+
+  await go('/');
+  const search = page.getByRole('searchbox', { name: 'Пошук малітваў' });
+  await search.fill('Прыёмка рубрыкі');
+  await page.getByText('marian prayer 2', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Ачысціць пошук' }).click();
 
   // The legacy path and the canonical priest set expose the same collection.
   await go('/home');
@@ -126,9 +169,11 @@ try {
   await rights(['another']);
   await category('Трэці зборнік').waitFor();
   assert.equal(await protectedLinks().count(), 1);
+  assert.equal(await category('Трэці зборнік').locator('.drawer-collection-lock').count(), 1);
   await rights([]);
   await category('Трэці зборнік').waitFor({ state: 'hidden' });
   assert.equal(await protectedLinks().count(), 0);
+  assert.equal(await drawer.locator('.drawer-collection-lock, .drawer-collection--separator').count(), 0);
   await closeMenu();
   await go('/home');
 
@@ -164,12 +209,12 @@ try {
     const grid = document.querySelector('.category-dialog-grid');
     return grid && globalThis.getComputedStyle(grid).gridTemplateColumns.split(' ').length === 1;
   });
-  await form.getByRole('button', { name: 'Скасаваць', exact: true }).click();
+  await form.locator('form').getByRole('button', { name: 'Скасаваць', exact: true }).click();
 
   const saved = await page.evaluate(() => JSON.stringify([localStorage, sessionStorage]));
   assert.doesNotMatch(saved, /(?:marian|priest) synthetic prayer text|marian-category-/);
   assert.deepEqual(errors, []);
-  console.log('PASS Chromium: closed collection roots, 56 ordered Marian prayers, priest hierarchy, legacy and canonical access, guest isolation, and admin catalog.');
+  console.log('PASS Chromium: drawer, focus and foreground recovery, one document navigation, reader markings, search, legacy and canonical access, guest isolation, and admin catalog.');
 } catch (error) {
   console.error('Browser errors:', errors);
   console.error('Pending fixture requests:', [...pendingRequests].slice(0, 20));

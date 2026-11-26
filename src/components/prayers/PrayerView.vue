@@ -54,7 +54,7 @@
     />
   </v-container>
 
-  <v-container v-else-if="isLoading || directPending" class="text-center">
+  <v-container v-else-if="isLoading || directPending || prayerCatalogRechecking" class="text-center">
     <v-progress-circular indeterminate color="primary"></v-progress-circular>
     <p class="mt-4">Загрузка малітвы...</p>
   </v-container>
@@ -100,7 +100,7 @@ import { DEVOTIONAL_OFFICE_PROFILES, devotionalOfficeProfile } from '@/utils/dev
 import { normalizePrayerSource } from '@/utils/prayerSource.mjs';
 import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { getPrayerForDeepLink } from '@/services/prayerContentService';
-import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { prayerCatalogRechecking, prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
@@ -128,7 +128,11 @@ const directPending = ref(false);
 const listedPrayer = computed(() => prayers.value.find((row) => row.id === route.params.id));
 const prayer = computed(() => listedPrayer.value || directPrayer.value);
 const editorUid = computed(() => auth.isAdmin ? auth.user?.uid : undefined);
+watch(prayerCatalogRevision, () => {
+  if (isProtectedPrayerRow(directPrayer.value)) directPrayer.value = null;
+}, { flush: 'sync' });
 watch([() => route.params.id, listedPrayer, prayerCatalogRevision, editorUid], async ([id, listed, , uid], _, onCleanup) => {
+  if (directPrayer.value?.id === id && !isProtectedPrayerRow(directPrayer.value)) return;
   directPrayer.value = null;
   directPending.value = false;
   if (listed || typeof id !== 'string') return;
@@ -140,7 +144,7 @@ watch([() => route.params.id, listedPrayer, prayerCatalogRevision, editorUid], a
     if (current) directPrayer.value = row;
   } catch { /* Catalog stores handle public load errors; a denied deep link stays hidden. */ }
   finally { if (current) directPending.value = false; }
-}, { immediate: true, flush: 'sync' });
+}, { immediate: true });
 const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
 const massVariant = computed(() => (isMassOrder.value ? getMassVariant(massLanguage.value) : null));
 // The Belarusian variant is the Mass prayer itself; other variants are their
