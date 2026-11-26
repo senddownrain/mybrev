@@ -1,30 +1,48 @@
 import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
-import { checkPriestAccess, priestAccess } from './priestAccessService';
-import { permittedPrayerContent, prayerAccessPolicy } from '@/utils/priestPolicy.mjs';
+import { permittedPrayerContent } from '@/utils/priestPolicy.mjs';
 import { collection, getDocsFromServer } from 'firebase/firestore';
-import { PUBLIC_PRAYERS_ASSET, validatePublicPrayerCatalog } from '@/utils/publicPrayerCatalog.mjs';
+import { PUBLIC_PRAYERS_ASSET, publicPrayerRows, validatePublicPrayerCatalog } from '@/utils/publicPrayerCatalog.mjs';
+import { assembleCanonicalCatalog, validCatalogId } from '@/utils/accessSetsV2Policy.mjs';
 import { db } from '@/plugins/firebase';
-import { priestFirebase } from '@/plugins/priestFirebase';
-import { assertFirestoreQuotaAvailable, isFirestoreQuotaBlocked, isFirestoreQuotaError, noteFirestoreError } from '@/utils/firestoreErrors.mjs';
+import { withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
+import { canReadPrayerCatalog, prayerCatalogAccess } from './prayerCatalogAccess';
+
+let editorGeneration;
+let editorReads = new Map();
+let editorEpoch = 0;
+
+function readEditorPrayer(id, editorUid, generation, epoch) {
+  if (editorGeneration?.uid !== editorUid || editorGeneration?.generation !== generation) {
+    editorGeneration = { uid: editorUid, generation };
+    editorReads = new Map();
+  }
+  if (!editorReads.has(id)) editorReads.set(id, import('./prayerStorageService').then(({ readStoredPrayerForEditor }) => {
+    if (epoch !== editorEpoch || generation !== prayerCatalogAccess.generation || !canReadPrayerCatalog()) return null;
+    return readStoredPrayerForEditor(id);
+  }));
+  return editorReads.get(id);
+}
+
+export function clearEditorPrayerReads() {
+  editorEpoch++;
+  editorGeneration = undefined;
+  editorReads.clear();
+}
 
 export const PRAYER_PUBLIC_CACHE_KEY = publicContentKey('prayer-content', 3);
 const documents = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
-async function readCollections(database, prayers, categories) {
-  assertFirestoreQuotaAvailable();
-  try {
-    const result = await Promise.all([prayers, categories].map((name) => getDocsFromServer(collection(database, name))));
-    return { prayers: documents(result[0]), categories: documents(result[1]) };
-  } catch (error) { noteFirestoreError(error); throw error; }
+let publicRequest;
+
+export function getPublicPrayerContent() {
+  publicRequest ??= loadPublic().finally(() => { publicRequest = null; });
+  return publicRequest;
 }
-let inFlight;
-// Public disk cache and protected in-memory results never share a storage key.
-export async function getPrayerContent() {
-  if (inFlight) return inFlight;
-  inFlight = (async () => {
-    // Upgrade fallback preserves previously saved public offline prayers.
-    // Both legacy collections are needed to evaluate category inheritance.
-    if (navigator.onLine === false) await publicContentCache.prime([PRAYER_PUBLIC_CACHE_KEY]);
-    if (navigator.onLine === false && !publicContentCache.peek(PRAYER_PUBLIC_CACHE_KEY)) {
+
+async function loadPublic() {
+  if (navigator.onLine === false) {
+    await publicContentCache.prime([PRAYER_PUBLIC_CACHE_KEY]);
+    // Upgrade fallback for previously cached public prayers.
+    if (!publicContentCache.peek(PRAYER_PUBLIC_CACHE_KEY)) {
       const oldPrayers = publicContentKey('prayers');
       const oldCategories = publicContentKey('prayerCategories');
       const oldCombined = publicContentKey('prayer-content', 2);
@@ -32,42 +50,54 @@ export async function getPrayerContent() {
       const prayers = publicContentCache.peek(oldCombined)?.prayers || publicContentCache.peek(oldPrayers);
       const categories = publicContentCache.peek(oldCombined)?.categories || publicContentCache.peek(oldCategories);
       if (Array.isArray(prayers) && Array.isArray(categories)) {
-        return permittedPrayerContent(prayers.filter((p) => p.effectivePriestOnly !== true),
-          categories.map((c) => ({ ...c, priestOnly: c.priestOnly === true || c.effectivePriestOnly === true })));
+        const safe = publicPrayerRows({ prayers, categories });
+        return safe;
       }
     }
-    const entry = await publicContentCache.read(PRAYER_PUBLIC_CACHE_KEY, async () => ({
-      data: await readPublic(), complete: true,
-    }), { fresh: true });
-    const publicData = permittedPrayerContent(entry.data.prayers, entry.data.categories);
-    if (navigator.onLine === false || isFirestoreQuotaBlocked()) return publicData;
-    try { await checkPriestAccess(); } catch { return publicData; }
-    if (!priestAccess.active) return publicData;
-    const revision = priestAccess.revision;
-    try {
-      const protectedContent = await readCollections(priestFirebase.db, 'priestProtectedPrayers', 'priestProtectedCategories');
-      const allowed = permittedPrayerContent(
-        [...new Map([...entry.data.prayers, ...protectedContent.prayers].map((item) => [item.id, item])).values()],
-        [...new Map([...entry.data.categories, ...protectedContent.categories].map((item) => [item.id, item])).values()], true);
-      if (revision !== priestAccess.revision || !priestAccess.active) return publicData;
-      return allowed;
-    } catch (error) {
-      if (!isFirestoreQuotaError(error)) await checkPriestAccess().catch(() => {});
-      return publicData;
-    }
-  })().finally(() => { inFlight = null; });
-  return inFlight;
-}
-async function readPublic() {
-  // Development keeps using the old Firestore path without an export snapshot.
-  // Production is STRICTLY Hosting-only. A missing/invalid asset must not
-  // generate hundreds of live Firestore reads per visitor at launch.
-  if (import.meta.env.DEV) {
-    const content = await readCollections(db, 'prayers', 'prayerCategories');
-    const policy = prayerAccessPolicy(content.prayers, content.categories);
-    return { prayers: content.prayers.filter((item) => item.effectivePriestOnly !== true && !policy.prayerRestricted(item)),
-      categories: content.categories.filter((item) => item.effectivePriestOnly !== true && !policy.categoryRestricted(item.id)) };
   }
+  const entry = await publicContentCache.read(PRAYER_PUBLIC_CACHE_KEY, async () => ({
+    data: await readPublic(), complete: true,
+  }), { fresh: true });
+  return publicPrayerRows(entry.data);
+}
+
+const withProtected = (publicRows, protectedRows) => [...new Map(
+  [...publicRows, ...protectedRows].map((row) => [row.id, row]),
+).values()];
+
+export async function getPrayerContent(publicData) {
+  if (!Array.isArray(publicData?.prayers) || !Array.isArray(publicData?.categories)) publicData = await getPublicPrayerContent();
+  const generation = prayerCatalogAccess.generation;
+  const privateData = await prayerCatalogAccess.catalog();
+  if (!privateData || generation !== prayerCatalogAccess.generation) return publicData;
+  if (privateData.mode === 'canonical') return assembleCanonicalCatalog(publicData, privateData.content);
+  const legacy = privateData.content;
+  // A row physically present in the legacy mirror remains private even if
+  // its payload predates the compatibility flags.
+  return permittedPrayerContent(withProtected(publicData.prayers, legacy.prayers.map((row) => ({ ...row, priestOnly: true }))),
+    withProtected(publicData.categories, legacy.categories.map((row) => ({ ...row, priestOnly: true }))), true);
+}
+
+export async function getPrayerForDeepLink(id, editorUid) {
+  if (!validCatalogId(id)) return null;
+  const generation = prayerCatalogAccess.generation;
+  const epoch = editorEpoch;
+  const publicData = await getPublicPrayerContent();
+  const existing = publicData.prayers.find((row) => row.id === id);
+  if (existing) return existing;
+  if (!editorUid) return prayerCatalogAccess.readPrayer(id, publicData);
+  if (epoch !== editorEpoch || generation !== prayerCatalogAccess.generation || !canReadPrayerCatalog()) return null;
+  const row = await readEditorPrayer(id, editorUid, generation, epoch);
+  return epoch === editorEpoch && generation === prayerCatalogAccess.generation && canReadPrayerCatalog() ? row : null;
+}
+
+async function readPublic() {
+  if (import.meta.env.DEV) {
+    const [prayers, categories] = await withFirestoreQuota(() => Promise.all(['prayers', 'prayerCategories']
+      .map((name) => getDocsFromServer(collection(db, name)))));
+    return publicPrayerRows({ prayers: documents(prayers), categories: documents(categories) });
+  }
+  // The public Hosting asset remains independent of device Auth and V2 reads.
   const response = await fetch(PUBLIC_PRAYERS_ASSET, { credentials: 'same-origin' });
   if (!response.ok) throw new Error('Не атрымалася загрузіць публічны каталог малітваў.');
   return validatePublicPrayerCatalog(await response.json());

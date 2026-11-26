@@ -103,16 +103,12 @@ reCAPTCHA ожидание токена ограничено. Локальная
    `authorization, x-firebase-appcheck`, `/api/admin/me`, список, детали
    и экспорт под обеими ролями. Старый Worker не разрешает новый
    заголовок CORS. До подтверждения Worker оставьте Web site key пустым.
-3. После отдельного разрешения выпустите Web с ключом. **Merge этого PR
-   в main запускает production Hosting workflow.** Его обычный push
-   пропускает rules deploy без специального маркера.
-   Для выпуска только кода передайте в итоговом коммите маркер
-   `[reuse-published-prayers:<sha256>]` с проверенным SHA-256 текущего
-   файла `public-prayers-v1.json` в production Hosting. Workflow перенесёт
-   этот файл без изменений и остановится при несовпадении SHA-256.
-   Экспорт коллекций Firestore в таком выпуске пропускается. **Ручной dispatch
-   того же workflow запускает и rules deploy**, поэтому для отдельного
-   повторного Web-релиза используйте согласованный Hosting-only путь.
+3. После отдельного разрешения запустите Hosting с проверенным SHA
+   и Web site key. Передайте `published_catalog_sha256` с проверенным
+   SHA-256 файла `public-prayers-v1.json`, если выпуск повторно
+   использует каталог с Hosting. При несовпадении контрольной суммы
+   публикация остановится. Такой выпуск не читает коллекции Firestore.
+   Порядок и выбор цели описаны в [runbook](firebase-production-release.md).
    Убедитесь, что новый бандл загружен в чистом и обновлённом PWA.
 4. В согласованных Android/iOS релизах проверьте свежую установку и
    обновление: Google Play, прямой APK, TestFlight/App Store, Flutter Web

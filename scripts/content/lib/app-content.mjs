@@ -9,7 +9,7 @@
  * without changing the text.
  */
 import { createHash } from 'node:crypto';
-import { prayerAccessPolicy } from '../../../src/utils/priestPolicy.mjs';
+import { publicPrayerRows } from '../../../src/utils/publicPrayerCatalog.mjs';
 import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
@@ -69,15 +69,26 @@ export const BOOKKEEPING_FIELDS = new Set(['updatedAt', 'importedAt', 'parsedAt'
 
 /** A string this long or longer is stored once per collection. */
 export const SHARED_STRING_MIN = 32;
+export const PRAYER_EXPORT_GUARDS = ['priestProtectedCategories', 'priestProtectedPrayers', 'protectedCategories', 'protectedPrayers'];
 /** Apply the same inheritance policy to every public app bundle/manifest. */
 export function publicAppCollections(collections) {
   if (collections.has('prayers') && !collections.has('prayerCategories')) {
     throw new Error('Exporting prayers requires prayerCategories from the same snapshot set (access inheritance).');
   }
   const result = new Map([...collections].filter(([name]) => APP_CONTENT_COLLECTIONS.includes(name)));
-  const policy = prayerAccessPolicy(collections.get('prayers') || [], [...(collections.get('prayerCategories') || []), ...(collections.get('priestProtectedCategories') || [])]);
-  if (result.has('prayers')) result.set('prayers', result.get('prayers').filter((p) => p.effectivePriestOnly !== true && !policy.prayerRestricted(p)));
-  if (result.has('prayerCategories')) result.set('prayerCategories', result.get('prayerCategories').filter((c) => c.effectivePriestOnly !== true && !policy.categoryRestricted(c.id)));
+  if (result.has('prayers') || result.has('prayerCategories')) {
+    const rows = (name) => collections.get(name) || [];
+    const [legacyCategories, legacyPrayers, canonicalCategories, canonicalPrayers] = PRAYER_EXPORT_GUARDS.map(rows);
+    const { prayers, categories } = publicPrayerRows({
+      prayers: rows('prayers'), categories: rows('prayerCategories'),
+      protectedCategories: [...legacyCategories, ...canonicalCategories],
+      protectedPrayers: [...legacyPrayers, ...canonicalPrayers],
+      // Legacy Flutter resolves these existing IDs against the separately
+      // authorized mirror. V2-only IDs and all protected payloads stay out.
+    }, { legacyPrayerIds: legacyPrayers.map((item) => item.id) });
+    if (result.has('prayers')) result.set('prayers', prayers);
+    if (result.has('prayerCategories')) result.set('prayerCategories', categories);
+  }
   return result;
 }
 /** Marks a reference into the string table; never the start of real text. */

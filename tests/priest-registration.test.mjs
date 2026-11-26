@@ -3,20 +3,24 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {codeProof} from '../src/utils/priestCode.mjs';
 import * as firestoreErrors from '../src/utils/firestoreErrors.mjs';
-import {quotaSafeTransaction} from '../src/utils/retry.js';
+import {ACCESS_V2,accessV2Error} from '../src/services/accessSetsV2Gateway.mjs';
+import {createS2AccessSession} from '../src/services/s2AccessSession.mjs';
 
-const source=(await readFile(new URL('../src/services/priestAccessService.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'').replace(/export /g,'');
+const source=(await readFile(new URL('../src/services/s2AccessFirebase.js',import.meta.url),'utf8')).replace(/^import [\s\S]*?;\r?\n/gm,'').replace(/export /g,'');
 const code='A2B3-C4D5-E6F7-G8H9-J2K3-L4M5';
 function harness({commitError,accepted=false,pending=false,serverError,online=true,legacy=false}={}){
- const rows=new Map(),storage=new Map(),auth={currentUser:{uid:'device'},authStateReady:async()=>{}};
+ firestoreErrors.resetFirestoreQuota();
+ const rows=new Map(),storage=new Map(),auth={currentUser:{uid:'device'},authStateReady:async()=>{},onAuthStateChanged:()=>{}};
  const snapshot=path=>({id:'device',exists:()=>rows.has(path),data:()=>rows.get(path),metadata:{fromCache:false,hasPendingWrites:pending}});
  let commits=0,operations=[];
  if(legacy)rows.set('priestDeviceGrants/device',{uid:'device',status:'active',activationProof:'old-proof'});
- const bindings={...firestoreErrors,quotaSafeTransaction,reactive:value=>value,codeProof,getPriestAuth:async()=>auth,getPriestActivationDb:()=>({}),priestFirebase:{db:{}},doc:(_db,name,uid)=>`${name}/${uid}`,activationDoc:(_db,name,uid)=>`${name}/${uid}`,activationTimestamp:()=> 'SERVER_TIME',serverTimestamp:()=> 'SERVER_TIME',activationUpdate:async()=>{},
+ const bindings={...firestoreErrors,ACCESS_V2,accessV2Error,createS2AccessSession,createAccessSetsV2Gateway:()=>({readMode:async()=> 'legacy',readGrant:async()=>null}),
+  codeProof,getPriestAuth:async()=>auth,getPriestActivationDb:()=>({}),priestFirebase:{db:{}},
+  doc:(_db,name,uid)=>`${name}/${uid}`,liteDoc:(_db,name,uid)=>`${name}/${uid}`,serverTimestamp:()=> 'SERVER_TIME',
   getDocFromServer:async path=>{if(serverError&&rows.size)throw serverError;return snapshot(path);},onSnapshot:()=>()=>{},updateDoc:async()=>{},
-  navigator:{onLine:online,userAgent:'Chrome/',platform:'Windows'},localStorage:{getItem:key=>storage.get(key),removeItem:key=>storage.delete(key)},
-  activationBatch:()=>{operations=[];return {set:(path,data)=>operations.push({path,data}),commit:async()=>{commits++;if(!commitError||accepted)for(const {path,data} of operations)rows.set(path,data);if(commitError)throw commitError;}};}};
- const api=new Function(...Object.keys(bindings),`${source}\nreturn {activatePriestAccess,priestAccess};`)(...Object.values(bindings));
+  navigator:{onLine:online,userAgent:'Chrome/',platform:'Windows'},window:{localStorage:{getItem:key=>storage.get(key)}},
+  writeBatch:()=>{operations=[];return {set:(path,data)=>operations.push({path,data}),commit:async()=>{commits++;if(!commitError||accepted)for(const {path,data} of operations)rows.set(path,data);if(commitError)throw commitError;}};}};
+ const api=new Function(...Object.keys(bindings),`${source}\nreturn {activatePriestAccess:s2Session.activate,priestAccess:s2Session.access};`)(...Object.values(bindings));
  return {...api,rows,get commits(){return commits;},get operations(){return operations;}};
 }
 test('activation waits for acknowledged batch and server status; readable grant has no proof',async()=>{

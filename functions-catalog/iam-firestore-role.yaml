@@ -1,0 +1,10 @@
+title: MyBrev canonical catalog writer
+description: Catalog transaction data operations
+stage: GA
+includedPermissions:
+  - datastore.databases.get
+  - datastore.entities.get
+  - datastore.entities.list
+  - datastore.entities.create
+  - datastore.entities.update
+  - datastore.entities.delete

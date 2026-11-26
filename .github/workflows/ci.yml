@@ -171,3 +171,9 @@ jobs:
         run: >
           npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
           "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs tests/priest-firestore.test.mjs"
+
+      - name: Access Sets V2 code vectors and Auth + Firestore authorization
+        run: |
+          node --test tests/access-sets-v2-code.test.mjs tests/priest-client-cache.test.mjs
+          npx --yes firebase-tools@latest emulators:exec --only auth,firestore --project demo-rules \
+            "node --test tests/access-sets-v2-rules.test.mjs"

@@ -172,7 +172,9 @@
         <v-form class="category-form" ref="categoryFormRef" @submit.prevent="saveCategory">
           <v-card-text class="dialog-fields">
             <v-alert v-if="categoryDraft.parentId && accessPolicy.categoryRestricted(categoryDraft.parentId)" type="info" variant="tonal">Бацькоўская катэгорыя абмяжоўвае доступ для святароў.</v-alert>
-            <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
+            <v-switch v-if="!canonical" v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
+            <ContentAccessSets :access="categoryDraft" :model-value="categoryDraft.accessSets ?? (categoryDraft.priestOnly ? ['priest'] : [])"
+              @update:model-value="categoryDraft.accessSets = $event" @mode="canonical = $event" />
             <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
             <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
             <v-text-field
@@ -282,10 +284,12 @@
 </template>
 
 <script setup>
+import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.vue';
 import { computed, ref, watch, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayers } from '@/composables/usePrayers';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validateCategory } from '@/utils/validators';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
@@ -326,6 +330,7 @@ const tagQuery = ref('');
 const categoryDialogOpen = ref(false);
 const categoryFormRef = ref(null);
 const categoryDraft = ref(emptyCategory());
+const canonical = ref(false);
 const categoryToDelete = ref(null);
 const tagToDelete = ref(null);
 const savingDialog = ref(false);
@@ -333,7 +338,7 @@ const deletingCategory = ref(false);
 const deletingTag = ref(false);
 const restoringDefaults = ref(false);
 
-prayerCategories.init();
+usePrayerCatalog();
 initPrayers();
 
 const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.value));
@@ -357,7 +362,7 @@ function inclusionReason(prayer) {
   return [reason, match.legacy ? 'Старая сувязь' : ''].filter(Boolean).join(' · ');
 }
 const storagePreview = computed(() => {
-  if (!categoryDialogOpen.value || prayersLoading.value) return null;
+  if (canonical.value || !categoryDialogOpen.value || prayersLoading.value) return null;
   const baseline = new Map([['prayers', prayers.value], ['prayerCategories', categories.value]]);
   const stored = prayerStoragePlan(baseline).desired;
   const draft = { ...categoryDraft.value, id: editingId.value || '__new_category__' };
@@ -420,6 +425,7 @@ function normalizedDraft() {
   return {
     name: categoryDraft.value.name.trim(),
     priestOnly: categoryDraft.value.priestOnly === true,
+    ...(categoryDraft.value.accessSets !== undefined && { accessSets: categoryDraft.value.accessSets }),
     parentId: categoryDraft.value.parentId || null,
     iconKey: normalizeCategoryIconKey(categoryDraft.value.iconKey) || undefined,
     order: Number(categoryDraft.value.order),

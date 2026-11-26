@@ -1,0 +1,112 @@
+# Access Sets V2 · интеграционный отчёт S8
+
+Дата проверки — 26 ноября 2026 года, Москва. Web Worktree находится в `C:/Users/User/.codex/worktrees/access-v2-s8-integration/mybrev`, ветка — `codex/access-v2-s8-integration`. Коммиты интегрированы в эту ветку. Данные эмулятора синтетические. Рабочие Firebase Rules, Hosting, IAM, контент и магазины приложений не менялись.
+
+## База и входные версии
+
+| Поверхность | SHA на момент сверки |
+| --- | --- |
+| Web `main` | `6f4f20a4f74a4521cc62a507c879e60d9bb51bc0`. С S0 `c1359b02` добавились #311–#316, включая bootstrap App Check, Web-аналитику и удаление её экрана выбора. Ветки S1–S5 этих изменений не отменяют. |
+| #317 · release gate | `e00e7c1903567f0c3c52d9d92388f293a9939cc5` |
+| #319 · S0 | `30711f5e9834027c07c587ee0853592ab4171074` |
+| #318 · тесты | `c2ac37cd4c9f72a565a0523f1738c50d8d34ed90` |
+| #320 · S1 | `56d398c2c20d505d9476e267bd1b29b1ecf77991` |
+| #321 · S2 | `6e4617bd04cd64d5a4e94c0231ffdbdbe29df4ab` |
+| #322 · S3 | `074ce62894b0aee3772986e570047d682d92773c` |
+| #323 · S4 | `adee346c7fc5fbc75ce929a426257a3916afb28a` |
+| #324 · S5 | `cab1473a8bd8d3eda8b2fa7fae58725c4435677a`. Этот head основан на предыдущем S4 `8f8c33c0`. В интеграции присутствует актуальный S4, общий типизированный hash и парность проверяются на нём. |
+| Flutter `main` | `97a9121e76cc6e13ccf3bed5d66c774815cea917`. После базового `a17be901` добавлен #149 с выравниванием коротких строк в чтениях. |
+| Flutter #148 · S7 | `44a81b13b7119e86f2a1d9e95869cc0eb615e091`. CI при сверке прошёл анализ, регрессию альтернатив, аналитику, Triduum и Compline в Chrome. [Flutter Draft PR](https://github.com/senddownrain/ibreviarybyapp/pull/148). |
+| S6 | По данным владельца 56 марианских молитв в 11 категориях. Реальные тексты и закрытый пакет не включены в ветку. Перед отдельным импортом требуется сверка частного артефакта и его digest. |
+
+В основном локальном checkout найден снимок от 27 августа. `openFirestoreSnapshot` подтвердил, что он не покрывает нужные четыре legacy и две canonical коллекции. Production-инвентаризация и refresh снимка оставлены для процедуры S5. [Правила снимков](firestore-snapshots.md).
+
+## Как связаны компоненты
+
+- Reader использует подтверждённое состояние установки S2. Firestore Lite gateway получает тот же UID, mode и наборы. Смена UID, режима, прав, профиля или ожидающий revoke инвалидируют поколение синхронно. Для первого восстановленного подтверждения каталог может привязаться к новому поколению один раз. Публичное открытие не запускает protected list.
+- Редакторы S3 вызывают существующую `canonicalCatalog` через основной Firebase app с App Check. Legacy-режим использует старый writer, suspended закрывает запись, canonical запрашивает preview и явное подтверждение. Потерянный ответ проверяется по итоговому digest. Повторной записи автоматически нет.
+- В canonical публикация сохранит правки черновика, молитву, необходимые index и mirror записи, версию каталога, статус и версию черновика, а также обе записи аудита одним коммитом. Используются серверные draft, actor и версии. Audit не содержит текста, proof или кода. Обычная работа с каталогом также добавляет служебный аудит.
+- S5 сохраняет исходные legacy документы и grants. Подтверждение копии основано на hash, typed payload, ID и полном readback, а restore удаляет только цели, созданные этим планом. Резервная копия и журналы production остаются частными.
+- Поддерживается один codebase `s4-catalog` и одна `canonicalCatalog`. Процедура release gate требует отдельного ручного авторизованного действия на Rules, Hosting и Function. [Callable](access-sets-s4-callable.md) · [S5](access-sets-s5.md) · [Ручной релиз](firebase-production-release.md).
+
+## Матрица приёмки Web и Flutter
+
+Локальный результат указывает проверяемый слой. Проверки подписанных устройств и production остаются воротами релиза.
+
+| Сценарий | Web | Flutter | Перед production |
+| --- | --- | --- | --- |
+| Гость, публичные молитвы, поиск и избранное | Публичный каталог и прямые ссылки. Защищённого запроса на общем старте нет. | Публичный bundle и overlay, тесты кеша. | Проверить старые Web/PWA, Android и iOS без авторизации. |
+| Ранее активированный legacy UID | Сессия и зеркало в legacy, затем canonical priest по тому же UID. | Unit-проверки восстановления и поведение PR #148. | In-place update реальной установки по каждому подписанному каналу без ввода кода. |
+| Новый legacy priest, V2 priest, Marian, смешанный профиль | Отдельные grants, правильное пересечение, чужая прямая ссылка закрыта. | Векторы, перенос состояния и фильтрация наборов проверяются unit-тестами. | Повторить на заранее выбранных синтетических аккаунтах после отдельного разрешения. |
+| Ошибочный или заменённый код, отзыв установки или профиля | Серверный отказ и очистка поколения. Повторная проверка после reconnect. | Unit-проверки revoke, background, reopen и запрета старого ответа. | Проверить открытый экран и глубокую ссылку при переходах online/offline, включая старую версию. |
+| Изменение молитвы, категории и публикация черновика | Основной admin app, preview, version/digest, атомарный writer и аудит. Legacy клиент с разрешением видит только своё зеркало. | Читает подтверждённые canonical и legacy документы. | Проверить настоящую аттестацию Web, отзыв роли и доступ runtime. |
+| S5 copy и rollback | Закрытый режим, backup/dry-run, copy, parity, resume, restore. | При сохранении legacy mirror текущие установки продолжают читать. | Утверждённый приватный backup, frozen writers, независимый readback и canary. |
+| Отсутствие закрытых данных в публичных артефактах | Сканирование Hosting/PWA и проверка публичного экспортера. | Unit-проверки source bundle, persistence и public overlay. | Просканировать финальные подписанные APK/IPA и PWA, проведённый offline smoke задокументировать. |
+
+## Результаты проверок
+
+- Web unit — 36 PASS. Auth/Firestore Rules S1 — 8 PASS. В первом общем запуске writer унаследовал suspended от предыдущей фикстуры. В отдельной базе проход writer подтвердил парность, откат и точную границу в 400 записей с аудитом.
+- S5 — 8 PASS. Проверены backup, offline dry-run, copy, parity/readback, interruption/resume, restore и отказ при drift.
+- Callable HTTP — PASS в Auth + Firestore + Functions Emulator. Протестированы отказ без Auth/App Check, обычный администратор, отзыв, stale draft, повторный save и verify. Для публикации подтверждены одинаковый commit time у документа, статуса черновика, версии и обеих записей аудита, отсутствие public/legacy копий Marian и сохранение графа.
+- Web Chromium S2 + S4 — PASS на правилах Firestore Emulator. Подтверждены прежний UID, активация обоих форматов, выдача по разрешённым наборам, запрет чужого прямого чтения, изменение прав, suspended, offline/reconnect и отсутствие следов кода в кеше. Отдельный Chromium smoke S4 подтвердил ленивую загрузку и отсутствие постоянного кеша.
+- Публичный PWA build и сканы экспортов, артефактов и service worker — PASS. Проверено 308 файлов с синтетическим экспортом. В отдельном S2 scan проверено 307 файлов.
+- Браузерный smoke S3 дошёл до вызова Callable из редактора, но Functions Emulator не запустил worker этого запроса. Сквозной ответ редактора остаётся непроверенным. У самого Callable прошёл отдельный HTTP-тест с теми же Auth и Firestore Emulator.
+- Flutter #148 — 33 PASS по доступу, настройкам, состоянию старого UID и публичному хранению.
+- В GitHub CI прошли Lint & Build и Draft publication Firestore emulator, включая legacy-тесты и S1 Rules. [Прогон CI](https://github.com/senddownrain/mybrev/actions/runs/45707564365).
+
+Firebase Emulator не подтверждает IAM, настоящие подписи App Check, cloud p95 или сумму счёта проекта. [Границы Emulator Suite](https://firebase.google.com/docs/emulator-suite/connect_functions#cloud_iam).
+
+### Локальные замеры чтения
+
+| Синтетический каталог | Чтения страницы индекса / canonical get | Верхняя оценка чтений с Rules | Холодная ссылка с закрытым предком |
+| --- | ---: | ---: | ---: |
+| Legacy priest, 21 + 1 | 22 / 22 | 114 | 8 |
+| Marian, 56 + 11 | 67 / 67 | 485 | 12 |
+| Два набора, 160 + 24 | 232 / 184 | 1 505 | 14 |
+| Четыре набора, 400 + 60 | 1 148 / 460 | 4 415 | 12 |
+
+Верхние оценки включают зависимые чтения Rules и цену пустых страниц. Отдельные запросы подтверждения S2 и обработку контента Callable учитывают отдельно. S4 Chromium подтвердил ноль protected-запросов на старте, в меню и на публичной ссылке. Холодная прямая ссылка без закрытого предка сделала один get и ноль списков. Тёплая выдача в пределах поколения дала ноль чтений. В синтетическом прогоне худшая конкурентность — 4 запроса. Холодный полный проход занял примерно 4,0–14,9 с на локальном Windows при параллельных прогонах. Это не cloud p95. [Firestore pricing](https://firebase.google.com/docs/firestore/pricing#cloud-firestore-security-rules).
+
+Обычная запись резервирует два места из лимита 400 для версии каталога и аудита. Публикация черновика резервирует четыре места, включая обновление черновика и его аудит.
+
+### Воспроизведение в локальном Worktree
+
+Node.js 22, Java 21 и Chrome с путём в BENCHMARK_BROWSER_PATH. Профили и данные в этих командах синтетические. Каждая команда emulators:exec использует новый набор данных.
+
+```powershell
+npm ci
+npm run test:access-sets-v2-copy
+$env:S8_TEST_PROJECT = 'demo-s8-web'
+firebase emulators:exec --config firebase.s8-qa.json --only auth,firestore --project demo-s8-web 'node --test tests/access-sets-v2-writer-firestore.test.mjs'
+$env:S2_TEST_PROJECT = 'demo-s8-web'
+$env:S8_BROWSER_TIMEOUT = '120000'
+firebase emulators:exec --config firebase.s8-qa.json --only auth,firestore --project demo-s8-web 'node scripts/s2-smoke-access.mjs'
+node scripts/smoke-access-sets-v2-catalog.mjs
+node scripts/stage-canonical-catalog-function.mjs
+npm ci --prefix reports/access-sets-v2-s4/callable-source
+$env:FUNCTIONS_DISCOVERY_TIMEOUT = '180'
+firebase emulators:exec --config firebase.s4-catalog.json --only auth,firestore,functions --project demo-s4-catalog 'node --test tests/access-sets-v2-callable-emulator.test.mjs'
+$env:S8_CANONICAL_ADMIN = '1'
+$env:S8_BROWSER_TIMEOUT = '180000'
+firebase emulators:exec --config firebase.s4-catalog.json --only auth,firestore,functions --project demo-s4-catalog 'node scripts/smoke-access-sets-admin.mjs'
+```
+
+Запуск измерений использует конфигурацию demo-s4-catalog и команду node scripts/benchmark-access-sets-catalog.mjs. Для Web-скана соберите PWA с demo-переменными CI, запустите tests/access-sets-v2-public.test.mjs с S4_DIST_SCAN=1 и затем node scripts/s2-scan-public-build.mjs. Flutter-тесты по пяти файлам запущены из отдельного checkout зафиксированного SHA PR #148.
+
+## План production и отката
+
+1. **Разрешение на релизный SHA и условия проверки.** Владелец утверждает интеграционный ревью, точные Web/Flutter SHA, независимого reviewer в GitHub production, целевой регион, бюджет чтений и окно, утверждённые canary-установки. Перепроверить актуальные версии Rules, Hosting release и версии Android/iOS по каналам, снять агрегаты без закрытого payload.
+2. **Разрешение на IAM и Function.** Оператор сверяет учётную запись runtime, два узких IAM-биндинга, условие базы, `actAs` и разрешённые origins из runbook. Отдельно публикует только `canonicalCatalog` и проверяет установленный runtime, Auth и App Check. В legacy-mode запись должна быть закрыта. Никаких runtime keys в артефакте.
+3. **Разрешение на Firestore Rules.** Опубликовать точный утверждённый SHA отдельной целью release gate. Smoke на старой подписанной установке проверяет прежний Auth UID, зеркало и отказ без права. Rules закрывают canonical чтение до переключения.
+4. **Раздельные разрешения на backup, S5 apply, verify и возможный restore.** Подтвердить `accessSetsV2/priest`, операционный freeze всех писателей и текущие guards S5. Получить typed backup, согласовать приватные digest и dry-run, копировать при legacy или утверждённом закрытом режиме. После parity сохранить метаданные и результат readback. До cutover удерживать freeze либо заново проверять parity. [Процедура S5](access-sets-s5.md).
+5. **Разрешение на Web Hosting.** Вручную опубликовать Hosting с утверждённого SHA в legacy, проверить старый PWA и новый Web. Повторное использование старого публичного JSON по digest допускается для выпуска кода без изменений публичного каталога.
+6. **Разрешение на canonical и отдельное разрешение на импорт Marian.** После подтверждения parity переключить mode, проверить S3 Callable, читателей и отзыв. Импорт S6 запускается отдельно по приватному артефакту с согласованными 56/11, preview и readback. Проверить выборку marian-only и отсутствие копий в legacy и public. При изменении public коллекций выполнить отчёт `npm run content:manifest`. Применение SAFE PATCH и app release проходят по отдельному регламенту. [Регламент Flutter](app-content-distribution.md).
+7. **Отдельное разрешение на Android и iOS.** Сначала проверенные canary по Play и прямому APK, затем iOS через TestFlight или утверждённый канал. Сверить подписи, версии и UID между обновлениями. Финальный scan подписанных артефактов и наблюдение Web/Flutter входят в release record.
+8. **Разрешение на откат.** При нарушении парности, утечке или недопустимой стоимости переключить canonical в suspended, остановить запись и выдачу, сохранить audit. Legacy-клиенты продолжают пользоваться прежними путями. Вернуть mode legacy или предыдущий Hosting можно после проверки зеркала. До canonical edits допускается S5 restore на том же digest и guards. После canonical edits восстановление использует актуальный preimage и проверку версий. Мобильный downgrade не требуется для остановки серверной выдачи. Legacy мост сохраняется до отдельной приёмки и решения владельца.
+
+## Блокеры выпуска
+
+- Отдельная проверка конечного Flutter SHA, подписей, in-place upgrade Android/iOS и фактических опубликованных версий.
+- Production-review IAM и App Check, ручной reviewer и бюджет Blaze. Замеры эмулятора дают расчёт чтений и локальную задержку, пределы p95/cost проверяются canary.
+- Частный полный backup S5 и независимый production readback, текущие активные legacy grants и scope оставшихся клиентов.
+- Частный S6 digest, редакционная приёмка и раздельное разрешение на Marian import.

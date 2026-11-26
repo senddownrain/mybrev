@@ -53,7 +53,9 @@ const page=await context.newPage();page.setDefaultTimeout(60000);const failures=
 page.on('pageerror',error=>{failures.push(error.message);console.log('UI runtime error:',error.stack);});
 await mkdir('reports/priest-access',{recursive:true});
 try {
- await page.goto(`http://127.0.0.1:${uiPort}/__priest_ui`,{waitUntil:'domcontentloaded'});
+ // The UI assertion below waits for the app and its Firestore data. Waiting
+ // for every Vite module here adds a separate, shorter cold-start deadline.
+ await page.goto(`http://127.0.0.1:${uiPort}/__priest_ui`,{waitUntil:'commit'});
  await page.getByText('Samsung Galaxy S23',{exact:true}).waitFor({timeout:120000});
  await page.screenshot({path:'reports/priest-access/admin-desktop.png',fullPage:true});
  await page.getByRole('button',{name:'Згенераваць новы код'}).click();await page.getByRole('dialog').getByText('Раней зарэгістраваныя прылады захаваюць доступ.',{exact:false}).waitFor();await page.getByRole('dialog').getByRole('button',{name:'Змяніць код',exact:true}).click();

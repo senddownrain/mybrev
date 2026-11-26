@@ -8,7 +8,7 @@ const [LEGACY] = ADMIN_UIDS;
 const doc = (data) => ({ exists: true, data });
 
 test('legacy document without role is admin and keeps priestAccess', () => {
-  assert.deepEqual(resolveAdminAccess('u1', doc({ email: 'a@b' })), { isAdmin: true, role: 'admin', isSuperAdmin: false, canManagePriestAccess: false });
+  assert.deepEqual(resolveAdminAccess('u1', doc({ email: 'a@b' })), { isAdmin: true, role: 'admin', isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false });
   assert.equal(resolveAdminAccess('u1', doc({ priestAccess: true })).canManagePriestAccess, true);
   assert.equal(resolveAdminAccess('u1', doc({ priestAccess: 'true' })).canManagePriestAccess, false);
 });
@@ -25,7 +25,7 @@ test('superadmin manages priest access without the priestAccess flag', () => {
 
 test('unknown or malformed explicit role grants nothing', () => {
   for (const role of ['superAdmin', 'owner', '', null, 7, true]) {
-    assert.deepEqual(resolveAdminAccess('u1', doc({ role, priestAccess: true })), { isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false });
+    assert.deepEqual(resolveAdminAccess('u1', doc({ role, priestAccess: true })), { isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false });
   }
 });
 
@@ -38,7 +38,7 @@ test('every fallback UID with an explicit superadmin document is superadmin', ()
 });
 
 test('fallback UID without document, on read error or with unknown role is only the former admin', () => {
-  const expected = { isAdmin: true, role: 'admin', isSuperAdmin: false, canManagePriestAccess: true };
+  const expected = { isAdmin: true, role: 'admin', isSuperAdmin: false, canManagePriestAccess: true, canManageAccessSetsV2: false };
   for (const uid of ADMIN_UIDS) {
     assert.deepEqual(resolveAdminAccess(uid, { exists: false }), expected);
     assert.deepEqual(resolveAdminAccess(uid, { failed: true }), expected);
@@ -48,7 +48,7 @@ test('fallback UID without document, on read error or with unknown role is only 
 });
 
 test('regular uid has no rights without a document or on read error', () => {
-  const none = { isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false };
+  const none = { isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false };
   assert.deepEqual(resolveAdminAccess('u1', { exists: false }), none);
   assert.deepEqual(resolveAdminAccess('u1', { failed: true }), none);
   assert.deepEqual(resolveAdminAccess('u1', { exists: true, data: { role: 'superadmin' }, failed: true }), none);
@@ -71,6 +71,24 @@ test('route decisions: anonymous, admin, superadmin, priest-only', () => {
   assert.equal(adminRouteDecision({}, admin, '/admin'), true);
   assert.deepEqual(adminRouteDecision({ requiresPriestAdmin: true }, admin, '/admin/priest-access'), { name: 'Admin' });
   assert.equal(adminRouteDecision({ requiresPriestAdmin: true }, sup, '/admin/priest-access'), true);
+});
+
+test('V2 role is server-confirmed, independent of legacy, and required by the route', () => {
+  const meta = { requiresAccessSetsV2: true };
+  const path = '/admin/access-sets';
+  for (const data of [{ role: 'superadmin' }, { role: 'admin', accessSetsV2: true }, { accessSetsV2: true }]) {
+    assert.equal(adminRouteDecision(meta, resolveAdminAccess('manager', doc(data)), path), true);
+    assert.equal(resolveAdminAccess('manager', { ...doc(data), fromCache: true }).canManageAccessSetsV2, false);
+  }
+  const manager = resolveAdminAccess('manager', doc({ role: 'admin', accessSetsV2: true }));
+  assert.equal(manager.canManagePriestAccess, false);
+  for (const data of [{ role: 'admin' }, { priestAccess: true }, { accessSetsV2: 'true' }]) {
+    assert.deepEqual(adminRouteDecision(meta, resolveAdminAccess('editor', doc(data)), path), { name: 'Admin' });
+  }
+  assert.deepEqual(adminRouteDecision(meta, resolveAdminAccess('visitor'), path), { name: 'Login', query: { redirect: path } });
+  assert.equal(resolveAdminAccess('visitor', doc({ role: 'bad', accessSetsV2: true })).canManageAccessSetsV2, false);
+  assert.equal(resolveAdminAccess(LEGACY, doc({ role: 'bad', accessSetsV2: true })).canManageAccessSetsV2, true);
+  assert.equal(resolveAdminAccess(LEGACY, { ...doc({ accessSetsV2: true }), failed: true }).canManageAccessSetsV2, false);
 });
 
 test('analytics URL: https or localhost only, no credentials, empty when unset', () => {
