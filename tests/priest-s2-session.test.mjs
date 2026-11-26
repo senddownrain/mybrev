@@ -138,6 +138,22 @@ test('V2-only grants never open the legacy mirror, including priest-only', async
   }
 });
 
+test('rechecking unchanged rights keeps the confirmed catalog generation available', async () => {
+  const c = fixture();
+  await c.activate(marian.input);
+  const generation = c.access.generation;
+  let complete;
+  c.blockEntitlements = new Promise(resolve => { complete = resolve; });
+  const recheck = c.refresh();
+  assert.equal(c.refresh(), recheck);
+  assert.equal(c.access.active, true);
+  assert.equal(c.access.generation, generation);
+  complete(c.entitlements);
+  await recheck;
+  assert.equal(c.access.active, true);
+  assert.equal(c.access.generation, generation);
+});
+
 test('union and per-branch revocation apply to the same UID and advance generation', async () => {
   const c = fixture();
   await c.activate(legacyCode);

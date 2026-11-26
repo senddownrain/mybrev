@@ -20,13 +20,16 @@ export function createAccessSetsCatalogSession({
   const queued = [];
   let generation = 0;
 
-  function invalidate() {
+  function reset(blocked) {
     generation++;
     current?.rows.clear();
-    current = undefined;
+    current = blocked ? { generation, blocked, rows: new Map(), confirmation: Promise.resolve(null) } : undefined;
     for (const job of queued.splice(0)) job.reject(expired());
     onInvalidated();
   }
+
+  const invalidate = () => reset(false);
+  const retryClosed = () => { if (current?.blocked && canRead()) invalidate(); };
 
   function assertCurrent(session) {
     if (session.generation !== generation || !canRead()) throw expired();
@@ -59,10 +62,9 @@ export function createAccessSetsCatalogSession({
 
   function failClosed(session) {
     if (session.generation !== generation) return;
-    invalidate();
     // A denied page or network/quota failure expires this generation. An
     // explicit provider event or foreground/reconnect can start a new one.
-    current = { generation, rows: new Map(), confirmation: Promise.resolve(null) };
+    reset(true);
   }
 
   async function sessionForRead(retryConfirmation = true) {
@@ -204,5 +206,5 @@ export function createAccessSetsCatalogSession({
     }
   }
 
-  return { catalog, readPrayer, invalidate, get generation() { return generation; } };
+  return { catalog, readPrayer, invalidate, retryClosed, get generation() { return generation; } };
 }

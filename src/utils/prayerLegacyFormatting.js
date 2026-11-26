@@ -72,7 +72,7 @@ export function collectQuotedPrayerSpeakers(value = '') {
           const physical = lines[physicalIndex] || '';
           const marker = /^(?: {0,3}>[ \t]?)* {0,3}/.exec(physical)[0];
           // AST establishes paragraph eligibility; source matching locates editor ranges only.
-          if (prefix && /^[КСНДЛЦVR]\./u.test(prefix.label) && child.content.startsWith(logical.slice(prefix.from, prefix.to))
+          if (prefix && /^[КСНДЛЦУVR]\./u.test(prefix.label) && child.content.startsWith(logical.slice(prefix.from, prefix.to))
             && physical.slice(marker.length).startsWith(prefix.label)) {
             ranges.push({ ...prefix, from: offsets[physicalIndex] + marker.length,
               to: offsets[physicalIndex] + marker.length + prefix.label.length, line: physicalIndex + 1 });
@@ -93,15 +93,15 @@ function namedAttribution(line) {
 }
 
 /** Returns source positions, display projection and a separate canonical edit. No Latin lookalike aliases. */
-export function legacySpeakerLine(line, { paragraph = null } = {}) {
+export function legacySpeakerLine(line, { paragraph = null, pairedInvocation = false } = {}) {
   if (namedAttribution(line)) return null;
-  const label = /^( {0,3})([*_]{0,6})([КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)([*_]{0,6})(:)?(?=[ \t]+|$)/u.exec(line);
+  const label = /^( {0,3})([*_]{0,6})([КСНДЛЦУVR]\.:?|Усе:|Цэлебрант:)([*_]{0,6})(:)?(?=[ \t]+|$)/u.exec(line);
   if (label && !(label[3].endsWith(':') && label[5])) {
     const visible = label[3] + (label[5] || '');
     const raw = label[0].slice(label[1].length);
     if (validLabelMarkup(raw, visible)) {
       const body = line.slice(label[0].length).trimStart();
-      const prefix = body ? prayerSpeakerPrefix(visible + ' ' + body) : null;
+      const prefix = body ? prayerSpeakerPrefix(visible + ' ' + body, { pairedInvocation }) : null;
       if (body && !prefix) return null;
       return {
         label: visible, canonicalLabel: label[3].replace(/\.:$/, '.'), role: prefix?.role,
@@ -114,9 +114,9 @@ export function legacySpeakerLine(line, { paragraph = null } = {}) {
       };
     }
   }
-  const whole = /^( {0,3})(\*\*|__|\*|_)([КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)([ \t]+)(.+)\2[ \t]*$/u.exec(line);
+  const whole = /^( {0,3})(\*\*|__|\*|_)([КСНДЛЦУVR]\.:?|Усе:|Цэлебрант:)([ \t]+)(.+)\2[ \t]*$/u.exec(line);
   if (!whole && paragraph?.content.includes('\n')) {
-    const partial = /^( {0,3})(\*\*|__|\*|_)([КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)([ \t]+)(\S.*)$/u.exec(line);
+    const partial = /^( {0,3})(\*\*|__|\*|_)([КСНДЛЦУVR]\.:?|Усе:|Цэлебрант:)([ \t]+)(\S.*)$/u.exec(line);
     const children = paragraph.children.filter(child => child.type !== 'text' || child.content);
     if (partial && paragraph.content.trimStart().startsWith(line.trimStart()) && paragraph.content.trimEnd().endsWith(partial[2])
       && /[.!?;:,…]$/.test(paragraph.content.trimEnd().slice(0, -partial[2].length))
@@ -149,7 +149,12 @@ export function collectLegacyPrayerSpeakers(value = '') {
   for (const line of structure.lines) { offsets.push(offset); offset += line.length + 1; }
   for (const paragraph of structure.paragraphs) {
     for (let index = paragraph.from; index < paragraph.to; index += 1) {
-      const speaker = legacySpeakerLine(structure.lines[index], { paragraph });
+      const line = structure.lines[index];
+      // A short invocation can look like a name in isolation. The following
+      // explicit assembly response in the same paragraph establishes dialogue.
+      const pairedInvocation = /^ {0,3}Л\.[ \t]/u.test(line) && index + 1 < paragraph.to
+        && prayerSpeakerPrefix(structure.lines[index + 1])?.role === 'all';
+      const speaker = legacySpeakerLine(line, { paragraph, pairedInvocation });
       if (!speaker) continue;
       // Prefixes inside inline code/links are rejected by the markup validator.
       candidates.push({ ...speaker, line: index + 1, index, paragraph, from: offsets[index] + speaker.labelFrom, to: offsets[index] + speaker.labelTo });
@@ -198,7 +203,7 @@ export function prayerContentEvidence(value = '') {
   }
   return {
     words: plain.match(/[\p{L}\p{N}]+/gu) || [],
-    punctuation: plain.replace(/(^|\n)(\s*[КСНДЛЦVR]\.):(?=\s|$)/gu, '$1$2').replace(/\s+/g, ' ').trim(),
+    punctuation: plain.replace(/(^|\n)(\s*[КСНДЛЦУVR]\.):(?=\s|$)/gu, '$1$2').replace(/\s+/g, ' ').trim(),
     links,
     headings: structure.tokens.flatMap((token, index) => token.type === 'heading_open'
       ? [{ level: token.tag, text: inlineText(structure.tokens[index + 1]?.children || []) }] : []),
@@ -270,7 +275,7 @@ export function normalizePrayerLegacyMarkdown(value = '', { rules = AUTOMATIC_PR
       if (namedAttribution(line) || (hasRomanSections && /^(?:\*\*|__)V\.\s+[^.!?:]+(?:\*\*|__)$/.test(line))) continue;
       // Corpus-confirmed malformed import shape. The first '*' is literal in the AST;
       // correcting intent requires group approval, so it never enters automatic output.
-      const joined = /^\*([КСНДЛЦVR]\.:?)[ \t]+(.+[,.!?])\*\*(Усе:)[ \t]+(.+[.!?])\*$/.exec(line);
+      const joined = /^\*([КСНДЛЦУVR]\.:?)[ \t]+(.+[,.!?])\*\*(Усе:)[ \t]+(.+[.!?])\*$/.exec(line);
       const parsedLine = parsePrayerMarkdown(line, PRAYER_TEXT_FORMAT).find(token => token.type === 'inline');
       if (joined && parsedLine?.children[0]?.type === 'text' && parsedLine.children[0].content.startsWith('*' + joined[1])
         && parsedLine.children.some(child => child.type === 'em_open')) {
@@ -282,7 +287,7 @@ export function normalizePrayerLegacyMarkdown(value = '', { rules = AUTOMATIC_PR
       const candidate = legacySpeakerLine(line);
       if (candidate?.standalone) assisted.push({ group: 'standalone-speaker', line: index + 1, confidence: 0.9, reason: 'No confirmed dialogue in the same paragraph.' });
       else if (/^\s*(?:[*_]{0,6})[CKHNP]\./u.test(line)) manual.push({ line: index + 1, reason: 'ambiguous-alphabet-or-initial' });
-      else if (/^\s*(?:[*_]{0,6})[КСНДЛЦVR]\./u.test(line) && !candidate) {
+      else if (/^\s*(?:[*_]{0,6})[КСНДЛЦУVR]\./u.test(line) && !candidate) {
         // Roman section numbers and initials are deliberately left unchanged.
         manual.push({ line: index + 1, reason: 'ambiguous-speaker-or-heading' });
       }
