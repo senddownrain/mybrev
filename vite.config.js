@@ -161,7 +161,7 @@ export default defineConfig(({ command, mode }) => {
                   const reader = response.clone().body.getReader();
                   try {
                     const { value } = await reader.read();
-                    const prefix = new TextDecoder().decode(value?.subarray(0, 200));
+                    const prefix = new globalThis.TextDecoder().decode(value?.subarray(0, 200));
                     return /^\s*(?:<!doctype html|<html[\s>])/i.test(prefix) ? null : response;
                   } finally {
                     // Awaiting cancellation of a tee can wait on the consumer.

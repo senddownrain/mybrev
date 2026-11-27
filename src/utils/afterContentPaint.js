@@ -1,6 +1,6 @@
 /** Give Vue and the browser a paint before starting optional reader work. */
 export function afterContentPaint(task) {
-  requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(task, 0)));
+  window.requestAnimationFrame(() => window.requestAnimationFrame(() => setTimeout(task, 0)));
 }
 
 const prayerTextSelector = '.liturgical-hour-column .ora-text, .readings-content .parsed-reading, .prayer-view-container .prayer-text';
@@ -15,7 +15,7 @@ export function observeFirstPrayerText(task) {
       task();
     });
   }
-  const observer = new MutationObserver(check);
+  const observer = new window.MutationObserver(check);
   observer.observe(document.getElementById('app'), { childList: true, characterData: true, subtree: true });
   check();
 }

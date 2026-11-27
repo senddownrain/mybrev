@@ -148,7 +148,7 @@ async function measure(variant, context, page, route, reload = false) {
 
 async function expireReaderCache(page) {
   await page.evaluate(() => new Promise((resolve, reject) => {
-    const request = indexedDB.open('mybrev-public-demo-startup-v1', 1);
+    const request = window.indexedDB.open('mybrev-public-demo-startup-v1', 1);
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       const database = request.result;
@@ -234,10 +234,10 @@ try {
         const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 390, height: 780 } });
         try {
           await context.addInitScript((selector) => {
-            const observer = new MutationObserver(() => {
+            const observer = new window.MutationObserver(() => {
               if (!document.querySelector(selector)?.textContent.trim()) return;
               observer.disconnect();
-              requestAnimationFrame(() => requestAnimationFrame(() => { window.startupTextAt = performance.now(); }));
+              window.requestAnimationFrame(() => window.requestAnimationFrame(() => { window.startupTextAt = performance.now(); }));
             });
             observer.observe(document, { childList: true, subtree: true });
           }, textSelector);
