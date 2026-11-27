@@ -176,4 +176,12 @@ jobs:
         run: |
           node --test tests/access-sets-v2-code.test.mjs tests/priest-client-cache.test.mjs
           npx --yes firebase-tools@latest emulators:exec --only auth,firestore --project demo-rules \
-            "node --test --test-concurrency=1 tests/access-sets-v2-rules.test.mjs tests/access-sets-v2-writer-firestore.test.mjs"
+            "node --test tests/access-sets-v2-rules.test.mjs"
+
+      - name: Canonical writer and category comment atomic readback
+        env:
+          S8_TEST_PROJECT: demo-s4-catalog
+        run: >
+          npx --yes firebase-tools@latest emulators:exec --config firebase.s4-catalog.json
+          --only auth,firestore --project demo-s4-catalog
+          "node --test tests/access-sets-v2-writer-firestore.test.mjs"
