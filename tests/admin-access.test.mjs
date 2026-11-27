@@ -4,92 +4,46 @@ import { readFileSync } from 'node:fs';
 import { ADMIN_UIDS } from '../src/constants/admin.js';
 import { adminRouteDecision, parseAnalyticsReportsUrl, resolveAdminAccess } from '../src/utils/adminAccess.js';
 
-const [LEGACY] = ADMIN_UIDS;
 const doc = (data) => ({ exists: true, data });
 
-test('legacy document without role is admin and keeps priestAccess', () => {
-  assert.deepEqual(resolveAdminAccess('u1', doc({ email: 'a@b' })), { isAdmin: true, role: 'admin', isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false });
-  assert.equal(resolveAdminAccess('u1', doc({ priestAccess: true })).canManagePriestAccess, true);
-  assert.equal(resolveAdminAccess('u1', doc({ priestAccess: 'true' })).canManagePriestAccess, false);
+test('server-confirmed plain admin and legacy roles share prayerbook access', () => {
+  const expected = { isAdmin: true, role: 'admin', isSuperAdmin: false };
+  for (const record of [{ role: 'admin' }, {}, { accessSetsV2: true }, { role: 'admin', priestAccess: false }]) {
+    const access = resolveAdminAccess('editor', doc(record));
+    assert.deepEqual(access, expected);
+    assert.equal(adminRouteDecision({}, access, '/admin/access-sets'), true);
+    assert.equal(adminRouteDecision({}, access, '/admin/priest-access'), true);
+    assert.deepEqual(adminRouteDecision({ requiresSuperAdmin: true }, access, '/admin/analytics'), { name: 'Admin' });
+  }
+  const superadmin = resolveAdminAccess('editor', doc({ role: 'superadmin' }));
+  assert.equal(adminRouteDecision({ requiresSuperAdmin: true }, superadmin, '/admin/analytics'), true);
 });
 
-test('role admin and superadmin are read from the document', () => {
-  assert.equal(resolveAdminAccess('u1', doc({ role: 'admin' })).isSuperAdmin, false);
-  const sup = resolveAdminAccess('u1', doc({ role: 'superadmin' }));
-  assert.deepEqual([sup.isAdmin, sup.role, sup.isSuperAdmin], [true, 'superadmin', true]);
-});
-
-test('superadmin manages priest access without the priestAccess flag', () => {
-  assert.equal(resolveAdminAccess('u1', doc({ role: 'superadmin' })).canManagePriestAccess, true);
-});
-
-test('unknown or malformed explicit role grants nothing', () => {
+test('malformed roles and unconfirmed roles do not grant privileges', () => {
+  const none = { isAdmin: false, role: null, isSuperAdmin: false };
   for (const role of ['superAdmin', 'owner', '', null, 7, true]) {
-    assert.deepEqual(resolveAdminAccess('u1', doc({ role, priestAccess: true })), { isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false });
+    assert.deepEqual(resolveAdminAccess('visitor', doc({ role, priestAccess: true, accessSetsV2: true })), none);
   }
+  for (const snapshot of [{ exists: false }, { ...doc({ role: 'superadmin' }), failed: true }, { ...doc({ role: 'superadmin' }), fromCache: true }]) {
+    assert.deepEqual(resolveAdminAccess('visitor', snapshot), none);
+  }
+  assert.deepEqual(adminRouteDecision({}, none, '/admin/access-sets'), { name: 'Login', query: { redirect: '/admin/access-sets' } });
 });
 
-test('every fallback UID with an explicit superadmin document is superadmin', () => {
+test('bootstrap UIDs match Rules and need a confirmed record for superadmin', () => {
+  const rules = readFileSync(new URL('../firestore.rules', import.meta.url), 'utf8');
+  const legacyUids = rules.match(/function legacyAdmin\(\) \{\s*return request\.auth\.uid in \[([^\]]+)\]/)[1];
+  assert.deepEqual([...legacyUids.matchAll(/'([^']+)'/g)].map((entry) => entry[1]), ADMIN_UIDS);
+  const admin = { isAdmin: true, role: 'admin', isSuperAdmin: false };
   for (const uid of ADMIN_UIDS) {
-    const access = resolveAdminAccess(uid, doc({ role: 'superadmin' }));
-    assert.equal(access.isSuperAdmin, true);
-    assert.equal(access.canManagePriestAccess, true);
+    assert.deepEqual(resolveAdminAccess(uid), admin);
+    assert.deepEqual(resolveAdminAccess(uid, doc({ role: 'bogus' })), admin);
+    assert.deepEqual(resolveAdminAccess(uid, { ...doc({ role: 'superadmin' }), fromCache: true }), admin);
+    assert.equal(resolveAdminAccess(uid, doc({ role: 'superadmin' })).isSuperAdmin, true);
   }
 });
 
-test('fallback UID without document, on read error or with unknown role is only the former admin', () => {
-  const expected = { isAdmin: true, role: 'admin', isSuperAdmin: false, canManagePriestAccess: true, canManageAccessSetsV2: false };
-  for (const uid of ADMIN_UIDS) {
-    assert.deepEqual(resolveAdminAccess(uid, { exists: false }), expected);
-    assert.deepEqual(resolveAdminAccess(uid, { failed: true }), expected);
-    assert.deepEqual(resolveAdminAccess(uid, { exists: true, data: { role: 'superadmin' }, failed: true }), expected);
-    assert.deepEqual(resolveAdminAccess(uid, doc({ role: 'bogus' })), expected);
-  }
-});
 
-test('regular uid has no rights without a document or on read error', () => {
-  const none = { isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false };
-  assert.deepEqual(resolveAdminAccess('u1', { exists: false }), none);
-  assert.deepEqual(resolveAdminAccess('u1', { failed: true }), none);
-  assert.deepEqual(resolveAdminAccess('u1', { exists: true, data: { role: 'superadmin' }, failed: true }), none);
-});
-
-test('fallback UIDs are unchanged and not hardcoded as superadmin', () => {
-  assert.deepEqual(ADMIN_UIDS, ['64MeSP56IWVotVFG7bu8YKeLis12', '7mszX2IiXHgjWxj0ZE5vEqdkmoD2']);
-  assert.ok(!resolveAdminAccess(LEGACY, { exists: false }).isSuperAdmin);
-});
-
-test('route decisions: anonymous, admin, superadmin, priest-only', () => {
-  const anon = resolveAdminAccess('x', { exists: false });
-  const admin = resolveAdminAccess('u1', doc({ role: 'admin' }));
-  const sup = resolveAdminAccess('u1', doc({ role: 'superadmin' }));
-  const priest = resolveAdminAccess('u1', doc({ priestAccess: true }));
-  assert.deepEqual(adminRouteDecision({ requiresSuperAdmin: true }, anon, '/admin/analytics'), { name: 'Login', query: { redirect: '/admin/analytics' } });
-  assert.deepEqual(adminRouteDecision({ requiresSuperAdmin: true }, admin, '/admin/analytics'), { name: 'Admin' });
-  assert.deepEqual(adminRouteDecision({ requiresSuperAdmin: true }, priest, '/admin/analytics'), { name: 'Admin' });
-  assert.equal(adminRouteDecision({ requiresSuperAdmin: true }, sup, '/admin/analytics'), true);
-  assert.equal(adminRouteDecision({}, admin, '/admin'), true);
-  assert.deepEqual(adminRouteDecision({ requiresPriestAdmin: true }, admin, '/admin/priest-access'), { name: 'Admin' });
-  assert.equal(adminRouteDecision({ requiresPriestAdmin: true }, sup, '/admin/priest-access'), true);
-});
-
-test('V2 role is server-confirmed, independent of legacy, and required by the route', () => {
-  const meta = { requiresAccessSetsV2: true };
-  const path = '/admin/access-sets';
-  for (const data of [{ role: 'superadmin' }, { role: 'admin', accessSetsV2: true }, { accessSetsV2: true }]) {
-    assert.equal(adminRouteDecision(meta, resolveAdminAccess('manager', doc(data)), path), true);
-    assert.equal(resolveAdminAccess('manager', { ...doc(data), fromCache: true }).canManageAccessSetsV2, false);
-  }
-  const manager = resolveAdminAccess('manager', doc({ role: 'admin', accessSetsV2: true }));
-  assert.equal(manager.canManagePriestAccess, false);
-  for (const data of [{ role: 'admin' }, { priestAccess: true }, { accessSetsV2: 'true' }]) {
-    assert.deepEqual(adminRouteDecision(meta, resolveAdminAccess('editor', doc(data)), path), { name: 'Admin' });
-  }
-  assert.deepEqual(adminRouteDecision(meta, resolveAdminAccess('visitor'), path), { name: 'Login', query: { redirect: path } });
-  assert.equal(resolveAdminAccess('visitor', doc({ role: 'bad', accessSetsV2: true })).canManageAccessSetsV2, false);
-  assert.equal(resolveAdminAccess(LEGACY, doc({ role: 'bad', accessSetsV2: true })).canManageAccessSetsV2, true);
-  assert.equal(resolveAdminAccess(LEGACY, { ...doc({ accessSetsV2: true }), failed: true }).canManageAccessSetsV2, false);
-});
 
 test('analytics URL: https or localhost only, no credentials, empty when unset', () => {
   assert.equal(parseAnalyticsReportsUrl(undefined), null);

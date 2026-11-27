@@ -1,4 +1,4 @@
-import { canManageCanonicalCatalog } from '../scripts/lib/access-sets-v2-writer.mjs';
+import { resolveAdminRole } from '../src/utils/adminAccess.js';
 
 const actions = new Set(['preview', 'save', 'verify']);
 const revokedAuthCodes = new Set([
@@ -18,7 +18,7 @@ export function createCatalogAuthorization({ db, auth, HttpsError }) {
 
     // Rejected administrators cost one targeted metadata read. The writer
     // still authorizes again inside the same transaction as catalog mutations.
-    if (!canManageCanonicalCatalog((await db.collection('admins').doc(uid).get()).data())) {
+    if (!resolveAdminRole(uid, (await db.collection('admins').doc(uid).get()).data())) {
       throw new HttpsError('permission-denied', 'permission-denied');
     }
     let current;
