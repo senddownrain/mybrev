@@ -202,12 +202,12 @@ function makePlan(version, before, after) {
   return { version, beforeDigest, afterDigest, planDigest, operations };
 }
 
-export function planCanonicalCatalog(snapshot, edits, draftId) {
+export function planCanonicalCatalog(snapshot, edits, draftId, { allowEmpty = false } = {}) {
   if (!Number.isSafeInteger(snapshot.version) || snapshot.version < 0 || snapshot.version >= Number.MAX_SAFE_INTEGER) {
     fail('invalid-content-version');
   }
   const { content, activeSets } = assertCatalogParity(snapshot);
-  if (!Array.isArray(edits) || !edits.length || edits.length >= MAX_ATOMIC_CONTENT_WRITES) fail('invalid-content-edits');
+  if (!Array.isArray(edits) || (!allowEmpty && !edits.length) || edits.length >= MAX_ATOMIC_CONTENT_WRITES) fail('invalid-content-edits');
   for (const edit of edits) applyEdit(content, edit);
   if (draftId !== undefined) {
     if (edits.length !== 1 || edits[0].kind !== 'prayers' || edits[0].action === 'delete' || !validCatalogId(draftId)) {

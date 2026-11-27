@@ -176,4 +176,4 @@ jobs:
         run: |
           node --test tests/access-sets-v2-code.test.mjs tests/priest-client-cache.test.mjs
           npx --yes firebase-tools@latest emulators:exec --only auth,firestore --project demo-rules \
-            "node --test tests/access-sets-v2-rules.test.mjs"
+            "node --test --test-concurrency=1 tests/access-sets-v2-rules.test.mjs tests/access-sets-v2-writer-firestore.test.mjs"

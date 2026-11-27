@@ -28,6 +28,8 @@
  * Report: reports/content/manifest-diff.json.
  */
 import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -63,9 +65,17 @@ function parseArgs(argv) {
     else if (argv[index] === '--schema-release') options.schemaRelease = true;
     else if (argv[index] === '--introduce-collections') options.introduceCollections = true;
     else if (argv[index] === '--service-account') options.serviceAccount = argv[++index];
+    else if (argv[index] === '--expected-additions') options.expectedAdditions = argv[++index];
+    else if (argv[index] === '--expected-patch-sha') options.expectedPatchSha = argv[++index];
   }
   if (options.apply && options.snapshots.length) throw new Error('--apply publishes hashes of live Firestore only (no --snapshot).');
   for(const name of options.collections)if(!APP_CONTENT_COLLECTIONS.includes(name))throw new Error(`Unsupported public collection: ${name}`);
+  if (options.expectedAdditions || options.expectedPatchSha) {
+    assert.deepEqual([...options.collections].sort(), ['prayerCategories', 'prayers'], 'Scoped release requires both prayer collections');
+    assert.ok(options.expectedAdditions && !options.snapshots.length && !options.allowLargePatch
+      && !options.schemaRelease && !options.introduceCollections, 'Expected additions require a scoped live SAFE CONTENT PATCH');
+    assert.ok(!options.apply || /^[a-f0-9]{64}$/u.test(options.expectedPatchSha), 'Pass the fingerprint from the SAFE CONTENT PATCH dry-run');
+  }
   return options;
 }
 
@@ -135,15 +145,21 @@ async function main() {
   try {
     const described = {};
     const invalid = [];
+    let sourceRevision;
     if (firestore) {
       const collections = new Map();
       const selected=options.collections.length?options.collections:APP_CONTENT_COLLECTIONS;
       const includesPrayers = selected.includes('prayers') || selected.includes('prayerCategories');
       const readNames = [...new Set([...selected, ...(includesPrayers ? ['prayers', 'prayerCategories', ...PRAYER_EXPORT_GUARDS] : [])])];
+      let scopedReads = 0;
       const before = includesPrayers ? (await firestore.doc(CONTENT_CONTROL).get()).data() : null;
       for (const name of readNames) {
         console.log(`reading ${name}…`);
-        const snapshot = await firestore.collection(name).get();
+        const collection = firestore.collection(name);
+        const query = options.expectedAdditions ? collection.limit(2501 - scopedReads) : collection;
+        const snapshot = await query.get();
+        scopedReads += Math.max(1, snapshot.size);
+        if (options.expectedAdditions) assert.ok(scopedReads <= 2500, 'Scoped content read budget exceeded');
         const docs = snapshot.docs.map((doc) => storedDocument(doc.id, doc.data()));
         collections.set(name, docs);
       }
@@ -152,6 +168,7 @@ async function main() {
         if (before?.lockUid || after?.lockUid || before?.version !== after?.version) {
           throw new Error('Prayer storage changed during manifest generation');
         }
+        sourceRevision = after?.version ?? 0;
       }
       for (const [name, docs] of publicAppCollections(collections)) {
         if (options.collections.length && !options.collections.includes(name)) continue;
@@ -189,6 +206,24 @@ async function main() {
       invalid: invalid.length, allowLargePatch: options.allowLargePatch, schemaRelease: options.schemaRelease,
       introduceCollections: options.introduceCollections,
     });
+    let patchSha;
+    if (options.expectedAdditions) {
+      const expected = JSON.parse(fs.readFileSync(options.expectedAdditions, 'utf8'));
+      assert.deepEqual(Object.keys(expected).sort(), [...options.collections].sort(), 'Expected additions must match the selected collections');
+      assert.ok(classification.verdict === 'SAFE CONTENT PATCH' && decision.publish && !heldBack.length,
+        'Scoped publication requires SAFE CONTENT PATCH, received ' + classification.verdict);
+      assert.ok(Number.isSafeInteger(expected.prayers?.catalogRevision), 'Include the committed catalog revision in the expected additions');
+      assert.equal(sourceRevision, expected.prayers.catalogRevision, 'Catalog revision differs from the import receipt');
+      for (const name of options.collections) {
+        const diff = diffs.find(({ collection }) => collection === name);
+        assert.deepEqual([...(diff?.added ?? [])].sort(), [...expected[name].ids].sort(), 'Unexpected additions in ' + name);
+        assert.ok(!diff || (!diff.changed.length && !diff.removed.length), 'Existing documents differ in ' + name);
+      }
+      patchSha = createHash('sha256').update(JSON.stringify({ sourceRevision, published: published.contentVersion,
+        collections: options.collections.map((name) => [name, described[name].digest]) })).digest('hex');
+      assert.ok(!options.expectedPatchSha || options.expectedPatchSha === patchSha, 'Manifest preview is stale');
+      console.log('SAFE CONTENT PATCH fingerprint: ' + patchSha);
+    }
     console.log(invalid.length
       ? `INVALID DOCUMENTS (${invalid.length}):\n${invalid.slice(0, 20).map((item) => `  ${item.collection}/${item.id}: ${item.reason}`).join('\n')}\n`
       : 'validation: OK');
@@ -199,6 +234,7 @@ async function main() {
       at: new Date().toISOString(), source: firestore ? 'firestore' : options.snapshots,
       published: published ? { contentVersion: published.contentVersion, schemaVersion: published.schemaVersion } : null,
       classification, decision, invalid,
+      ...(patchSha && { patchSha, sourceRevision }),
       diffs: diffs.map((d) => ({ ...d, added: d.added.length, changed: d.changed.length, removed: d.removed.length, ids: { added: d.added, changed: d.changed, removed: d.removed } })),
     }, null, 1)}\n`);
     console.log(`report: ${path.relative(ROOT, reportPath)}`);
@@ -223,14 +259,26 @@ async function main() {
     }
     // Collection documents first: `current` never points to a digest whose
     // hashes are not readable yet.
-    for (const name of changed) {
+    const collectionData = (name) => {
       const item = described[name];
-      await firestore.collection(MANIFEST_COLLECTION).doc(name).set({
+      return {
         collection: name, digest: item.digest, version: current.collections[name].version, hashes: item.hashes, sizes: item.sizes,
-      });
+      };
+    };
+    const manifest = firestore.collection(MANIFEST_COLLECTION);
+    if (patchSha) {
+      await firestore.runTransaction(async (transaction) => {
+        const [previous, control] = await transaction.getAll(manifest.doc('current'), firestore.doc(CONTENT_CONTROL));
+        assert.equal(previous.data()?.contentVersion, published.contentVersion, 'Manifest version changed');
+        assert.ok(!control.data()?.lockUid && (control.data()?.version ?? 0) === sourceRevision, 'Catalog revision changed');
+        for (const name of changed) transaction.set(manifest.doc(name), collectionData(name));
+        transaction.set(manifest.doc('current'), current);
+      }, { maxAttempts: 1 });
+    } else {
+      for (const name of changed) await manifest.doc(name).set(collectionData(name));
+      await manifest.doc('current').set(current);
     }
-    await firestore.collection(MANIFEST_COLLECTION).doc('current').set(current);
-    const check = (await firestore.collection(MANIFEST_COLLECTION).doc('current').get()).data();
+    const check = (await manifest.doc('current').get()).data();
     if (check.contentVersion !== current.contentVersion) throw new Error('Verification failed: current was not written.');
     recordMigration(ROOT, {
       collection: MANIFEST_COLLECTION, mode: 'apply',

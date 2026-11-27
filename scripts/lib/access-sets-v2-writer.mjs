@@ -41,7 +41,7 @@ export function createCanonicalCatalogWriter(db) {
       if (reads > MAX_CATALOG_SCAN_READS) fail('catalog-scan-limit');
       for (const doc of page.docs) documents.set(doc.ref.path, doc.data());
     }
-    return { version, sets, documents };
+    return { version, sets, documents, reads: reads + 3 };
   }
 
   function apply(transaction, plan, advance = Boolean(plan.operations.length)) {
@@ -55,7 +55,7 @@ export function createCanonicalCatalogWriter(db) {
     }
   }
 
-  async function save(uid, request) {
+  async function save(uid, request, prepareImport) {
     if (typeof uid !== 'string' || !uid.length || uid.includes('/')) fail('unauthenticated');
     const { action, edits, draft, expectedVersion, planDigest, afterDigest } = request ?? {};
     if (!['preview', 'save', 'verify'].includes(action)) fail('invalid-writer-action');
@@ -87,7 +87,10 @@ export function createCanonicalCatalogWriter(db) {
         return { version: snapshot.version, parity: 'verified' };
       }
       const publication = draft && await prepareDraftPublication(db, transaction, snapshot, draft);
-      const plan = planCanonicalCatalog(snapshot, publication ? [publication.edit] : edits, draft?.id);
+      const prepared = prepareImport?.(snapshot);
+      const plan = planCanonicalCatalog(snapshot, prepared?.edits ?? (publication ? [publication.edit] : edits), draft?.id,
+        { allowEmpty: Boolean(prepared) });
+      prepared?.check(plan.operations);
       const advance = Boolean(publication || plan.operations.length);
       const extraWrites = publication ? 4 : advance ? 2 : 0; // control, catalog audit, draft, draft audit
       if (plan.operations.length + extraWrites > MAX_ATOMIC_CONTENT_WRITES) fail('content-transaction-too-large');
@@ -105,14 +108,17 @@ export function createCanonicalCatalogWriter(db) {
         });
       }
       return { ...summary, planDigest: digest, ...(publication && { id: publication.id }),
+        ...(prepared && { importPlan: prepared.summary, beforeDigest: plan.beforeDigest, reads: snapshot.reads }),
         extraWrites, committedVersion: action === 'save' ? plan.version + Number(advance) : null };
-    }, { maxAttempts: 2 });
+    }, { maxAttempts: prepareImport ? 1 : 2 });
   }
 
   return {
     // Handler contract: Firebase callable request shape after Auth validation.
     // Bind only to a trusted transport that supplies verified request.auth.
     call: ({ auth, data }) => save(auth?.uid, data),
+    // Trusted local release operator only. The Callable does not expose this callback.
+    importBatch: (uid, data, prepare) => save(uid, data, prepare),
     async restore(uid, retainedPlan) {
       if (typeof uid !== 'string' || !uid.length || uid.includes('/')) fail('unauthenticated');
       return db.runTransaction(async (transaction) => {
