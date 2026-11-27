@@ -12,6 +12,13 @@
       </router-link>
       <div class="prayers-page-eyebrow">Малітоўнік</div>
       <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ categoryName(selectedCategory) || 'Малітвы' }}</h1>
+      <PrayerCategoryComment
+        v-if="categoryComment"
+        :key="categoryCommentKey"
+        :comment="categoryComment"
+        :category-name="categoryName(activeCommentCategory)"
+        @open-prayer="viewPrayer"
+      />
       <v-select v-if="editorial" v-model="accessFilter" data-test="prayer-access-filter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
@@ -34,7 +41,6 @@
     </v-alert>
     
     <div v-else>
-      <PrayerCategoryComment v-if="categoryComment" :key="categoryCommentKey" :comment="categoryComment" />
       <nav v-if="categoryNavigation.children.length" class="subcategory-list" aria-label="Падкатэгорыі">
         <router-link
           v-for="category in categoryNavigation.children"
