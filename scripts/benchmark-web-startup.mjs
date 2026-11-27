@@ -11,7 +11,9 @@ import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { decodeCollection } from './content/lib/app-content.mjs';
 
-const [baseline, flutter, fixtureRef = '696b71089bc6d135865d9c930249bb2ecfc55c0b'] = process.argv.slice(2);
+const recoveryOnly = process.argv.includes('--recovery-only');
+const [baseline, flutter, fixtureRef = '696b71089bc6d135865d9c930249bb2ecfc55c0b'] =
+  process.argv.slice(2).filter((argument) => argument !== '--recovery-only');
 const endpoint = process.env.FIRESTORE_EMULATOR_HOST;
 assert.ok(baseline && flutter && process.env.BENCHMARK_BROWSER_PATH,
   'Pass the baseline worktree and Flutter checkout, and set BENCHMARK_BROWSER_PATH');
@@ -174,8 +176,8 @@ async function checkRecovery(variant) {
       const page = await context.newPage();
       let entries = 0;
       const navigations = [];
-      page.on('framenavigated', (frame) => {
-        if (frame === page.mainFrame()) navigations.push(frame.url());
+      page.on('request', (request) => {
+        if (request.isNavigationRequest() && request.frame() === page.mainFrame()) navigations.push(request.url());
       });
       await context.route('**/assets/index-*.js', (route) => {
         entries += 1;
@@ -188,6 +190,19 @@ async function checkRecovery(variant) {
     } finally { await context.close(); }
   }
 
+  const interrupted = await browser.newContext({ serviceWorkers: 'block' });
+  try {
+    const firestore = `http://${endpoint}/**`;
+    await interrupted.route(firestore, (route) => route.abort());
+    const page = await interrupted.newPage();
+    await page.goto(variant.base + weekday, { waitUntil: 'commit' });
+    const retry = page.getByRole('button', { name: 'Паўтарыць' });
+    await retry.waitFor({ timeout: 16000 });
+    await interrupted.unroute(firestore);
+    await retry.click();
+    await page.locator(textSelector).first().waitFor({ timeout: 15000 });
+  } finally { await interrupted.close(); }
+
   const context = await browser.newContext();
   try {
     const firstTab = await context.newPage();
@@ -196,7 +211,7 @@ async function checkRecovery(variant) {
       await tab.goto(variant.base + weekday, { waitUntil: 'commit' });
       await tab.locator(textSelector).first().waitFor({ timeout: 20000 });
     }));
-    await firstTab.evaluate(() => navigator.serviceWorker.ready);
+    await firstTab.waitForFunction(() => navigator.serviceWorker.controller, null, { timeout: 20000 });
     await context.setOffline(true);
     await firstTab.reload({ waitUntil: 'commit' });
     await firstTab.locator(textSelector).first().waitFor({ timeout: 20000 });
@@ -206,13 +221,13 @@ async function checkRecovery(variant) {
 const measurements = {};
 const expectedText = new Map();
 try {
-  variants.push(await serve('before', path.resolve(baseline), 4311));
+  if (!recoveryOnly) variants.push(await serve('before', path.resolve(baseline), 4311));
   variants.push(await serve('after', process.cwd(), 4312));
   browser = await chromium.launch({
     executablePath: process.env.BENCHMARK_BROWSER_PATH,
     args: ['--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1'],
   });
-  for (let run = 0; run < 3; run += 1) {
+  for (let run = 0; !recoveryOnly && run < 3; run += 1) {
     for (const variant of run % 2 ? [...variants].reverse() : variants) {
       const result = measurements[variant.name] ||= { weekday: [], memorial: [], expiredAfterDeploy: [] };
       for (const [name, route] of [['weekday', weekday], ['memorial', memorial]]) {
@@ -242,9 +257,9 @@ try {
       }
     }
   }
-  console.log(JSON.stringify({ fixtureRef, seeded, measurements }, null, 2));
-  await checkRecovery(variants[1]);
-  console.log('Recovery passed: missing entry, persistent failure, two tabs and offline reload.');
+  if (!recoveryOnly) console.log(JSON.stringify({ fixtureRef, seeded, measurements }, null, 2));
+  await checkRecovery(variants.at(-1));
+  console.log('Recovery passed: missing entry, persistent failure, Firestore timeout and retry, two tabs and offline reload.');
 } finally {
   await browser?.close();
   await Promise.all(variants.map(variant => variant.server.close()));
