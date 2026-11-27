@@ -7,6 +7,10 @@
   >
     <v-main :class="{ 'has-bottom-nav': hasBottomNav }">
       <router-view v-if="!hideLayoutTopNav" name="topNav" />
+      <v-alert v-if="loadError" class="ma-4" type="warning" variant="tonal" role="alert">
+        <p>{{ loadError.message }}</p>
+        <v-btn variant="text" @click="loadError.retry">Паўтарыць</v-btn>
+      </v-alert>
       <router-view />
       <NextHourLink />
       <FeedbackPrompt class="ora-feedback" />
@@ -21,18 +25,21 @@
 </template>
 
 <script setup>
-  import { computed } from 'vue';
+  import { computed, provide, shallowRef } from 'vue';
   import { useRoute } from 'vue-router';
   import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
   import BackToTop from '@/components/BackToTop.vue';
   import { providePsalmody } from '@/composables/usePsalmody';
   import { provideLiturgicalHours } from '@/composables/useLiturgicalHours';
+  import { hourLoadError } from '@/composables/useResolvedLiturgicalDay';
   import NextHourLink from '@/components/liturgical/NextHourLink.vue';
   import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
   import { useSettingsStore } from '@/stores/settings.js';
   
   const settings = useSettingsStore();
   const route = useRoute();
+  const loadError = shallowRef(null);
+  provide(hourLoadError, loadError);
   providePsalmody(route);
   provideLiturgicalHours();
   const isHour = computed(() => route.name !== 'oras');

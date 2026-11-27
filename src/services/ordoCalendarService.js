@@ -105,8 +105,8 @@ export function serializableOverride(item) {
 
 /**
  * Refresh the calendar from Firestore (cached result first, network in the
- * background) and apply it to the engine. Saved Hours/Readings are marked
- * stale when the calendar actually changed.
+ * background) and apply it to the engine. Reader cache keys follow the
+ * resolved calendar of each date.
  */
 async function refreshCalendarNow(options = {}) {
   try {
@@ -117,7 +117,7 @@ async function refreshCalendarNow(options = {}) {
     // No rules / no collections / offline without a cache: bundled snapshot.
     logger.warn('[ordoCalendar] Firestore calendar unavailable, using the bundled snapshot:', error?.message || error);
   }
-  const changed = applyCachedCalendar({ markContentStale: true });
+  const changed = applyCachedCalendar();
   if (typeof window !== 'undefined') window.dispatchEvent(new window.Event('ordo-publication-checked'));
   return changed;
 }
@@ -125,7 +125,7 @@ async function refreshCalendarNow(options = {}) {
 /** Year overrides straight from the server (admin page). */
 export async function fetchYearOverridesFresh() {
   const entry = await publicContentCache.read(YEAR_OVERRIDES_CACHE_KEY, loadYearOverrides, { fresh: true, revalidate: true });
-  applyCachedCalendar({ markContentStale: true });
+  applyCachedCalendar();
   return entry.data.items;
 }
 
@@ -151,7 +151,12 @@ export const refreshCalendarDefinitions = createCalendarRevalidator({ run: refre
 /** One small metadata + year check per interval; collections only for a new revision. */
 export function startCalendarRevalidation() {
   const check = () => {
-    if (document.visibilityState !== 'hidden') refreshCalendarDefinitions().catch(() => {});
+    if (document.visibilityState === 'hidden') return;
+    if (publicContentCache.peekFresh(CALENDAR_CACHE_KEY) && publicContentCache.peekFresh(YEAR_OVERRIDES_CACHE_KEY)) {
+      window.dispatchEvent(new window.Event('ordo-publication-checked'));
+      return;
+    }
+    refreshCalendarDefinitions().catch(() => {});
   };
   const timer = setInterval(check, CALENDAR_CHECK_INTERVAL);
   window.addEventListener('online', check);

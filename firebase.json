@@ -11,24 +11,6 @@
     ],
     "headers": [
       {
-        "source": "/assets/**",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
-        "source": "/workbox-*.js",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
-          }
-        ]
-      },
-      {
         "source": "/public-prayers-v1.json",
         "headers": [
           {
@@ -51,7 +33,7 @@
         ]
       },
       {
-        "source": "/index.html",
+        "regex": "^/((day|readings|ordo|prayer|p|prayers|settings|feedback|about|sources|documents|picker|compendium|songs|song|bible|login|admin)(/[^/.]+)*/?|index[.]html)?$",
         "headers": [
           {
             "key": "Cache-Control",
@@ -89,24 +71,6 @@
             "value": "no-cache"
           }
         ]
-      },
-      {
-        "source": "**/*.js",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/javascript"
-          }
-        ]
-      },
-      {
-        "source": "**/*.mjs",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/javascript"
-          }
-        ]
       }
     ],
     "rewrites": [
@@ -119,7 +83,7 @@
         "destination": "/privacy.html"
       },
       {
-        "source": "**",
+        "regex": "^/((day|readings|ordo|prayer|p|prayers|settings|feedback|about|sources|documents|picker|compendium|songs|song|bible|login|admin)(/[^/.]+)*/?)?$",
         "destination": "/index.html"
       }
     ],
