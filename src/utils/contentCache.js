@@ -4,12 +4,12 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
   const requests = new Map();
   const reads = new Map();
 
-  async function restore(key) {
+  async function restore(key, options) {
     if (memory.get(key)?.complete) return memory.get(key);
     if (!reads.has(key)) {
       reads.set(key, (async () => {
         try {
-          const entry = await storage.get(key);
+          const entry = await storage.get(key, options);
           if (entry?.complete === true && typeof entry.revision === 'string'
             && Object.hasOwn(entry, 'data') && !memory.get(key)?.complete) memory.set(key, entry);
         } catch (error) { onError(error); }
@@ -54,7 +54,7 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
     maxAge = maxAgeMs, legacyKey, acceptCached = () => true,
   } = {}) {
     const usableEntry = async (cacheKey) => {
-      const stored = await restore(cacheKey);
+      const stored = await restore(cacheKey, { preferExisting: Boolean(revalidateInBackground) && !revalidate });
       return stored && acceptCached(stored) ? stored : undefined;
     };
     const current = await usableEntry(key);
@@ -98,7 +98,7 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
       const entry = memory.get(key);
       return entry?.complete === true && accept(entry);
     },
-    prime: (keys) => Promise.all(keys.map(restore)),
+    prime: (keys, options) => Promise.all(keys.map((key) => restore(key, options))),
     async keys() {
       try { return [...new Set([...memory.keys(), ...await storage.keys()])]; }
       catch (error) { onError(error); return [...memory.keys()]; }

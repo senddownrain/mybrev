@@ -8,7 +8,7 @@ const source = (file) => readFileSync(new URL(`../src/${file}`, import.meta.url)
 test('Liturgy feedback appears after NextHourLink, with spacing below its divider', () => {
   const layout = source('layouts/simple/One.vue');
   const next = layout.indexOf('<NextHourLink />');
-  const feedback = layout.indexOf('<FeedbackPrompt class="ora-feedback" />');
+  const feedback = layout.search(/<FeedbackPrompt\b[^>]*class="ora-feedback"/);
   assert.ok(next >= 0 && feedback > next, 'Feedback must follow the next-hour navigation');
   assert.match(layout, /margin-bottom: calc\(88px \+ env\(safe-area-inset-bottom, 0px\)\)/);
   assert.match(source('components/liturgical/NextHourLink.vue'), /margin: 8px auto 0;/);

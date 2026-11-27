@@ -13,8 +13,8 @@
       </v-alert>
       <router-view />
       <NextHourLink />
-      <FeedbackPrompt class="ora-feedback" />
-      <BackToTop v-if="isHour" />
+      <FeedbackPrompt v-if="showExtras" class="ora-feedback" />
+      <BackToTop v-if="isHour && showExtras" />
 
       <router-view name="bottomNav" />
 
@@ -25,16 +25,15 @@
 </template>
 
 <script setup>
-  import { computed, provide, shallowRef } from 'vue';
+  import { computed, defineAsyncComponent, provide, shallowRef } from 'vue';
   import { useRoute } from 'vue-router';
   import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
-  import BackToTop from '@/components/BackToTop.vue';
   import { providePsalmody } from '@/composables/usePsalmody';
   import { provideLiturgicalHours } from '@/composables/useLiturgicalHours';
   import { hourLoadError } from '@/composables/useResolvedLiturgicalDay';
   import NextHourLink from '@/components/liturgical/NextHourLink.vue';
-  import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
   import { useSettingsStore } from '@/stores/settings.js';
+  import { firstPrayerPaint } from '@/utils/afterContentPaint';
   
   const settings = useSettingsStore();
   const route = useRoute();
@@ -43,6 +42,11 @@
   providePsalmody(route);
   provideLiturgicalHours();
   const isHour = computed(() => route.name !== 'oras');
+  const readerPainted = shallowRef(false);
+  const showExtras = computed(() => !isHour.value || readerPainted.value);
+  const FeedbackPrompt = defineAsyncComponent(() => import('@/components/common/FeedbackPrompt.vue'));
+  const BackToTop = defineAsyncComponent(() => import('@/components/BackToTop.vue'));
+  firstPrayerPaint.then(() => { readerPainted.value = true; });
   const hideLayoutTopNav = computed(() => route.matched.some((record) => record.meta?.hideLayoutTopNav));
   const hasBottomNav = computed(() => route.matched.some((record) => record.meta?.hasBottomNav));
 </script>
