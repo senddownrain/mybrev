@@ -65,13 +65,12 @@ const response = alert('Malitounik Firestore API response volume', {
   },
 }, 'API response bytes are a traffic signal. Check billed Firestore network charges in Cloud Billing.');
 
-const monthlyBudgetUsd = 20;
 const budget = {
   displayName: 'Malitounik monthly project spend',
   budgetFilter: { projects: ['projects/344097781816'], calendarPeriod: 'MONTH' },
-  amount: { specifiedAmount: { currencyCode: 'USD', units: String(monthlyBudgetUsd) } },
-  thresholdRules: [2, 5, 10, 15, 20].map(usd => ({
-    thresholdPercent: usd / monthlyBudgetUsd,
+  amount: { specifiedAmount: { currencyCode: 'PLN', units: '30' } },
+  thresholdRules: [0.1, 0.25, 0.5, 0.75, 1].map(thresholdPercent => ({
+    thresholdPercent,
     spendBasis: 'CURRENT_SPEND',
   })),
   notificationsRule: {
