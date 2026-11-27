@@ -79,22 +79,24 @@ optionalWorkReady.then(() => scheduleSentryInit(app, router))
 
 // Local-only analytics for test builds (decision D-10 = B). The flag is a build-time
 // constant: when it is not 'true' this branch and the analytics code are removed from the bundle.
-if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') optionalWorkReady.then(() => {
-  // R03: QA-only hand-over of closed days to the closed staging. A second compile-time flag; without it the transport
-  // module and the staging URL are removed from the bundle and nothing is ever sent. No consent UI is mounted.
-  const loadStaging = import.meta.env.VITE_ANALYTICS_STAGING === 'true'
-    ? import('./utils/analytics/stagingTransport').then(({ createBrowserStagingTransport }) => (context) => createBrowserStagingTransport({
-      ...context,
-      url: import.meta.env.VITE_ANALYTICS_STAGING_URL || 'http://127.0.0.1:8788',
-    }))
-    : Promise.resolve(null)
-  Promise.all([import('./utils/analytics/localAnalytics'), loadStaging, import('./utils/massRitual')])
-    .then(([{ startLocalAnalytics }, staging, { MASS_ORDER_PRAYER_ID }]) => startLocalAnalytics(router, {
-      massOrderPrayerId: MASS_ORDER_PRAYER_ID,
-      staging,
-    }))
-    .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
-})
+if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
+  optionalWorkReady.then(() => {
+    // R03: QA-only hand-over of closed days to the closed staging. A second compile-time flag; without it the transport
+    // module and the staging URL are removed from the bundle and nothing is ever sent. No consent UI is mounted.
+    const loadStaging = import.meta.env.VITE_ANALYTICS_STAGING === 'true'
+      ? import('./utils/analytics/stagingTransport').then(({ createBrowserStagingTransport }) => (context) => createBrowserStagingTransport({
+        ...context,
+        url: import.meta.env.VITE_ANALYTICS_STAGING_URL || 'http://127.0.0.1:8788',
+      }))
+      : Promise.resolve(null)
+    Promise.all([import('./utils/analytics/localAnalytics'), loadStaging, import('./utils/massRitual')])
+      .then(([{ startLocalAnalytics }, staging, { MASS_ORDER_PRAYER_ID }]) => startLocalAnalytics(router, {
+        massOrderPrayerId: MASS_ORDER_PRAYER_ID,
+        staging,
+      }))
+      .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
+  })
+}
 
 // Optional Google Analytics: initialize choice handling after the first render.
 if (import.meta.env.VITE_FIREBASE_ANALYTICS === 'true') optionalWorkReady.then(() => {

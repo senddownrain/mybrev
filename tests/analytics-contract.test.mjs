@@ -84,7 +84,7 @@ test('stage guard: only main.js, behind the build flag, may reach the analytics 
       if (/analytics\/contract|utils\/analytics/.test(readFileSync(full, 'utf8'))) offenders.push(path.relative(root, full));
     }
   }(path.join(root, 'src')));
-  assert.deepEqual(offenders, ['src/main.js']);
+  assert.deepEqual(offenders, [path.join('src', 'main.js')]);
   const main = readFileSync(path.join(root, 'src/main.js'), 'utf8');
   // R03: two dynamic imports, both inside the LOCAL flag; the transport additionally behind its own compile-time STAGING flag
   const localBlock = main.slice(main.indexOf("if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {"));

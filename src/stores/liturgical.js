@@ -8,10 +8,8 @@ import {
 import { currentOrdoDiocese } from '@/utils/ordoDiocese';
 import { createReadSession } from '@/utils/contentCache';
 import { afterContentPaint } from '@/utils/afterContentPaint';
-import {
-  publicContentCache, publicContentKey, contentKey, readingsKey, requestContentRefresh,
-  resolveReaderDay, legacyReaderKey, hasCorrectedHours,
-} from '@/utils/publicContentCache';
+import { publicContentCache, publicContentKey, requestContentRefresh, legacyReaderKey } from '@/utils/publicContentCache';
+import { contentKey, readingsKey, resolveReaderDay, hasCorrectedHours } from '@/utils/readerCacheKeys';
 
 const dateKey = (date) => moment(date).startOf('day').format('YYYY-MM-DD');
 

@@ -9,7 +9,8 @@ import { fileURLToPath } from 'node:url';
 test('reference Office and readings caches cannot populate canonical day keys', async () => {
   const server = await createServer({ configFile: false, cacheDir: 'node_modules/.cache/cache-test-vite', server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, entries: [] }, root: fileURLToPath(new URL('../', import.meta.url)) });
   try {
-    const { contentKey, readingsKey, publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
+    const { publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
+    const { contentKey, readingsKey } = await server.ssrLoadModule('/src/utils/readerCacheKeys.js');
     const date = '2026-12-06', diocese = 'minsk-mohilev';
     const contentParts = JSON.parse(contentKey(date, diocese));
     const readingsParts = JSON.parse(readingsKey(date, { diocese }));
