@@ -10,7 +10,7 @@ import { buildDefinition, dayNumberOfHeading, headingsOf, resolveDay, sectionTex
 import { INITIAL_SCHEDULES, scheduleFor } from '../src/utils/novena/schedules.mjs';
 import { LITURGICAL_EVENTS, recommendedStarts } from '../src/utils/novena/calendar.mjs';
 import { publicNovenaRows, validateSchedule, validateShape } from '../src/utils/novena/document.mjs';
-import { generatedDraft, publicationDocument } from '../src/utils/novena/drafts.mjs';
+import { generatedDraft, novenaSources, publicationDocument } from '../src/utils/novena/drafts.mjs';
 import { countPlan, generateDrafts, planImport } from '../scripts/novena/lib.mjs';
 import { applyImport, parseArgs } from '../scripts/novena/import-drafts.mjs';
 import { publicAppCollections, validateCollection } from '../scripts/content/lib/app-content.mjs';
@@ -43,6 +43,15 @@ test('a stated order becomes a template and every day assembles in that order', 
   assert.deepEqual(resolveDay(definition, 5, prayers()).map((block) => [block.kind, block.markdown.split('\n').at(-1)]), [
     ['rubric', 'Рубрыка перад пачаткам.'], ['section', 'Уступны тэкст.'], ['section', 'Тэкст дня 5.'], ['prayer', 'Тэкст літаніі.'],
   ]);
+});
+
+test('a novena is selected by its tag or by its title (contract 1.1)', () => {
+  const untagged = { ...source, id: 'untagged', title: 'НАВЭННА Б', tags: undefined };
+  const tagged = { ...source, id: 'tagged', title: 'Дзевяць дзён' };
+  const other = { id: 'other', title: 'Літанія з навэнны', text: 'Тэкст.', tags: [] };
+  assert.deepEqual(novenaSources([untagged, tagged, other]).map((item) => item.id), ['untagged', 'tagged']);
+  const all = new Map([untagged, tagged, other, litany].map((item) => [item.id, item]));
+  assert.deepEqual(generateDrafts(all).drafts.map((draft) => draft.novenaId), ['tagged', 'untagged']);
 });
 
 test('headings, repeated sections and day numbers', () => {

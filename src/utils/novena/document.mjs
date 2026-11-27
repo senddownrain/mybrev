@@ -10,6 +10,9 @@ export const NOVENA_COLLECTION = 'novenaDefinitions';
 export const NOVENA_DRAFTS_COLLECTION = 'novenaDrafts';
 export const NOVENA_TAG = 'Навэнна';
 
+/** Contract 1.1: tagged «Навэнна» or titled so (one source prayer lacks the tag). */
+export const isNovenaSource = (prayer) => (prayer?.tags || []).includes(NOVENA_TAG) || /^навэнна/i.test(prayer?.title || '');
+
 /** Keys of a published document, exactly (also enforced by firestore.rules). */
 export const DEFINITION_FIELDS = Object.freeze([
   'schemaVersion', 'novenaId', 'sourcePrayerId', 'title', 'contentVersion', 'durationDays', 'status',

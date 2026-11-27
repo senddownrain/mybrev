@@ -1,7 +1,7 @@
 /** Draft records, their provenance and the publication step (pure). */
 import { EXCLUDED, buildDefinition } from './core.mjs';
 import { scheduleFor } from './schedules.mjs';
-import { NOVENA_TAG, pickDefinition } from './document.mjs';
+import { isNovenaSource, pickDefinition } from './document.mjs';
 
 /** Keys of a `novenaDrafts` document besides the definition. */
 export const DRAFT_META_FIELDS = Object.freeze(['blockers', 'importHash', 'everPublished', 'updatedAt', 'updatedBy']);
@@ -21,7 +21,7 @@ export function editableContent(draft) {
 }
 
 /** Source prayers of V1 among the public prayers (Pompeii included for listing). */
-export const novenaSources = (prayers) => prayers.filter((prayer) => (prayer.tags || []).includes(NOVENA_TAG));
+export const novenaSources = (prayers) => prayers.filter(isNovenaSource);
 
 /** Generator output as a new draft record; null for excluded novenas. */
 export function generatedDraft(prayer, prayers) {

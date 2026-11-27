@@ -1,5 +1,5 @@
 /**
- * Novena Tracker V1 — shared definition builder and day resolver (contract 1.0).
+ * Novena Tracker V1 — shared definition builder and day resolver (contract 1.1).
  * Pure functions, no I/O. The Dart resolver must match resolveDay() exactly
  * (see NOVENA_TRACKER_V1_SPEC.md §3 and contract/fixtures).
  */
