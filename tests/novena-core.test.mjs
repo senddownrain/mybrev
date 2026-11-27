@@ -215,6 +215,18 @@ test('contentVersion grows only when published content changes', () => {
   assert.equal(publicationDocument({ ...draft, contentVersion: 4, everPublished: true }).contentVersion, 5);
 });
 
+test('an owner decision replaces the parsed order, and blocks when its source no longer fits', () => {
+  // «days only» decision (St Jude): the text states no order.
+  const jude = { id: 'XMJCWmBqkteNID7PxGeC', title: 'Навэнна', tags: ['Навэнна'], text: DAYS.flatMap((day, n) => [`**${day} дзень**`, `Тэкст ${n + 1}.`]).join('\n') };
+  const decided = buildDefinition(jude, new Map([[jude.id, jude]]));
+  assert.deepEqual(decided.blockers, []);
+  assert.deepEqual(decided.definition.template, [{ type: 'daySection' }]);
+  // A «page reference» decision whose reference is gone.
+  const changed = { ...source, id: 'cn_38e44fcd858f9423' };
+  const stale = buildDefinition(changed, new Map([[changed.id, changed], [litany.id, litany]]));
+  assert.ok(stale.blockers.includes('decision-outdated:(с. 28)'));
+});
+
 // The frozen contract fixtures hold full prayer texts and live outside the repository.
 const contract = process.env.NOVENA_CONTRACT_DIR;
 test('contract fixtures: resolver and validator parity', { skip: !contract && 'set NOVENA_CONTRACT_DIR' }, () => {

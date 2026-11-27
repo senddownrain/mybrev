@@ -1,26 +1,15 @@
 /**
- * Novena Tracker V1 — shared definition builder and day resolver (contract 1.1).
+ * Novena Tracker V1 — shared definition builder and day resolver (contract 1.2).
  * Pure functions, no I/O. The Dart resolver must match resolveDay() exactly
  * (see NOVENA_TRACKER_V1_SPEC.md §3 and contract/fixtures).
  */
 export const NOVENA_SCHEMA_VERSION = 1;
-/** Found by review, not by the parser: publication waits for an editor. */
-export const NEEDS_REVIEW = { zvkoIQoxh7ilXp7oUjFg: 'review:closing-after-day-9-may-belong-to-every-day' };
 export const EXCLUDED = { v4g6eUqZvze29v5vq4o1: 'Пампейская навэнна: 54 дня, вне V1' };
 
 const HEADING = /^(?:(#{1,6})\s+\S.*|\*\*(?!Молімся)[^*]{1,140}\*\*)\s*$/;
 const level = (line) => { const m = HEADING.exec(line); return m ? (m[1] ? m[1].length : 7) : 0; };
 const lines = (text) => String(text || '').replace(/\r\n/g, '\n').split('\n');
 const norm = (s) => String(s).toLowerCase().replace(/­/g, '').replace(/i/g, 'і').replace(/[#*_\\.:«»"()]/g, ' ').replace(/\s+/g, ' ').trim();
-/** Headings a `section` block can point at (editor helper, not part of the contract). */
-export function headingsOf(text) {
-  const seen = new Map();
-  return lines(text).filter((line) => level(line)).map((line) => {
-    const heading = line.trim();
-    seen.set(heading, (seen.get(heading) || 0) + 1);
-    return { heading, occurrence: seen.get(heading) };
-  });
-}
 const ORD = ['перш', 'друг', 'трэц', 'чацв', 'пят', 'шост', 'с[её]м', 'восьм', '(?:дзяв|дзев)'];
 export function dayNumberOfHeading(line) {
   if (!level(line)) return 0;
@@ -31,6 +20,15 @@ export function dayNumberOfHeading(line) {
   return i + 1;
 }
 
+/** Headings a `section` block can point at (editor helper, not part of the contract). */
+export function headingsOf(text) {
+  const seen = new Map();
+  return lines(text).filter((line) => level(line)).map((line) => {
+    const heading = line.trim();
+    seen.set(heading, (seen.get(heading) || 0) + 1);
+    return { heading, occurrence: seen.get(heading) };
+  });
+}
 /** Lines [start, end) of the n-th heading line equal to `heading`. */
 export function sectionRange(text, heading, occurrence = 1) {
   const all = lines(text);
@@ -99,6 +97,105 @@ export function validateDefinition(definition, prayers) {
   }
   return [...new Set(errors)];
 }
+
+/**
+ * Owner's decisions of 2026-11-27 for novenas whose source does not say enough
+ * for the parser (NOVENA_BLOCKED_DECISIONS.md, groups A–D). Source texts are
+ * never edited. A decision that no longer fits its source throws → blocked.
+ */
+const LORETO = 'd_cn_5746a9036180a067';
+const MERCY_LITANY = 'kibOzcwhAfunlGfNYnVz';
+const MERCY_CHAPLET = 'YIhZBel5S4BDSIke4MKP';
+const BOBOLA_LITANY = 'cn_df409141d8f4f0f2';
+
+const need = (value, what) => {
+  if (value == null || value === false) throw new Error(`decision-outdated:${what}`);
+  return value;
+};
+const section = (prayer, heading) => {
+  need(sectionRange(prayer.text, heading), heading);
+  return { type: 'section', prayerId: prayer.id, heading, occurrence: 1 };
+};
+const dayHeading = (prayer, n) => need(lines(prayer.text).map((l) => l.trim()).find((l) => dayNumberOfHeading(l) === n), `day-${n}`);
+const daysOf = (prayer, extra = () => []) => Array.from({ length: 9 }, (_, i) => ({
+  number: i + 1, blocks: [section(prayer, dayHeading(prayer, i + 1)), ...extra(i + 1)],
+}));
+const noDays = () => Array.from({ length: 9 }, (_, i) => ({ number: i + 1, blocks: [] }));
+const inline = (text) => ({ type: 'inline', kind: 'text', text: need(text?.trim() || null, 'inline') });
+/** Source text from the first line starting with `from` up to the line starting with `to` (or the end). */
+const excerpt = (text, from, to) => {
+  const all = lines(text);
+  const start = all.findIndex((l) => l.trim().startsWith(from));
+  need(start >= 0, from);
+  const end = to ? all.findIndex((l, i) => i > start && l.trim().startsWith(to)) : all.length;
+  need(end > start, to);
+  return all.slice(start, end).join('\n').trim();
+};
+
+/** The order list stays; a page reference becomes the prayer it names. */
+const linkPage = (reference, blocks) => (prayer, built) => {
+  const at = built.template.findIndex((b) => b.type === 'inline' && b.kind === 'rubric' && b.text.includes(reference));
+  need(at >= 0, reference);
+  const template = [...built.template];
+  template.splice(at, 1, ...blocks);
+  return { template, days: built.days };
+};
+const loreto = linkPage('(с. 28)', [{ type: 'prayer', prayerId: LORETO }]);
+const daysOnly = (prayer) => ({ template: [{ type: 'daySection' }], days: daysOf(prayer) });
+
+export const DECISIONS = {
+  // A: a page number instead of a link.
+  cn_38e44fcd858f9423: loreto,
+  cn_6eb6dc8550aca59d: loreto,
+  cn_9b5ac6e852892d96: loreto,
+  cn_71fcef6576ae8b20: linkPage('(с. 603)', [
+    { type: 'prayer', prayerId: MERCY_LITANY },
+    { type: 'inline', kind: 'rubric', text: 'або' },
+    { type: 'prayer', prayerId: MERCY_CHAPLET },
+  ]),
+  // B: the order is clear from the text itself.
+  Hu99bIb4R7v3mINaNtbT: daysOnly,
+  SZpGwrPMFSiOONOagPL8: daysOnly,
+  XMJCWmBqkteNID7PxGeC: daysOnly,
+  BwaAAX6vNeZ7EFbCEJW8: (prayer) => ({ template: [{ type: 'prayer', prayerId: prayer.id }], days: noDays() }),
+  // C: a repeated text the book abbreviates is shown in full every day.
+  b9F5qGGznu8z0v3jlLM3: (prayer) => {
+    const full = excerpt(prayer.text, 'Пане Божа Усемагутны, праз', '**Дзень другі**');
+    return {
+      template: [{ type: 'daySection' }],
+      days: daysOf(prayer, (n) => (n >= 3 ? [inline(full)] : [])),
+    };
+  },
+  'import-10-navenna-za-pamerlykh-z-bl-a-hanaratam': (prayer) => {
+    const chaplet = excerpt(prayer.text, '_Вяночак за канаючых і памерлых (', '**Другі дзень');
+    return {
+      template: [section(prayer, '**Уступная малітва**'), { type: 'daySection' }, section(prayer, '**Малітва на заканчэнне**')],
+      days: daysOf(prayer, (n) => (n >= 2 ? [inline(chaplet)] : [])),
+    };
+  },
+  // D: the common parts are read every day.
+  VhXYtz8MrvCYftvbIInu: (prayer) => ({
+    template: [section(prayer, '**Уступная малітва**'), { type: 'daySection' }], days: daysOf(prayer),
+  }),
+  zvkoIQoxh7ilXp7oUjFg: (prayer, built) => {
+    // Only what follows day 9: the same versicle also occurs earlier.
+    const last = need(sectionText(prayer.text, dayHeading(prayer, 9)), 'day-9');
+    const closing = excerpt(last, 'К. Пане, Твой святы Провід');
+    return {
+      template: built.template,
+      days: built.days.map((d) => (d.number < 9 ? { ...d, blocks: [...d.blocks, inline(closing)] } : d)),
+    };
+  },
+  d_bd_ab47a646f2736a83: (prayer) => ({
+    template: [
+      { type: 'daySection' },
+      { type: 'prayer', prayerId: BOBOLA_LITANY },
+      // Not a section: its heading level would run on into the following days.
+      inline(excerpt(prayer.text, '### Малітва на кожны дзень навэнны', '#### ДРУГІ ДЗЕНЬ')),
+    ],
+    days: daysOf(prayer),
+  }),
+};
 
 /** Build a definition from the source prayer's own «Парадак навэнны». */
 export function buildDefinition(prayer, prayers) {
@@ -187,8 +284,6 @@ export function buildDefinition(prayer, prayers) {
   const selfWhole = template.some((b) => b.type === 'prayer' && b.prayerId === prayer.id);
   if (leftover.length && !selfWhole) blockers.push(`uncovered-lines:${leftover.length}:${leftover[0].l.slice(0, 80)}`);
 
-  if (NEEDS_REVIEW[prayer.id]) blockers.push(NEEDS_REVIEW[prayer.id]);
-
   const definition = {
     schemaVersion: NOVENA_SCHEMA_VERSION,
     novenaId: prayer.id,
@@ -201,6 +296,13 @@ export function buildDefinition(prayer, prayers) {
     template,
     days,
   };
+  const decide = DECISIONS[prayer.id];
+  if (decide) {
+    try {
+      Object.assign(definition, decide(prayer, definition));
+      blockers.length = 0;
+    } catch (error) { blockers.push(error.message); }
+  }
   const errors = validateDefinition(definition, prayers);
   return { definition, blockers: [...new Set([...blockers, ...errors])] };
 }
