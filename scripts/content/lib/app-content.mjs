@@ -10,6 +10,7 @@
  */
 import { createHash } from 'node:crypto';
 import { publicPrayerRows } from '../../../src/utils/publicPrayerCatalog.mjs';
+import { validPrayerCategoryCommentFields } from '../../../src/utils/prayerCategoryComment.mjs';
 import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
@@ -87,7 +88,13 @@ export function publicAppCollections(collections) {
       // authorized mirror. V2-only IDs and all protected payloads stay out.
     }, { legacyPrayerIds: legacyPrayers.map((item) => item.id) });
     if (result.has('prayers')) result.set('prayers', prayers);
-    if (result.has('prayerCategories')) result.set('prayerCategories', categories);
+    if (result.has('prayerCategories')) {
+      // Keep the exact public document for the updater's hash. Reject unexpected nested metadata before export.
+      if (categories.some((row) => !validPrayerCategoryCommentFields(row.comment))) {
+        throw new Error('Invalid category comment fields in the public app export');
+      }
+      result.set('prayerCategories', categories);
+    }
   }
   return result;
 }

@@ -1,4 +1,5 @@
 import { prayerCategoryMatch, MAX_CATEGORY_DEPTH } from './prayerCategoryMembership.mjs';
+import { publishedPrayerCategoryComment } from './prayerCategoryComment.mjs';
 /** Shared policy for tag, manual and legacy membership. Restriction always wins. */
 export function prayerAccessPolicy(_prayers = [], categories = []) {
   const byId = new Map(categories.map((c) => [c.id, c]));
@@ -37,7 +38,7 @@ export function permittedPrayerContent(prayers, categories, priest = false, { ke
   const nonempty = new Set();
   for (const c of categories) {
     if (!priest && policy.categoryRestricted(c.id)) continue;
-    if ((priest && keepEmptyProtected && c.priestOnly === true)
+    if (publishedPrayerCategoryComment(c) || (priest && keepEmptyProtected && c.priestOnly === true)
       || permitted.some((p) => prayerCategoryMatch(p, c).matches)) nonempty.add(c.id);
   }
   // Keep ancestors of visible descendants, including grouping categories without tags.

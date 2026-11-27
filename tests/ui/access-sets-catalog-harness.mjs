@@ -10,7 +10,9 @@ import PrayerView from '/src/components/prayers/PrayerView.vue';
 import PrayerForm from '/src/components/prayers/PrayerForm.vue';
 import PrayerCategories from '/src/views/admin/PrayerCategories.vue';
 import NavigationDrawer from '/src/layouts/default/NavigationDrawer.vue';
+import Settings from '/src/views/Settings.vue';
 import { useUiStore } from '/src/stores/ui.js';
+import { useSettingsStore } from '/src/stores/settings.js';
 import { authFixture } from '/src/stores/auth.js';
 import { installPrayerCatalogEntitlements } from '/src/services/prayerCatalogAccess.js';
 
@@ -29,6 +31,7 @@ const categories = sets.flatMap(({ id: set }, n) => Array.from({ length: [8, 1, 
     name: i ? set + ' category ' + i : ['Для святара', 'Для марыянаў', 'Трэці зборнік'][n], order: i,
     ...(i && { parentId: set + '-category-0', accessSets: [] }),
     ...(set === 'marian' && { prayerIds: Array.from({ length: 56 }, (_, i) => 'marian-prayer-' + i) }),
+    ...(!i && { comment: { content: `Synthetic ${set} category commentary` } }),
   },
 )));
 const prayers = sets.flatMap(({ id: set }, n) => Array.from({ length: [46, 56, 1][n] }, (_, i) => content(
@@ -55,6 +58,7 @@ const gateway = {
 let allowedSets = [];
 let invalidate;
 let legacy = false;
+let suspended = false;
 let finishRefresh;
 let resumeChecks = 0;
 installPrayerCatalogEntitlements({
@@ -64,6 +68,7 @@ installPrayerCatalogEntitlements({
   },
   async confirm() {
     calls.confirm++;
+    if (suspended) return { mode: 'suspended' };
     if (legacy) return { mode: 'legacy', legacyActive: true, readLegacy: async () => ({
       prayers: prayers.filter((row) => row.effectiveAccessSets.includes('priest')),
       categories: categories.filter((row) => row.effectiveAccessSets.includes('priest')),
@@ -74,12 +79,13 @@ installPrayerCatalogEntitlements({
 });
 
 const dummy = { render: () => 'Synthetic link target' };
-const navRoutes = ['Today', 'Readings', 'Ordo', 'Bible', 'Compendium', 'Songs', 'Settings', 'About', 'Feedback']
+const navRoutes = ['Today', 'Readings', 'Ordo', 'Bible', 'Compendium', 'Songs', 'About', 'Feedback']
   .map((name) => ({ path: '/' + name.toLowerCase(), component: dummy, name }));
 const router = createRouter({ history: createWebHashHistory(), routes: [
   ...navRoutes,
   { path: '/', component: PrayersList, name: 'Prayers' },
   { path: '/home', component: { render: () => 'Synthetic home' }, name: 'Home' },
+  { path: '/settings', component: Settings, name: 'Settings' },
   { path: '/all', component: PrayersList, name: 'PrayersList' },
   { path: '/prayers/:id', component: PrayerView, name: 'PrayerView' },
   { path: '/favorites', component: { render: () => 'Favorites' }, name: 'FavoritePrayers' },
@@ -90,14 +96,18 @@ const router = createRouter({ history: createWebHashHistory(), routes: [
 ] });
 window.catalogHarness = {
   go: (to) => router.push(to),
-  theme: (name) => vuetify.theme.change(name),
   visibility(hidden) {
     Object.defineProperty(document, 'hidden', { value: hidden, configurable: true });
     document.dispatchEvent(new globalThis.Event('visibilitychange'));
   },
   resumeChecks: () => resumeChecks,
   finishRefresh: () => finishRefresh?.(),
-  confirm(allowed) { legacy = allowed === 'legacy'; allowedSets = legacy ? [] : allowed; invalidate(); },
+  confirm(allowed) {
+    suspended = allowed === 'suspended';
+    legacy = allowed === 'legacy';
+    allowedSets = Array.isArray(allowed) ? allowed : [];
+    invalidate();
+  },
   counts: () => ({ ...calls }),
   editor() { Object.assign(authFixture, { isAdmin: true, user: { uid: 'synthetic-editor' }, canManageAccessSetsV2: true }); },
   sets,
@@ -107,6 +117,9 @@ window.catalogHarness = {
 createApp({
   setup() {
     const ui = useUiStore();
+    const settings = useSettingsStore();
+    window.catalogHarness.theme = (name) => { settings.themePreference = name; };
+    window.catalogHarness.fontSize = (amount) => { settings.fontSizeMultiplier = amount; };
     window.catalogHarness.openMenu = () => { ui.isDrawerOpen = true; };
     window.catalogHarness.closeMenu = () => { ui.isDrawerOpen = false; };
     return () => h(VApp, () => [h(NavigationDrawer), h(RouterView)]);

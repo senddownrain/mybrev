@@ -59,8 +59,7 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   const seed = db.batch();
   for (const [path, data] of documents) seed.set(db.doc(path), data);
   for (const [id, data] of sets) seed.set(db.doc('accessSetsV2/' + id), data);
-  seed.set(db.doc('admins/' + manager.uid), { role: 'admin', accessSetsV2: true });
-  seed.set(db.doc('admins/' + deniedEditor.uid), { role: 'admin', priestAccess: true });
+  seed.set(db.doc('admins/' + manager.uid), { role: 'admin' });
   seed.set(db.doc('priestDeviceGrants/' + legacyReader.uid), { uid: legacyReader.uid, status: 'active' });
   seed.set(db.doc('accessDeviceGrantsV2/' + v2Reader.uid), { uid: v2Reader.uid, status: 'active', codeId: 'ABCDEFGHJKLMNPQR' });
   seed.set(db.doc('accessCodesV2/ABCDEFGHJKLMNPQR'), { profileId: 's4-both' });
@@ -98,6 +97,10 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   await assert.rejects(preview(edits, deniedEditor.uid), { code: 'permission-denied' });
   await db.doc('admins/' + deniedEditor.uid).set({ role: null, accessSetsV2: true });
   await assert.rejects(preview(edits, deniedEditor.uid), { code: 'permission-denied' });
+  await db.doc('admins/' + deniedEditor.uid).set({ name: 'Legacy admin fixture' });
+  assert.equal((await preview(edits, deniedEditor.uid)).version, 1);
+  await db.doc('admins/' + deniedEditor.uid).delete();
+  await assert.rejects(preview(edits, deniedEditor.uid), { code: 'permission-denied' });
   await assert.rejects(writer.call({ data: { action: 'preview', edits } }), { code: 'unauthenticated' });
   const review = await preview(edits);
   const preimage = planCanonicalCatalog({ version: 1, sets, documents }, edits);
@@ -125,7 +128,11 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
 
   const concurrent = await Promise.allSettled([call(saveRequest(edits, review)), call(saveRequest(edits, review))]);
   assert.equal(concurrent.filter((result) => result.status === 'fulfilled').length, 1);
-  assert.equal(concurrent.find((result) => result.status === 'rejected').reason.code, 'content-snapshot-drift');
+  // The emulator can exhaust Firestore's transaction attempts under contention.
+  // After the winning commit, a fresh request must still reject the stale review.
+  const conflict = concurrent.find((result) => result.status === 'rejected').reason.code;
+  assert.ok(['content-snapshot-drift', 10].includes(conflict));
+  await assert.rejects(call(saveRequest(edits, review)), { code: 'content-snapshot-drift' });
   assert.deepEqual(await call({ action: 'verify', expectedVersion: 2, afterDigest: review.afterDigest }), { version: 2, parity: 'verified' });
   const mirror = (await db.doc(mirrorPath).get()).data();
   const canonical = (await db.doc(canonicalPath).get()).data();
@@ -202,4 +209,48 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   assert.ok((await clientRead(legacyReader, mirrorPath)).exists());
   await mode('legacy');
   await legacySet('prayers/legacy-edit', 5);
+
+  await mode('canonical');
+  const comment = { title: 'Synthetic comment', content: '**Text**\n\n:::rubric\nDirection\n:::', sourceId: 'ojcha-nash-2022' };
+  const categoryId = 'comment-leaf';
+  const publicCategory = db.doc('prayerCategories/' + categoryId);
+  const privateCategory = db.doc('protectedCategories/' + categoryId);
+  const mirrorCategory = db.doc('priestProtectedCategories/' + categoryId);
+  const editCategory = async (patch, action = 'update') => {
+    const change = [{ kind: 'categories', action, id: categoryId, patch }];
+    const version = await preview(change);
+    await call(saveRequest(change, version));
+    return version;
+  };
+  await editCategory({ name: 'Synthetic comment-only category', tags: [], prayerIds: [], comment }, 'create');
+  assert.deepEqual((await publicCategory.get()).data().comment, comment);
+  await editCategory({ order: 7 });
+  assert.deepEqual((await publicCategory.get()).data().comment, comment, 'an unrelated patch preserves comment');
+  await assert.rejects(editCategory({ comment: { ...comment, editorNote: 'synthetic' } }), { code: 'invalid-content-patch' });
+
+  const move = await editCategory({ accessSets: ['priest'] });
+  const [priest, legacy, publicAfter, index, audit] = await db.getAll(privateCategory, mirrorCategory, publicCategory,
+    db.doc(`accessSetsV2/priest/categories/${categoryId}`),
+    db.doc(`priestContentControl/accessSetsV2/catalogAudit/${move.version + 1}`));
+  assert.equal(publicAfter.exists, false);
+  assert.deepEqual(priest.data().comment, comment);
+  assert.deepEqual(legacy.data().comment, comment);
+  assert.equal(priest.data().contentHash, catalogContentHash(legacy.data()));
+  assert.deepEqual(index.data(), {});
+  for (const sibling of [legacy, index, audit]) assert.ok(priest.updateTime.isEqual(sibling.updateTime));
+
+  await editCategory({ accessSets: ['marian', 'priest'] });
+  assert.equal((await mirrorCategory.get()).exists, false);
+  assert.deepEqual((await privateCategory.get()).data().comment, comment);
+  await editCategory({ accessSets: ['marian'] });
+  assert.deepEqual((await privateCategory.get()).data().effectiveAccessSets, ['marian']);
+  assert.equal((await mirrorCategory.get()).exists, false);
+  assert.equal((await publicCategory.get()).exists, false);
+  await editCategory({ comment: null });
+  assert.equal(Object.hasOwn((await privateCategory.get()).data(), 'comment'), false);
+  assert.deepEqual((await privateCategory.get()).data().effectiveAccessSets, ['marian']);
+  await editCategory({ accessSets: [], comment: { content: ' ' } });
+  assert.equal((await privateCategory.get()).exists, false);
+  assert.equal(Object.hasOwn((await publicCategory.get()).data(), 'comment'), false);
+  assert.equal((await publicCategory.get()).data().order, 7n);
 });

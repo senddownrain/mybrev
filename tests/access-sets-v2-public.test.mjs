@@ -13,11 +13,11 @@ import { readCanonicalCatalogSnapshot } from '../scripts/lib/access-sets-v2-snap
 import { assertCatalogParity } from '../scripts/lib/access-sets-v2-storage-plan.mjs';
 
 const privateTokens = ['S4-FIXTURE-CLOSED-TITLE', 'S4-FIXTURE-CLOSED-BODY', 'S4-FIXTURE-CLOSED-PREVIEW',
-  'S4-FIXTURE-CLOSED-NAME', 's4-fixture-private-id', 's4-fixture-private-category'];
+  'S4-FIXTURE-CLOSED-NAME', 's4-fixture-private-id', 's4-fixture-private-category', 'S4-FIXTURE-CLOSED-COMMENT'];
 const id = privateTokens[4];
 const categoryId = privateTokens[5];
 const protectedPrayer = { id, title: privateTokens[0], text: privateTokens[1], preview: privateTokens[2], tags: ['s4-private-tag'] };
-const protectedCategory = { id: categoryId, name: privateTokens[3], tags: ['s4-private-tag'] };
+const protectedCategory = { id: categoryId, name: privateTokens[3], tags: ['s4-private-tag'], comment: { content: privateTokens[6] } };
 
 async function snapshot(root, collections) {
   const manifest = { schemaVersion: 1, exportedAt: '2026-11-25T08:00:00.000Z', collections: {} };

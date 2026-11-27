@@ -28,7 +28,7 @@ jobs:
         run: node --test tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs
 
       - name: Public prayer Hosting export safety tests (offline; no Firestore)
-        run: node --test tests/public-prayer-catalog.test.mjs
+        run: node --test tests/public-prayer-catalog.test.mjs tests/prayer-category-comment.test.mjs
 
       - name: Administrator-only Songbook regression tests
         run: node --test tests/admin-access.test.mjs
@@ -177,3 +177,11 @@ jobs:
           node --test tests/access-sets-v2-code.test.mjs tests/priest-client-cache.test.mjs
           npx --yes firebase-tools@latest emulators:exec --only auth,firestore --project demo-rules \
             "node --test tests/access-sets-v2-rules.test.mjs"
+
+      - name: Canonical writer and category comment atomic readback
+        env:
+          S8_TEST_PROJECT: demo-s4-catalog
+        run: >
+          npx --yes firebase-tools@latest emulators:exec --config firebase.s4-catalog.json
+          --only auth,firestore --project demo-s4-catalog
+          "node --test tests/access-sets-v2-writer-firestore.test.mjs"

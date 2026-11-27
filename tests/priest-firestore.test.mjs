@@ -26,7 +26,7 @@ test('Spark Firestore authoritative registration, revocation, legacy compatibili
   await seed.recursiveDelete(seed.collection('priestDeviceGrants'));
   await seed.recursiveDelete(seed.collection('priestActivationClaims'));
   for(const name of ['prayers','prayerCategories','priestProtectedPrayers','priestProtectedCategories']) await seed.recursiveDelete(seed.collection(name));
-  await seed.doc('admins/manager').set({priestAccess:true}); await seed.doc('admins/editor').set({priestAccess:false});
+  await seed.doc('admins/manager').set({name:'Legacy admin'}); await seed.doc('admins/editor').set({role:'admin'});
   await seed.doc('priestAccess/settings').set({activeCodeProof:proof,changedAt:new Date(),helpText:''});
   await seed.doc('priestProtectedPrayers/closed').set({text:'SECRET',priestOnly:true}); await seed.doc('priestProtectedCategories/closed').set({name:'Closed',priestOnly:true});
   await seed.doc('prayers/public').set({text:'PUBLIC',priestOnly:false}); await seed.doc('prayerCategories/public').set({name:'Public',tags:['p']});
@@ -37,7 +37,8 @@ test('Spark Firestore authoritative registration, revocation, legacy compatibili
    for(const name of ['priestAccess','priestDeviceGrants','priestActivationClaims','priestProtectedPrayers','priestProtectedCategories','priestContentControl','priestContentMigrationBackups','priestInstallations','priestActivationAttempts']) {
     await denied(read(guest,`${name}/x/private/y`)); await denied(getDocsFromServer(collection(device,name)));
    }
-   await denied(read(device,'priestAccess/settings')); await denied(read(editor,'priestAccess/settings')); assert.ok((await read(manager,'priestAccess/settings')).exists());
+   await denied(read(device,'priestAccess/settings'));
+   for (const admin of [editor,manager]) assert.ok((await read(admin,'priestAccess/settings')).exists());
   });
   await t.test('wrong proof, foreign UID, forged time/status/extra fields rejected',async()=>{
    await denied(activate(device,'device','f'.repeat(64)));
@@ -89,15 +90,15 @@ test('Spark Firestore authoritative registration, revocation, legacy compatibili
    const staleCodeBatch=writeBatch(manager);staleCodeBatch.update(doc(manager,'priestAccess/settings'),{activeCodeProof:nextProof,changedAt:serverTimestamp()});
    staleCodeBatch.set(doc(manager,'priestActivationClaims/manager'),claim('manager'));staleCodeBatch.set(doc(manager,'priestDeviceGrants/manager'),grant('manager'));
    await denied(staleCodeBatch.commit());assert.equal((await seed.doc('priestAccess/settings').get()).data().activeCodeProof,proof);
-   await updateDoc(doc(manager,'priestAccess/settings'),{activeCodeProof:nextProof,changedAt:serverTimestamp()});
+   await updateDoc(doc(editor,'priestAccess/settings'),{activeCodeProof:nextProof,changedAt:serverTimestamp()});
    assert.equal((await read(device,'priestProtectedPrayers/closed')).data().text,'SECRET');
    await denied(activate(other,'other'));assert.equal((await seed.doc('priestActivationClaims/other').get()).exists,false);await activate(other,'other',nextProof);
    await updateDoc(doc(device,'priestDeviceGrants/device'),{lastActiveAt:serverTimestamp()});
   });
   await t.test('administrative revoke stops reads and cannot be undone by client; label edit works',async()=>{
    await updateDoc(doc(manager,'priestDeviceGrants/device'),{label:'а. Яўгеній'});
-   await denied(updateDoc(doc(editor,'priestDeviceGrants/device'),{status:'revoked',revokedAt:serverTimestamp()}));
-   await updateDoc(doc(manager,'priestDeviceGrants/device'),{status:'revoked',revokedAt:serverTimestamp()});
+   await denied(updateDoc(doc(other,'priestDeviceGrants/device'),{status:'revoked',revokedAt:serverTimestamp()}));
+   await updateDoc(doc(editor,'priestDeviceGrants/device'),{status:'revoked',revokedAt:serverTimestamp()});
    await denied(read(device,'priestProtectedPrayers/closed'));await denied(getDocsFromServer(collection(device,'priestProtectedCategories')));
    await denied(updateDoc(doc(device,'priestDeviceGrants/device'),{status:'active',revokedAt:null}));await denied(activate(device,'device',nextProof));await denied(deleteDoc(doc(device,'priestDeviceGrants/device')));
    assert.equal((await read(other,'priestProtectedPrayers/closed')).data().text,'SECRET');

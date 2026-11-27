@@ -52,8 +52,8 @@ test('catalog callable boundary and real Auth/Firestore transactions', { skip: !
   }
   const [editor, ordinary, anon] = await Promise.all([
     // Each client app name is allocated synchronously before the first await.
-    signIn({ role: 'admin', accessSetsV2: true }),
     signIn({ role: 'admin' }),
+    signIn(null),
     signIn({ role: 'superadmin' }, true),
   ]);
 
@@ -165,7 +165,7 @@ test('catalog callable boundary and real Auth/Firestore transactions', { skip: !
   await auth.updateUser(editor.uid, { disabled: true });
   await assert.rejects(invoke(editor, previewRequest), { code: 'unauthenticated', message: 'editor-session-invalid' });
   await auth.updateUser(editor.uid, { disabled: false });
-  const revoked = await signIn({ role: 'admin', accessSetsV2: true });
+  const revoked = await signIn({ role: 'admin' });
   // Auth compares whole seconds. Revoke at a later second than auth_time.
   const waitMs = (revoked.claims.auth_time + 1) * 1000 - Date.now();
   if (waitMs > 0) await new Promise((resolve) => setTimeout(resolve, waitMs + 25));

@@ -34,6 +34,7 @@
     </v-alert>
     
     <div v-else>
+      <PrayerCategoryComment v-if="categoryComment" :key="categoryCommentKey" :comment="categoryComment" />
       <nav v-if="categoryNavigation.children.length" class="subcategory-list" aria-label="Падкатэгорыі">
         <router-link
           v-for="category in categoryNavigation.children"
@@ -117,7 +118,7 @@
         </v-list-item>
       </v-list>
 
-      <div v-if="!isLoading && filteredPrayers.length === 0 && !categoryNavigation.children.length" class="text-center text-grey-darken-1 mt-16">
+      <div v-if="!isLoading && filteredPrayers.length === 0 && !categoryNavigation.children.length && (!categoryComment || searchQuery || selectedTags.length)" class="text-center text-grey-darken-1 mt-16">
         <v-icon size="48" class="mb-2">mdi-note-off-outline</v-icon>
         <p>Малітвы не знойдзены</p>
         <p v-if="searchQuery || selectedTags.length > 0" class="text-caption mt-2">
@@ -203,6 +204,7 @@ import { matchesPrayerTags } from '@/utils/prayerTagFilter';
 import { prayerCategoryMatch } from '@/utils/prayerCategoryMembership.mjs';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX, PhArrowLeft, PhCaretRight } from '@phosphor-icons/vue';
 import CategoryIcon from './CategoryIcon.vue';
+import PrayerCategoryComment from './PrayerCategoryComment.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { buildPrayerCategoryMenu, readerPrayerCategoryName } from '@/utils/prayerCategoryMenu.js';
 import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
@@ -212,6 +214,7 @@ import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { useAdminPrayerCatalog } from '@/composables/useAdminPrayerCatalog';
 import { matchesPrayerAccessFilter, prayerAccessFilters, prayerAccessLabel, storedPrayerAccess } from '@/utils/prayerAccessPresentation.mjs';
 import { hasV2ContentFields, isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
+import { publishedPrayerCategoryComment } from '@/utils/prayerCategoryComment.mjs';
 
 const { editorial } = defineProps({ editorial: Boolean });
 const router = useRouter();
@@ -236,6 +239,11 @@ const categoryTree = computed(() => buildCategoryTree(editorial ? categories.val
 )));
 const categoryNavigation = computed(() => selectedCategory.value?.scope === 'global'
   ? categoryPageNavigation(categoryTree.value, selectedCategory.value.id) : { parent: null, children: [] });
+const activeCommentCategory = computed(() => selectedCategory.value?.scope === 'global'
+  ? categories.value.find((category) => category.id === selectedCategory.value.id) : null);
+const categoryComment = computed(() => publishedPrayerCategoryComment(activeCommentCategory.value));
+const categoryCommentKey = computed(() => !editorial && isProtectedPrayerRow(activeCommentCategory.value)
+  ? `${activeCommentCategory.value.id}:${prayerCatalogRevision.value}` : activeCommentCategory.value?.id);
 const categoryLocation = (category) => ({ name: catalogRoute, query: { category: category.id } });
 function rememberChild(category, event) {
   if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
@@ -248,8 +256,8 @@ function clearPersonalCategory(event) {
 // The existing /prayers route accepts an optional stable ID; old URLs still work.
 watch(() => [route.query.category, categories.value], ([id]) => {
   if (id) {
-    const category = categories.value.find((c) => c.id === id);
-    const next = category ? { ...category, key: `global-${category.id}`, scope: 'global' } : { id, name: 'Катэгорыя недаступная', tags: [], prayerIds: [], scope: 'global' };
+    const { comment: _comment, ...category } = categories.value.find((c) => c.id === id) || {};
+    const next = category.id ? { ...category, key: `global-${category.id}`, scope: 'global' } : { id, name: 'Катэгорыя недаступная', tags: [], prayerIds: [], scope: 'global' };
     if (selectedCategory.value?.scope === 'global' && selectedCategory.value.id === id) selectedCategory.value = next;
     else setSelectedCategory(next);
   } else if (selectedCategory.value?.scope === 'global') setSelectedCategory(null);

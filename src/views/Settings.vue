@@ -127,29 +127,36 @@
     <PriestAccessSettings />
 
     <section class="settings-section" aria-labelledby="categories-title">
-      <div class="section-heading">
-        <span class="section-icon"><PhFolders :size="22" /></span>
-        <div><h2 id="categories-title">Катэгорыі ў меню</h2><p>Ваш асабісты спіс катэгорый малітваў</p></div>
-      </div>
-      <div v-if="visibleCategories.length" class="category-list">
-        <div v-for="category in visibleCategories" :key="category.key" class="category-row">
-          <span class="category-glyph"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
-          <div class="category-copy">
-            <div class="category-title-line">
-              <strong>{{ category.name }}</strong>
-              <span v-if="category.scope === 'global'" class="global-badge">Па змаўчанні</span>
+      <h2 class="text-group-heading">
+        <button type="button" class="section-heading text-group-toggle" :aria-expanded="categoriesExpanded"
+          aria-controls="category-settings-content" aria-labelledby="categories-title" aria-describedby="categories-description"
+          @click="categoriesExpanded = !categoriesExpanded">
+          <span class="section-icon"><PhFolders :size="22" aria-hidden="true" /></span>
+          <span class="text-group-copy"><span id="categories-title">Катэгорыі ў меню</span><span id="categories-description">Ваш асабісты спіс катэгорый малітваў</span></span>
+          <PhCaretDown :size="20" class="text-group-chevron" :class="{ 'is-expanded': categoriesExpanded }" aria-hidden="true" />
+        </button>
+      </h2>
+      <div id="category-settings-content" :hidden="!categoriesExpanded">
+        <div v-if="categoriesExpanded && visibleCategories.length" class="category-list">
+          <div v-for="category in visibleCategories" :key="category.key" class="category-row">
+            <span class="category-glyph"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
+            <div class="category-copy">
+              <div class="category-title-line">
+                <strong>{{ category.name }}</strong>
+                <span v-if="category.scope === 'global'" class="global-badge">Па змаўчанні</span>
+              </div>
+              <span>{{ category.tags.join(' · ') }}</span>
             </div>
-            <span>{{ category.tags.join(' · ') }}</span>
+            <button v-if="category.scope === 'personal'" type="button" class="delete-button edit-button" :aria-label="`Рэдагаваць катэгорыю ${category.name}`" @click="editCategory(category)"><PhPencilSimple :size="19" /></button>
+            <button type="button" class="delete-button" :aria-label="`Прыбраць катэгорыю ${category.name} з меню`" @click="removeCategory(category)"><PhTrash :size="19" /></button>
           </div>
-          <button v-if="category.scope === 'personal'" type="button" class="delete-button edit-button" :aria-label="`Рэдагаваць катэгорыю ${category.name}`" @click="editCategory(category)"><PhPencilSimple :size="19" /></button>
-          <button type="button" class="delete-button" :aria-label="`Прыбраць катэгорыю ${category.name} з меню`" @click="removeCategory(category)"><PhTrash :size="19" /></button>
         </div>
+        <p v-else-if="categoriesExpanded" class="categories-empty">У меню няма катэгорый.</p>
+        <button v-if="settings.hiddenGlobalPrayerCategoryIds.length" type="button" class="restore-categories-button" @click="restoreGlobalCategories">
+          Аднавіць катэгорыі па змаўчанні
+        </button>
+        <button type="button" class="add-category-button" @click="openAddCategory"><PhPlus :size="19" weight="bold" />Дадаць катэгорыю</button>
       </div>
-      <p v-else class="categories-empty">У меню няма катэгорый.</p>
-      <button v-if="settings.hiddenGlobalPrayerCategoryIds.length" type="button" class="restore-categories-button" @click="restoreGlobalCategories">
-        Аднавіць катэгорыі па змаўчанні
-      </button>
-      <button type="button" class="add-category-button" @click="openAddCategory"><PhPlus :size="19" weight="bold" />Дадаць катэгорыю</button>
     </section>
 
     <section class="settings-section" aria-labelledby="saved-content-title">
@@ -189,6 +196,7 @@ const prayerCategories = usePrayerCategoriesStore();
 const prayersStore = usePrayersStore();
 prayersStore.init();
 const { notifySuccess } = useNotifier();
+const categoriesExpanded = ref(false);
 const showAddCategoryDialog = ref(false);
 const editingCategory = ref(null);
 const editingIndex = ref(-1);
@@ -262,7 +270,7 @@ function restoreGlobalCategories() {
 .section-heading p { margin: 2px 0 0; color: var(--nav-muted); font-size: .78rem; line-height: 1.35; }
 .setting-row, .text-size-control, .category-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 70px; margin-inline: 20px; border-top: 1px solid var(--nav-border); }
 .setting-copy, .category-copy { display: grid; min-width: 0; gap: 3px; }
-.category-title-line { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.category-title-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 7px; min-width: 0; overflow-wrap: anywhere; }
 .setting-copy strong, .category-copy strong { color: var(--nav-on-surface); font-size: .9rem; font-weight: 720; }
 .setting-copy span, .category-copy span { overflow-wrap: anywhere; color: var(--nav-muted); font-size: .76rem; line-height: 1.4; }
 .setting-row :deep(.v-switch) { flex: 0 0 auto; }
