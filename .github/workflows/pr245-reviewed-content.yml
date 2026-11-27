@@ -53,8 +53,8 @@ jobs:
     environment: production
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: npm
@@ -168,7 +168,7 @@ jobs:
           node scripts/liturgy/future-publish-editorial-v3.mjs --mode execute --plan "$REVIEWED_PLAN_PATH" --authorization "$RUNNER_TEMP/pr245-authorization.json" --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json --batch-size "$BATCH_SIZE" "${args[@]}"
       - name: Retain actual server receipt and rollback inputs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: pr245-server-receipt-${{ github.run_id }}
           path: backups/pr245-release/
