@@ -33,6 +33,9 @@ jobs:
       - name: Administrator-only Songbook regression tests
         run: node --test tests/admin-access.test.mjs
 
+      - name: Novena tracker definitions, calendar, export and import (offline)
+        run: npm run test:novena
+
       - name: Triduum and Compline regression
         run: node --test tests/triduum-compline.test.mjs tests/liturgical-period-title.test.mjs
 
