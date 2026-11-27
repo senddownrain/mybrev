@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, persistentLocalCache } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { createFirestoreCacheRecovery } from '../utils/firestoreCacheRecovery';
 import { initializeClientAppCheck } from './firebaseAppCheck';
 
@@ -28,6 +28,7 @@ export const firestoreCacheRecovery = createFirestoreCacheRecovery({
 // CACHE_SIZE_UNLIMITED is intentionally avoided.
 export const db = initializeFirestore(firebaseApp, {
   localCache: firestoreCacheRecovery.usesMemoryCache() ? memoryLocalCache() : persistentLocalCache({
+    tabManager: persistentMultipleTabManager(),
     cacheSizeBytes: 100 * 1024 * 1024, // 100MB
   }),
 });

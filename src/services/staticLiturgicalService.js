@@ -1,47 +1,96 @@
-import { applyWebLiturgicalCorrections } from '@/utils/webLiturgicalCorrections';
-import { collection } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { getDocsOfflineAware } from '@/utils/firestoreRead';
+import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { createReadSession } from '@/utils/contentCache';
 import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
+import { afterContentPaint } from '@/utils/afterContentPaint';
+
+const CHECK_INTERVAL = 60 * 60 * 1000;
+const FULL_READ_INTERVAL = 24 * CHECK_INTERVAL;
+const STATIC_COLLECTIONS = ['liturgicalTemplates', 'invitatoriums', 'completoriums'];
+const digestsKey = publicContentKey('published-static-digests');
+
+async function readPublishedDigests(deadline) {
+  const entry = await publicContentCache.read(digestsKey, async () => {
+    const session = createReadSession(deadline);
+    const snapshot = await getDocOfflineAware(doc(db, 'contentManifest', 'current'), session);
+    const published = snapshot.data()?.collections;
+    const data = Object.fromEntries(STATIC_COLLECTIONS.map((name) => [name, published?.[name]?.digest || '']));
+    return { data, complete: session.complete };
+  }, { maxAge: CHECK_INTERVAL });
+  return entry.complete ? entry.data : {};
+}
+
+function readStaticResource(key, collectionName, read, options) {
+  const loader = async (previous, revision) => {
+    const unchangedRevision = previous?.revision === revision;
+    // A fresh install can start its data read without waiting for metadata.
+    const deadline = options.session?.deadline;
+    const digests = readPublishedDigests(deadline).catch(() => ({}));
+    if (unchangedRevision && previous?.complete && !options.revalidate && !options.requireFresh
+      && Date.now() - previous.sourceFetchedAt < FULL_READ_INTERVAL) {
+      const digest = (await digests)[collectionName];
+      // Older projects may have no manifest. Give them a bounded refresh
+      // interval as well, and retry on the next check if a known digest is unavailable.
+      if (!digest || digest === previous.sourceDigest) return previous;
+    }
+    const session = createReadSession(deadline);
+    const data = await read(session);
+    return {
+      data,
+      complete: session.complete,
+      sourceDigest: publicContentCache.peekFresh(digestsKey, CHECK_INTERVAL)?.[collectionName] || '',
+      sourceFetchedAt: Date.now(),
+    };
+  };
+  return publicContentCache.read(key, loader, {
+    ...options, maxAge: CHECK_INTERVAL,
+  });
+}
+
+const publicDocument = (snapshot) => ({ id: snapshot.id, ...snapshot.data() });
+const readCollection = (collectionName, session) => getDocsOfflineAware(collection(db, collectionName), session)
+  .then((snapshot) => snapshot.docs.map(publicDocument));
+const loadStaticCollection = (name, options) => readStaticResource(
+  publicContentKey('static', name), name, (session) => readCollection(name, session), options,
+);
 
 /** Cache only a confirmed complete public collection, never a partial SDK query. */
 export async function getStaticCollection(collectionName, options = {}) {
   if (!['invitatoriums', 'completoriums'].includes(collectionName)) {
     throw new Error('Unsupported public static collection');
   }
-  const loader = async () => {
+  if (options.bypassCache) {
     const session = createReadSession();
-    const snapshot = await getDocsOfflineAware(collection(db, collectionName), session);
-    return { data: snapshot.docs.map((item) => ({ id: item.id, ...item.data() })), complete: session.complete };
-  };
-  const entry = options.bypassCache
-    ? await loader()
-    : await publicContentCache.read(publicContentKey('static', collectionName), loader, options);
+    const items = await readCollection(collectionName, session);
+    if (options.requireFresh && !session.complete) throw new Error('Не атрымалася абнавіць агульныя тэксты.');
+    return items;
+  }
+  const entry = await loadStaticCollection(collectionName, {
+    ...options, revalidateInBackground: options.requireFresh ? undefined : afterContentPaint,
+  });
   if (options.requireFresh && !entry.complete) throw new Error('Не атрымалася абнавіць агульныя тэксты.');
   return entry.data;
 }
 
 /**
  * Reusable Office sources (`liturgicalTemplates`): the Commons and the
- * Sunday, week I psalter. Returned by id; an unavailable or not yet
- * published collection is an empty map (the Office then uses the day).
+ * Sunday, week I psalter. Returned by id for Office assembly.
  */
 export async function getLiturgicalTemplates(options = {}) {
-  try {
-    const entry = await publicContentCache.read(publicContentKey('static', 'liturgicalTemplates'), async () => {
-      const session = createReadSession();
-      const snapshot = await getDocsOfflineAware(collection(db, 'liturgicalTemplates'), session);
-      return { data: snapshot.docs.map((item) => ({ id: item.id, ...item.data() })), complete: session.complete };
-    }, options);
-    // Apply after restoring the raw collection too: an old persistent cache
-    // receives the Web layer without another Firestore collection read.
-    const items = await Promise.all((entry.data || []).map((item) =>
-      options.webCorrections === false ? item : applyWebLiturgicalCorrections('liturgicalTemplates', item)));
-    return new Map(items.map((item) => [item.id, item]));
-  } catch {
-    return new Map();
-  }
+  const entry = await loadStaticCollection('liturgicalTemplates', options);
+  if (!entry.complete && options.session) options.session.complete = false;
+  if (!entry.complete && options.requireFresh) throw new Error('Не атрымалася абнавіць агульныя тэксты.');
+  return new Map(entry.data.map((item) => [item.id, item]));
+}
+
+export async function getLiturgicalTemplate(id, session) {
+  const entry = await readStaticResource(publicContentKey('static-template', id), 'liturgicalTemplates', async (readSession) => {
+    const snapshot = await getDocOfflineAware(doc(db, 'liturgicalTemplates', id), readSession);
+    return snapshot.exists() ? publicDocument(snapshot) : null;
+  }, { session });
+  if (session && !entry.complete) session.complete = false;
+  return entry.data;
 }
 
 export const getInvitatoriums = (options) => getStaticCollection('invitatoriums', options);

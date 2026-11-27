@@ -1,6 +1,6 @@
 import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
-import { computed, ref, watch } from 'vue';
+import { computed, inject, onScopeDispose, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
@@ -12,6 +12,8 @@ import {
 } from '@/utils/liturgicalDayResolution';
 import { resolveComplineDescriptor } from '@/utils/ordo/runtime';
 import { findOptionByDayId, findResolvedDayById } from '@/utils/ordoDayOptions';
+
+export const hourLoadError = Symbol('hourLoadError');
 
 /**
  * Resolve the route's day from the date-aware service instead of reading a raw
@@ -27,7 +29,12 @@ export function useResolvedLiturgicalDay({ forCompline = false, enabled } = {}) 
   const periodDay = ref(null);
   const pending = ref(false);
   const error = ref('');
+  const loadStatus = inject(hourLoadError, null);
   let sequence = 0;
+  onScopeDispose(() => {
+    sequence += 1;
+    if (loadStatus?.value?.retry === load) loadStatus.value = null;
+  });
 
   async function load() {
     const currentSequence = ++sequence;
@@ -40,8 +47,10 @@ export function useResolvedLiturgicalDay({ forCompline = false, enabled } = {}) 
     context.value = null;
     periodDay.value = null;
     if (enabled?.value === false) return;
+    if (loadStatus?.value?.retry === load) loadStatus.value = null;
     if (!date.isValid()) {
       error.value = 'Няправільная дата літургічнага дня.';
+      reportLoadError(error.value);
       pending.value = false;
       return;
     }
@@ -98,20 +107,27 @@ export function useResolvedLiturgicalDay({ forCompline = false, enabled } = {}) 
       displayed = content;
       day.value = resolveDay(content);
       error.value = day.value ? '' : 'Літургічны дзень не знойдзены.';
+      if (error.value) reportLoadError(error.value);
+      else if (loadStatus?.value?.retry === load) loadStatus.value = null;
       pending.value = false;
     };
     pending.value = true;
     try {
-      show(await getLiturgicalContentForDate(date.toDate(), undefined, { onCached: show }));
+      show(await getLiturgicalContentForDate(date.toDate(), undefined, { onCached: show, onUpdated: show }));
     } catch (loadError) {
       logger.error('[useResolvedLiturgicalDay] load failed:', loadError);
       if (currentSequence === sequence) {
         if (canResolveCompline) day.value = resolveDay({});
         error.value = firestoreErrorMessage(loadError);
+        reportLoadError(error.value);
       }
     } finally {
       if (currentSequence === sequence) pending.value = false;
     }
+  }
+
+  function reportLoadError(message) {
+    if (loadStatus) loadStatus.value = { message, retry: load };
   }
 
   watch([() => enabled?.value, ordoCalendarEpoch, effectiveOrdoDiocese, () => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });

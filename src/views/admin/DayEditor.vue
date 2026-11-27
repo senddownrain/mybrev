@@ -517,7 +517,7 @@ async function loadDay() {
   if (isSparse.value) {
     properOriginal.value = clone(source.data);
     sparseChoice.value = source.choice === 'day' ? CURRENT_DAY_CHOICE : source.choice;
-    sparseTemplates.value = await getLiturgicalTemplates({ revalidate: true, webCorrections: false });
+    sparseTemplates.value = await getLiturgicalTemplates({ revalidate: true });
   }
 }
 

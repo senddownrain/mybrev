@@ -1,7 +1,6 @@
 <template>
   <router-view v-slot="{ Component }">
     <component :is="Component" v-if="calendarRestored && Component" />
-    <div v-else class="launch-status" role="status">Загрузка…</div>
   </router-view>
 </template>
 
@@ -17,12 +16,3 @@ onMounted(() => {
   initTelegramWebApp()
 })
 </script>
-
-<style scoped>
-.launch-status {
-  padding: 2rem 1rem;
-  text-align: center;
-  color: var(--nav-on-surface, CanvasText);
-  font-family: system-ui, sans-serif;
-}
-</style>
