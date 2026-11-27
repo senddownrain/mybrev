@@ -178,6 +178,23 @@ try {
   await page.getByText('Структура знята з публікацыі.').waitFor();
   assert.equal((await published.get()).exists, false);
 
+  // Bulk publication: every ready novena that was never published, tracker on.
+  await page.goto(base + '/admin/novenas', { waitUntil: 'commit' });
+  const bulk = page.getByTestId('novena-publish-all');
+  await bulk.waitFor();
+  const expectedBulk = Number((await bulk.innerText()).match(/\((\d+)\)/)?.[1] || 0);
+  if (expectedBulk) {
+    await bulk.click();
+    await page.getByTestId('novena-publish-all-confirm').click();
+    await page.getByTestId('novena-batch').waitFor({ timeout: 300000 });
+    console.log(await page.getByTestId('novena-batch').innerText());
+    const all = (await seed.collection('novenaDefinitions').get()).docs.map((item) => item.data());
+    assert.equal(all.length, expectedBulk);
+    assert.ok(all.every((item) => item.trackerEnabled === true && item.status === 'published'));
+  }
+  // The one taken down above stays down.
+  assert.equal((await published.get()).exists, false);
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/admin/novenas', { waitUntil: 'commit' });
   await page.getByTestId('novena-summary').filter({ hasText: /Паказана [1-9]/ }).waitFor();

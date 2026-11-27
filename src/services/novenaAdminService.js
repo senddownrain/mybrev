@@ -62,14 +62,23 @@ const referencedIds = (draft) => [...new Set([draft.sourcePrayerId,
   ...[...draft.template, ...draft.days.flatMap((day) => day.blocks)].map((block) => block.prayerId).filter(Boolean)])];
 
 /** Current server versions of the referenced public prayers only. */
-async function livePrayers(draft) {
-  const snapshots = await Promise.all(referencedIds(draft).map((id) => getDocFromServer(doc(db, 'prayers', id))));
+async function livePrayers(draft, cache = new Map()) {
+  const read = (id) => {
+    if (!cache.has(id)) {
+      const request = getDocFromServer(doc(db, 'prayers', id));
+      request.catch(() => cache.delete(id));
+      cache.set(id, request);
+    }
+    return cache.get(id);
+  };
+  const snapshots = await Promise.all(referencedIds(draft).map(read));
   return new Map(snapshots.filter((item) => item.exists()).map((item) => [item.id, { ...item.data(), id: item.id }]));
 }
 
-export async function publishNovena(draft, loaded) {
+/** `cache` shares the prayer reads of one batch. */
+export async function publishNovena(draft, loaded, { cache } = {}) {
   if (draft.blockers?.length) throw new Error('Ёсць неразвязаныя заўвагі генератара.');
-  const prayers = await livePrayers(draft);
+  const prayers = await livePrayers(draft, cache);
   const errors = publicationErrors(pickDefinition(draft), prayers);
   if (errors.length) throw new Error(`Праверка не пройдзена: ${errors.join(', ')}`);
   const id = draft.novenaId;

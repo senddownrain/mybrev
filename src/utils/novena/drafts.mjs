@@ -43,3 +43,35 @@ export function publicationDocument(draft, published = null) {
   if (draft.everPublished) return { ...next, contentVersion: (draft.contentVersion || 0) + 1 };
   return { ...next, contentVersion: draft.contentVersion || 1 };
 }
+
+/**
+ * Rows the list may publish in one go: ready and never published. A published
+ * one with changes, or one that was taken down, is a decision for its editor.
+ */
+export const bulkCandidates = (rows) => rows.filter((row) => row.check === 'ready'
+  && !row.published && !row.stored?.everPublished);
+
+/**
+ * Publishes one by one with the tracker on. Stops after `maxFailures` errors in
+ * a row (quota, rules), so a broken run does not repeat reads for nothing.
+ */
+export async function publishInTurn(rows, publish, { onProgress = () => {}, maxFailures = 3 } = {}) {
+  const result = { published: [], failed: [], skipped: 0 };
+  let inRow = 0;
+  for (const [index, row] of rows.entries()) {
+    if (inRow >= maxFailures) {
+      result.skipped = rows.length - index;
+      break;
+    }
+    try {
+      await publish({ ...row.record, trackerEnabled: true }, row.stored);
+      result.published.push(row.id);
+      inRow = 0;
+    } catch (error) {
+      result.failed.push({ id: row.id, title: row.title, message: error?.message || String(error) });
+      inRow += 1;
+    }
+    onProgress(index + 1);
+  }
+  return result;
+}

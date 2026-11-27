@@ -10,7 +10,7 @@ import { buildDefinition, dayNumberOfHeading, headingsOf, resolveDay, sectionTex
 import { INITIAL_SCHEDULES, scheduleFor } from '../src/utils/novena/schedules.mjs';
 import { LITURGICAL_EVENTS, recommendedStarts } from '../src/utils/novena/calendar.mjs';
 import { publicNovenaRows, validateSchedule, validateShape } from '../src/utils/novena/document.mjs';
-import { generatedDraft, novenaSources, publicationDocument } from '../src/utils/novena/drafts.mjs';
+import { bulkCandidates, generatedDraft, novenaSources, publicationDocument, publishInTurn } from '../src/utils/novena/drafts.mjs';
 import { countPlan, generateDrafts, planImport } from '../scripts/novena/lib.mjs';
 import { applyImport, parseArgs } from '../scripts/novena/import-drafts.mjs';
 import { publicAppCollections, validateCollection } from '../scripts/content/lib/app-content.mjs';
@@ -225,6 +225,20 @@ test('an owner decision replaces the parsed order, and blocks when its source no
   const changed = { ...source, id: 'cn_38e44fcd858f9423' };
   const stale = buildDefinition(changed, new Map([[changed.id, changed], [litany.id, litany]]));
   assert.ok(stale.blockers.includes('decision-outdated:(с. 28)'));
+});
+
+test('bulk publication takes only ready, never published rows and stops on repeated errors', async () => {
+  const row = (id, extra = {}) => ({ id, title: id, check: 'ready', published: null, stored: null, record: { novenaId: id }, ...extra });
+  const rows = [row('a'), row('b', { check: 'blocked' }), row('c', { published: {} }), row('d', { stored: { everPublished: true } }), row('e')];
+  assert.deepEqual(bulkCandidates(rows).map((item) => item.id), ['a', 'e']);
+
+  const seen = [];
+  const ok = await publishInTurn(bulkCandidates(rows), async (draft) => { seen.push(draft); });
+  assert.deepEqual([ok.published, ok.failed, ok.skipped], [['a', 'e'], [], 0]);
+  assert.ok(seen.every((draft) => draft.trackerEnabled === true));
+
+  const failing = await publishInTurn(['1', '2', '3', '4', '5'].map((id) => row(id)), async () => { throw new Error('quota'); });
+  assert.deepEqual([failing.published.length, failing.failed.length, failing.skipped], [0, 3, 2]);
 });
 
 // The frozen contract fixtures hold full prayer texts and live outside the repository.

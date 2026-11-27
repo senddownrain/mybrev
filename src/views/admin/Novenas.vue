@@ -24,6 +24,34 @@
       · без трэкера {{ count('excluded') }} · апублікавана {{ rows.filter((row) => row.published).length }}
     </p>
 
+    <div v-if="candidates.length || batch" class="bulk">
+      <v-btn color="primary" variant="tonal" rounded="pill" class="text-none" data-testid="novena-publish-all"
+        :disabled="loading || publishing || !candidates.length" :loading="publishing" @click="confirming = true">
+        Апублікаваць усе гатовыя ({{ candidates.length }})
+      </v-btn>
+      <span v-if="publishing" class="muted">{{ progress }} з {{ total }}</span>
+    </div>
+    <v-alert v-if="batch" :type="batch.failed.length ? 'warning' : 'success'" variant="tonal" density="comfortable" class="mb-4" data-testid="novena-batch">
+      Апублікавана: {{ batch.published.length }}. Не атрымалася: {{ batch.failed.length }}.
+      <template v-if="batch.skipped"> Спынена пасля некалькіх памылак запар, не апрацавана: {{ batch.skipped }}.</template>
+      <div v-for="item in batch.failed.slice(0, 5)" :key="item.id">{{ item.title }}: {{ item.message }}</div>
+    </v-alert>
+
+    <v-dialog v-model="confirming" max-width="460">
+      <v-card>
+        <v-card-title class="text-wrap">Апублікаваць {{ candidates.length }} навэнн?</v-card-title>
+        <v-card-text>
+          Трэкер будзе ўключаны для кожнай. Папярэдне праверце парадак дзён: пасля выпуску кантэнту яго ўбачаць карыстальнікі.
+          Ужо апублікаваныя, знятыя з публікацыі і навэнны з заўвагамі не зменяцца.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" class="text-none" @click="confirming = false">Скасаваць</v-btn>
+          <v-btn color="primary" class="text-none" data-testid="novena-publish-all-confirm" @click="publishAll">Апублікаваць</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-progress-linear v-if="loading" indeterminate class="mb-2" />
     <ul class="list">
       <li v-for="row in filtered" :key="row.id">
@@ -52,9 +80,9 @@
 import { computed, onMounted, ref, shallowRef } from 'vue';
 import { RouterLink } from 'vue-router';
 import { errorLabel, isExcluded, scheduleLabel, TYPE_LABELS } from '@/components/admin/novena/labels';
-import { loadNovenaData } from '@/services/novenaAdminService';
+import { loadNovenaData, publishNovena } from '@/services/novenaAdminService';
 import { pickDefinition, publicationErrors } from '@/utils/novena/document.mjs';
-import { generatedDraft, novenaSources, publicationDocument, stableJson } from '@/utils/novena/drafts.mjs';
+import { bulkCandidates, generatedDraft, novenaSources, publicationDocument, publishInTurn, stableJson } from '@/utils/novena/drafts.mjs';
 
 const data = shallowRef(null);
 const loading = ref(false);
@@ -87,7 +115,7 @@ function describe(id, prayers, drafts, published) {
     current = same ? 'published' : 'changed';
   }
   return {
-    id, title, problems, published: live, state: current,
+    id, title, problems, published: live, state: current, record, stored,
     check: problems.length ? 'blocked' : 'ready',
     days: record.durationDays,
     uniqueDays: (record.days || []).some((day) => day.blocks.length),
@@ -124,6 +152,30 @@ async function reload() {
     loading.value = false;
   }
 }
+const candidates = computed(() => bulkCandidates(rows.value));
+const confirming = ref(false);
+const publishing = ref(false);
+const progress = ref(0);
+const total = ref(0);
+const batch = ref(null);
+
+async function publishAll() {
+  const list = candidates.value;
+  confirming.value = false;
+  publishing.value = true;
+  batch.value = null;
+  progress.value = 0;
+  total.value = list.length;
+  const cache = new Map();
+  try {
+    batch.value = await publishInTurn(list, (draft, loaded) => publishNovena(draft, loaded, { cache }), {
+      onProgress: (done) => { progress.value = done; },
+    });
+    await reload();
+  } finally {
+    publishing.value = false;
+  }
+}
 onMounted(reload);
 </script>
 
@@ -135,6 +187,7 @@ h1 { margin: 0 0 8px; font-family: var(--reader-display-font-family); font-size:
 .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 16px 0 10px; }
 .search { flex: 2 1 220px; }
 .filter { flex: 1 1 160px; }
+.bulk { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 12px; }
 .list { margin: 0; padding: 0; list-style: none; }
 .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 8px; padding: 14px 16px; border: 1px solid var(--nav-border); border-radius: 16px; background: var(--nav-surface); color: inherit; text-decoration: none; }
 .row__main { display: grid; flex: 1 1 380px; gap: 3px; min-width: 0; }
