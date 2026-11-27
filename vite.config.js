@@ -43,19 +43,25 @@ function collectOfflineAssets(root, entries) {
         hours.invitatorium = hours.invit;
         const layout = ['src/layouts/simple/One.vue', 'src/layouts/default/OraBar.vue']
           .map((source) => sources[source]).filter(Boolean).map((file) => '/' + file);
+        const content = sources['src/services/liturgicalContentService.js'];
         return [{
           tag: 'script', injectTo: 'head-prepend',
           children: `(() => {
             const hour = location.pathname.match(/^\\/day\\/[^/]+\\/ora\\/[^/]+\\/([^/]+)\\/?$/)?.[1];
             const files = ${JSON.stringify(hours)};
             if (!Object.hasOwn(files, hour)) return;
-            for (const href of [...${JSON.stringify(layout)}, files[hour]]) {
+            const preload = (href) => {
               const link = document.createElement('link');
               link.rel = 'modulepreload';
               link.crossOrigin = 'anonymous';
               link.href = href;
               document.head.appendChild(link);
-            }
+            };
+            for (const href of [...${JSON.stringify(layout)}, files[hour]]) preload(href);
+            const coldContent = ${JSON.stringify(content ? '/' + content : '')};
+            if (coldContent) window.indexedDB?.databases?.().then(databases => {
+              if (!databases.some(database => database.name?.startsWith('mybrev-public-'))) preload(coldContent);
+            }).catch(() => {});
           })()`,
         }];
       },

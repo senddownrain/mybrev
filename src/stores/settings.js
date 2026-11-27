@@ -14,7 +14,7 @@ import { normalizeTextAlignment } from '@/utils/readerPreferences';
 import { normalizeChordLayout } from '@/utils/songDisplay';
 import { trackFeature } from '../utils/trackFeature.js';
 import { ordoDiocese, ordoDioceses, setOrdoDiocese, toggleOrdoDiocese } from '@/utils/ordoDiocese';
-import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { prayerCatalogRevision } from '@/services/prayerCatalogRevision';
 
 const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
 const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
