@@ -34,6 +34,7 @@ function verifyActor(role, uid) {
 function checkMode(rollout, expected) {
   const mode = rollout.data()?.mode ?? 'legacy';
   assert.equal(mode, expected, 'Catalog rollout changed or is suspended');
+  if (expected === 'legacy') assert.notEqual(rollout.data()?.legacyWritesFrozen, true, 'Legacy catalog writes are frozen');
 }
 
 function legacyWriter(db) {
@@ -170,6 +171,7 @@ async function main() {
       const mode = rollout.data()?.mode ?? 'legacy';
       if (preview) assert.equal(mode, preview.mode);
       if (mode === 'legacy') {
+        checkMode(rollout, 'legacy');
         result = await runLegacy(db, uid, bundle, approved, preview);
       } else {
         checkMode(rollout, 'canonical');
