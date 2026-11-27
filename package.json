@@ -95,6 +95,7 @@
     "import:bog:plan": "node scripts/prayer-import/bog-import.mjs plan",
     "import:canon:plan": "node scripts/prayer-import/canon-import.mjs plan",
     "test:rules": "firebase emulators:exec --only firestore --project demo-rules \"node tests/firestore-rules/rules-emulator.mjs\"",
+    "test:emergency-rules": "node scripts/prepare-firestore-emergency.mjs && firebase emulators:exec --config .firebase/finops/firebase.json --only auth,firestore --project demo-rules \"node tests/firestore-rules/rules-emulator.mjs --emergency && node --test tests/access-sets-v2-rules.test.mjs\"",
     "content:app-bundle": "node scripts/content/build-app-bundle.mjs",
     "content:manifest": "node scripts/content/publish-manifest.mjs",
     "content:app-release": "node scripts/content/build-app-bundle.mjs --compare-live",

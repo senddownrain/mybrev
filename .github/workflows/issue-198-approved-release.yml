@@ -29,13 +29,13 @@ jobs:
           [[ "$GITHUB_REF" == refs/heads/main && "$APPROVED_SHA" == "$GITHUB_SHA" ]]
 
       - name: Checkout approved main
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: npm
@@ -107,7 +107,7 @@ jobs:
           test -s dist/index.html
 
       - name: Deploy Firebase Hosting
-        run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
+        run: npx --yes firebase-tools@15.28.1 deploy --only hosting --project ibreviaryby --non-interactive
 
       - name: Install Chromium for mobile and desktop visual QA
         run: npx --no-install playwright-core install --with-deps chromium
@@ -158,7 +158,7 @@ jobs:
 
       - name: Upload visual evidence and sanitized release reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: issue-198-production-screenshots-and-report
           path: |
@@ -169,7 +169,7 @@ jobs:
 
       - name: Preserve private pre-write Firestore rollback copy
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: issue-198-private-rollback
           path: backups/issue-198/

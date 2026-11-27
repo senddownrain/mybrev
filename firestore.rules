@@ -486,16 +486,27 @@ service cloud.firestore {
         'contentManifest'
       ];
     }
+    function publicListAllowed(collection) {
+      // The incident configuration changes this constant without a Firestore
+      // lookup. Check it before isAdmin() so denied lists need no role read.
+      let restrictPublicLists = false;
+      return !restrictPublicLists || !(collection in [
+        'days', 'readings', 'liturgicalProperTexts', 'liturgicalOrdoNotes', 'liturgicalTemplates'
+      ]);
+    }
     // Firestore allows are OR-composed; the catch-all must never overlap
     // explicitly protected namespaces. Public data only at root document
     // depth: no accidental exposure of future nested private subcollections.
     match /{collection}/{document} {
-      allow get, list: if !explicitlyRuled(collection) && publicContentCollection(collection);
+      allow get: if !explicitlyRuled(collection) && publicContentCollection(collection);
+      allow list: if !explicitlyRuled(collection) && publicContentCollection(collection)
+        && publicListAllowed(collection);
     }
     // Retain authorized editor access to existing and future non-reserved
     // content, including subcollections; no anonymous catch-all.
     match /{collection}/{document=**} {
-      allow read, write: if !explicitlyRuled(collection) && isAdmin();
+      allow get, write: if !explicitlyRuled(collection) && isAdmin();
+      allow list: if !explicitlyRuled(collection) && publicListAllowed(collection) && isAdmin();
     }
   }
 }
