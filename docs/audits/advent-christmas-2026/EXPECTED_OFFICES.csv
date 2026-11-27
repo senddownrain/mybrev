@@ -226,6 +226,7 @@ PS-0975,2026-12-02,Wed,all,vespers,antiphon2,starts_with,"Буду шукаць 
 PS-0976,2026-12-02,Wed,all,vespers,antiphon3,starts_with,Ён першародны сярод усякага стварэння * і,doc5,1426,41,R-TEMP,DOC,,,
 COMP-1059,2026-12-03,Thu,all,compline,set,equals,weekday: Псальм 16 (15) (or the Sunday psalms),doc6,414-463,12-14,R-COMPWD,DOC,,,
 COMP-1060,2026-12-03,Thu,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,34,2,R-COMPHYM,DOC,,,
+COM-2486,2026-12-03,Thu,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,
 INV-1013,2026-12-03,Thu,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,"weekday text: one of the allowed choices for a memorial (doc4:165,270,280,319,387-434)",
 COM-2489,2026-12-03,Thu,all,lauds,hymn,allowed_alternative,"Гімнам пастыра праславім,",doc8,2730,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра аднаго пастыра»,
 COM-2490,2026-12-03,Thu,all,lauds,hymn,allowed_alternative,"Ён настаўнікам быў слаўным,",doc8,2746,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра прэзбітэра»,
@@ -300,7 +301,9 @@ PS-1029,2026-12-03,Thu,all,vespers,antiphon3,starts_with,"Пан даў Яму �
 COMP-1112,2026-12-04,Fri,all,compline,set,equals,weekday: Псальм 88 (87) (or the Sunday psalms),doc6,464-527,14-15,R-COMPWD,DOC,,,
 COMP-1113,2026-12-04,Fri,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,34,2,R-COMPHYM,DOC,,,
 COM-2504,2026-12-04,Fri,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,sv-john-damascene
+COM-2522,2026-12-04,Fri,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / крыніцы мудрасці.",doc8,2998,105,R-COMMON,DOC,,Common of Doctors. or the weekday antiphon,sv-john-damascene
 INV-1066,2026-12-04,Fri,all,invitatory,antiphon,equals,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,,
+INV-1066,2026-12-04,Fri,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 COM-2507,2026-12-04,Fri,all,lauds,hymn,allowed_alternative,"Гімнам пастыра праславім,",doc8,2730,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра аднаго пастыра»,sv-john-damascene
 COM-2508,2026-12-04,Fri,all,lauds,hymn,allowed_alternative,"Ён настаўнікам быў слаўным,",doc8,2746,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра прэзбітэра»,sv-john-damascene
 COM-2511,2026-12-04,Fri,all,lauds,shortReading.citation,allowed_alternative,"Гбр 13, 7-9а",doc8,2780,97,R-COMMON,DOC,,Common of Pastors,sv-john-damascene
@@ -314,10 +317,15 @@ COM-2525,2026-12-04,Fri,all,lauds,shortReading.text,allowed_alternative,"Я шч
 COM-2526,2026-12-04,Fri,all,lauds,responsory,allowed_alternative,К. Пра мудрасць святых * няхай расказваюць,doc8,3070,109,R-COMMON,DOC,,Common of Doctors.,sv-john-damascene
 COM-2527,2026-12-04,Fri,all,lauds,gospelAntiphon,allowed_alternative,"Мудрыя будуць ззяць, як свяцілы небасхілу, *",doc8,3071,109,R-COMMON,DOC,,Common of Doctors.,sv-john-damascene
 DAY-1088,2026-12-04,Fri,all,lauds,shortReading.citation,citation,"Ер 30, 21а. 22",doc3,688,23,R-TEMP,DOC,,,
+DAY-1088,2026-12-04,Fri,all,lauds,shortReading.citation,allowed_alternative,"Ер 30, 21а. 22",doc3,688,23,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1089,2026-12-04,Fri,all,lauds,shortReading.text,starts_with,"Так кажа Пан: Правадыр будзе з Якуба, і",doc3,689,23,R-TEMP,DOC,,,
+DAY-1089,2026-12-04,Fri,all,lauds,shortReading.text,allowed_alternative,"Так кажа Пан: Правадыр будзе з Якуба, і",doc3,689,23,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1090,2026-12-04,Fri,all,lauds,responsory,starts_with,"К. Над табою, Ерузалем, * узыдзе Пан. Н.",doc3,691,23,R-TEMP,DOC,,,
+DAY-1090,2026-12-04,Fri,all,lauds,responsory,allowed_alternative,"К. Над табою, Ерузалем, * узыдзе Пан. Н.",doc3,691,23,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1091,2026-12-04,Fri,all,lauds,gospelAntiphon,contains,"Вось прыйдзе Бог і Чалавек з дома Давіда,",doc3,692,23,R-TEMP,DOC,,,
+DAY-1091,2026-12-04,Fri,all,lauds,gospelAntiphon,allowed_alternative,"Вось прыйдзе Бог і Чалавек з дома Давіда,",doc3,692,23,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1092,2026-12-04,Fri,all,lauds,intercessions,starts_with,Бог Айцец пастанавіў аб’явіць людзям сваю славу праз,doc3,694,23,R-TEMP,DOC,,,
+DAY-1092,2026-12-04,Fri,all,lauds,intercessions,allowed_alternative,Бог Айцец пастанавіў аб’явіць людзям сваю славу праз,doc3,694,23,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1093,2026-12-04,Fri,all,lauds,collect,starts_with,"Пане Езу, праяві сваю магутнасць і прыйдзі, няхай",doc3,706,24,R-TEMP,DOC,,,
 GRO-0113,2026-12-04,Fri,grodno,lauds,hymn,starts_with,Хрыстус з неба быў пасланы,doc8,265,11,R-DED,DOC,ADV-02,,
 GRO-0114,2026-12-04,Fri,grodno,lauds,antiphon1,starts_with,Мой дом будзе названы * домам малітвы.,doc8,295,12,R-DED,DOC,ADV-02,,
@@ -333,6 +341,7 @@ GRO-0135,2026-12-04,Fri,grodno,lauds,psalms,psalm_set,Sunday week I Lauds psalms
 GRO-0140,2026-12-04,Fri,grodno,lauds,collect,variant,Use «У гадавіну пасвячэння іншага касцёла» (outside the cathedral basilica); in the basilica use the first variant,doc8,316-322,12-13,R-DED,DOC,ADV-02,,
 GRO-0870,2026-12-04,Fri,grodno,lauds,collect,starts_with,"Усемагутны Божа, Ты з нас, як з жывых",doc8,320,13,R-DED,DOC,ADV-02,variant for a church other than the cathedral,
 HYM-1062,2026-12-04,Fri,all,lauds,hymn,starts_with,"Вось гучыць магутны голас,",doc3,62,3,R-HYMN,DOC,,,
+HYM-1062,2026-12-04,Fri,all,lauds,hymn,allowed_alternative,"Вось гучыць магутны голас,",doc3,62,3,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 OWN-2625,2026-12-04,Fri,all,lauds,collect,starts_with,"Усемагутны Божа, Ты паклікаў святога Яна Дамаскіна, прэзбітэра,",doc7,159,9,R-MEM,DOC,,own collect,sv-john-damascene
 PS-1069,2026-12-04,Fri,all,lauds,psalms,psalm_set,"Псальм 51 (50) | Песня Іс 45, 15-25 | Псальм 100 (99)",doc5,1880-2006,54-58,R-TEMP,DOC,,,
 PS-1070,2026-12-04,Fri,all,lauds,antiphon1,starts_with,Упадабаеш Ты ахвяру справядлівасці * на алтары,doc5,1885,55,R-TEMP,DOC,,,
@@ -354,6 +363,7 @@ DAY-1085,2026-12-04,Fri,all,readings,reading1.responsory,starts_with,Н. Егі�
 DAY-1086,2026-12-04,Fri,all,readings,reading2,contains_heading,"«Праслогіі» св. Анзэльма, біскупа",doc3,671,22,R-TEMP,DOC,,,
 DAY-1087,2026-12-04,Fri,all,readings,reading2.responsory,starts_with,"Н. Мы не адступімся ад Цябе, ажыві нас,",doc3,683-685,23,R-TEMP,DOC,,,
 HYM-1061,2026-12-04,Fri,all,readings,hymn,starts_with,"Слова з неба нам паслана,",doc3,40,2,R-HYMN,DOC,,,
+HYM-1061,2026-12-04,Fri,all,readings,hymn,allowed_alternative,"Слова з неба нам паслана,",doc3,40,2,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 OWN-2623,2026-12-04,Fri,all,readings,reading2,contains_heading,"«Вызнанне веры» св. Яна Дамаскіна, прэзбітэра",doc7,142,7,R-MEM,DOC,,own second reading (required when this memorial is chosen),sv-john-damascene
 OWN-2624,2026-12-04,Fri,all,readings,collect,starts_with,"Усемагутны Божа, Ты паклікаў святога Яна Дамаскіна, прэзбітэра,",doc7,159,9,R-MEM,DOC,,own collect,sv-john-damascene
 PS-1068,2026-12-04,Fri,all,readings,psalms,psalm_set,"Псальм 35 (34), 1-2. 3c. 9-19. 22-23. 27-28",doc5,1816-1879,53-54,R-TEMP,DOC,,,
@@ -388,10 +398,15 @@ COM-2532,2026-12-04,Fri,all,vespers,gospelAntiphon,allowed_alternative,"О на�
 COM-2646,2026-12-04,Fri,all,vespers,gospelAntiphon,allowed_alternative,"Для ўсіх я стаў усім, * каб",doc8,2477,84,R-COMMON-MAG1,DOC,,"Common of Pastors (priest), I Vespers antiphon (doc8 l.2, l.4740)",sv-john-damascene
 COM-2647,2026-12-04,Fri,all,vespers,gospelAntiphon,allowed_alternative,"Хто ж выканае запаведзі і навучыць ім,",doc8,2993,105,R-COMMON-MAG1,DOC,,"Common of Doctors, I Vespers antiphon (doc8 l.2, l.4740)",sv-john-damascene
 DAY-1103,2026-12-04,Fri,all,vespers,shortReading.citation,citation,"2 П 3, 8b-9",doc3,728,24,R-TEMP,DOC,,,
+DAY-1103,2026-12-04,Fri,all,vespers,shortReading.citation,allowed_alternative,"2 П 3, 8b-9",doc3,728,24,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1104,2026-12-04,Fri,all,vespers,shortReading.text,starts_with,"У Пана адзін дзень, як тысяча гадоў, і",doc3,729,24,R-TEMP,DOC,,,
+DAY-1104,2026-12-04,Fri,all,vespers,shortReading.text,allowed_alternative,"У Пана адзін дзень, як тысяча гадоў, і",doc3,729,24,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1105,2026-12-04,Fri,all,vespers,responsory,starts_with,"К. Прыйдзі, каб вызваліць нас, * Пане, Божа",doc3,731,24,R-TEMP,DOC,,,
+DAY-1105,2026-12-04,Fri,all,vespers,responsory,allowed_alternative,"К. Прыйдзі, каб вызваліць нас, * Пане, Божа",doc3,731,24,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1106,2026-12-04,Fri,all,vespers,gospelAntiphon,contains,"З Егіпта Я паклікаў Майго Сына, * і",doc3,732,24,R-TEMP,DOC,,,
+DAY-1106,2026-12-04,Fri,all,vespers,gospelAntiphon,allowed_alternative,"З Егіпта Я паклікаў Майго Сына, * і",doc3,732,24,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1107,2026-12-04,Fri,all,vespers,intercessions,starts_with,З вераю ўсклікнем да Хрыста – пастыра і,doc3,734,24,R-TEMP,DOC,,,
+DAY-1107,2026-12-04,Fri,all,vespers,intercessions,allowed_alternative,З вераю ўсклікнем да Хрыста – пастыра і,doc3,734,24,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 DAY-1108,2026-12-04,Fri,all,vespers,collect,starts_with,"Пане Езу, праяві сваю магутнасць і прыйдзі, няхай",doc3,748,25,R-TEMP,DOC,,,
 GRO-0124,2026-12-04,Fri,grodno,vespers,hymn,starts_with,"О, Ерузалем шчаслівы,",doc8,348,14,R-DED,DOC,ADV-02,,
 GRO-0125,2026-12-04,Fri,grodno,vespers,antiphon1,starts_with,"Пан асвяціў жыллё сваё. * Бог пасярод яго,",doc8,379,15,R-DED,DOC,ADV-02,,
@@ -407,6 +422,7 @@ GRO-0136,2026-12-04,Fri,grodno,vespers,psalms,psalm_set,Ps 46(45); Ps 122(121); 
 GRO-0141,2026-12-04,Fri,grodno,vespers,collect,variant,Use «У гадавіну пасвячэння іншага касцёла» (outside the cathedral basilica); in the basilica use the first variant,doc8,98-104,4,R-DED,DOC,ADV-02,,
 GRO-0871,2026-12-04,Fri,grodno,vespers,collect,starts_with,"Усемагутны Божа, Ты з нас, як з жывых",doc8,474,17,R-DED,DOC,ADV-02,variant for a church other than the cathedral,
 HYM-1067,2026-12-04,Fri,all,vespers,hymn,starts_with,"О жыццядайны Творца зор,",doc3,9,2,R-HYMN,DOC,,,
+HYM-1067,2026-12-04,Fri,all,vespers,hymn,allowed_alternative,"О жыццядайны Творца зор,",doc3,9,2,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-john-damascene
 OWN-2626,2026-12-04,Fri,all,vespers,collect,starts_with,"Усемагутны Божа, Ты паклікаў святога Яна Дамаскіна, прэзбітэра,",doc7,159,9,R-MEM,DOC,,own collect,sv-john-damascene
 PS-1079,2026-12-04,Fri,all,vespers,psalms,psalm_set,"Псальм 41 (40) | Псальм 46 (45) | Песня Ап 15, 3-4",doc5,2087-2169,60-62,R-TEMP,DOC,,,
 PS-1080,2026-12-04,Fri,all,vespers,antiphon1,starts_with,"Аздараві, Пане, маю душу, * бо я",doc5,2091,60,R-TEMP,DOC,,,
@@ -518,6 +534,8 @@ PS-1167,2026-12-06,Sun,all,vespers,psalms,psalm_set,"Псальм 110 (109), 1-5
 COMP-1243,2026-12-07,Mon,all,compline,set,equals,after I Vespers: Ps 4; Ps 134 (133),doc6,110-163,4-5,R-COMP,DOC,,,
 COMP-1244,2026-12-07,Mon,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,34,2,R-COMPHYM,DOC,,,
 IC-0161,2026-12-07,Mon,all,compline,set,equals,after I Vespers (Ps 4; 134),doc6,"46,106-163",1-5,R-COMP,DOC,ADV-04,,
+COM-2533,2026-12-07,Mon,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,
+COM-2543,2026-12-07,Mon,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / крыніцы мудрасці.",doc8,2998,105,R-COMMON,DOC,,Common of Doctors. or the weekday antiphon,
 INV-1208,2026-12-07,Mon,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,"weekday text: one of the allowed choices for a memorial (doc4:165,270,280,319,387-434)",
 COM-2538,2026-12-07,Mon,all,lauds,shortReading.citation,allowed_alternative,"Гбр 13, 7-9а",doc8,2780,97,R-COMMON,DOC,,Common of Pastors,
 COM-2539,2026-12-07,Mon,all,lauds,shortReading.text,allowed_alternative,"Памятайце пра настаўнікаў вашых, якія абвяшчалі вам",doc8,2781,97,R-COMMON,DOC,,Common of Pastors.,
@@ -754,6 +772,7 @@ COMP-1407,2026-12-11,Fri,all,compline,set,equals,weekday: Псальм 88 (87) (
 COMP-1408,2026-12-11,Fri,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,34,2,R-COMPHYM,DOC,,,
 COM-2549,2026-12-11,Fri,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,sv-damasus-i
 INV-1361,2026-12-11,Fri,all,invitatory,antiphon,equals,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,,
+INV-1361,2026-12-11,Fri,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 COM-2552,2026-12-11,Fri,all,lauds,hymn,allowed_alternative,"Гімнам пастыра праславім,",doc8,2730,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра аднаго пастыра»,sv-damasus-i
 COM-2553,2026-12-11,Fri,all,lauds,hymn,allowed_alternative,Ён з Пятровага пасаду,doc8,2736,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра Папу»,sv-damasus-i
 COM-2556,2026-12-11,Fri,all,lauds,shortReading.citation,allowed_alternative,"Гбр 13, 7-9а",doc8,2780,97,R-COMMON,DOC,,Common of Pastors,sv-damasus-i
@@ -762,13 +781,19 @@ COM-2558,2026-12-11,Fri,all,lauds,responsory,allowed_alternative,"К. Над т�
 COM-2559,2026-12-11,Fri,all,lauds,gospelAntiphon,allowed_alternative,"Не вы будзеце гаварыць, * а Дух",doc8,2784,97,R-COMMON,DOC,,Common of Pastors.,sv-damasus-i
 COM-2560,2026-12-11,Fri,all,lauds,intercessions,allowed_alternative,"З удзячнасцю праславім Хрыста – добрага пастыра,",doc8,2786,97,R-COMMON,DOC,,Common of Pastors.,sv-damasus-i
 DAY-1383,2026-12-11,Fri,all,lauds,shortReading.citation,citation,"Ер 30, 21а. 22",doc3,1372,46,R-TEMP,DOC,,,
+DAY-1383,2026-12-11,Fri,all,lauds,shortReading.citation,allowed_alternative,"Ер 30, 21а. 22",doc3,1372,46,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1384,2026-12-11,Fri,all,lauds,shortReading.text,starts_with,"Так кажа Пан: Правадыр будзе з Якуба, і",doc3,1373,46,R-TEMP,DOC,,,
+DAY-1384,2026-12-11,Fri,all,lauds,shortReading.text,allowed_alternative,"Так кажа Пан: Правадыр будзе з Якуба, і",doc3,1373,46,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1385,2026-12-11,Fri,all,lauds,responsory,starts_with,"К. Над табою, Ерузалем, * узыдзе Пан. Н.",doc3,1375,46,R-TEMP,DOC,,,
+DAY-1385,2026-12-11,Fri,all,lauds,responsory,allowed_alternative,"К. Над табою, Ерузалем, * узыдзе Пан. Н.",doc3,1375,46,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1386,2026-12-11,Fri,all,lauds,gospelAntiphon,contains,"Кажыце тым, хто страціў сілы: * Будзьце мужнымі,",doc3,1376,46,R-TEMP,DOC,,,
+DAY-1386,2026-12-11,Fri,all,lauds,gospelAntiphon,allowed_alternative,"Кажыце тым, хто страціў сілы: * Будзьце мужнымі,",doc3,1376,46,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1387,2026-12-11,Fri,all,lauds,intercessions,starts_with,"Радасна ўсклікаючы, просім Хрыста Адкупіцеля, які прыйдзе апраўдаць",doc3,1378,46,R-TEMP,DOC,,,
+DAY-1387,2026-12-11,Fri,all,lauds,intercessions,allowed_alternative,"Радасна ўсклікаючы, просім Хрыста Адкупіцеля, які прыйдзе апраўдаць",doc3,1378,46,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1388,2026-12-11,Fri,all,lauds,collect,starts_with,"Усемагутны Божа, дай народу Твайму ў дбайным чуванні",doc3,1390,46,R-TEMP,DOC,,,
 FMT-0112,2026-12-11,Fri,all,lauds,psalm3,line_layout,"Ps 147,12-20: line1 «Хвалі, Ерузалем, Пана, *»; line2 «† праслаўляй, Сіён, твайго Бога.»; antiphon ends †",doc5,4535-4541,131,F-DAGGER,AMBIGUOUS,ADV-08,Never two † adjacent on one line; whether the antiphon-echo line may be hidden is an editorial convention,
 HYM-1357,2026-12-11,Fri,all,lauds,hymn,starts_with,"Вось гучыць магутны голас,",doc3,62,3,R-HYMN,DOC,,,
+HYM-1357,2026-12-11,Fri,all,lauds,hymn,allowed_alternative,"Вось гучыць магутны голас,",doc3,62,3,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 OWN-2629,2026-12-11,Fri,all,lauds,collect,starts_with,"Пане, наш Божа, святы папа Дамас меў асаблівую",doc7,476,23,R-MEM,DOC,,own collect,sv-damasus-i
 PS-1364,2026-12-11,Fri,all,lauds,psalms,psalm_set,"Псальм 51 (50) | Песня Абк 3, 2-4. 13а. 15-19 | Псальм 147, 12-20 (147)",doc5,4442-4559,129-132,R-TEMP,DOC,,,
 PS-1365,2026-12-11,Fri,all,lauds,antiphon1,starts_with,"Не пагарджай, Божа, * пакорным і прыгнечаным",doc5,4447,129,R-TEMP,DOC,,,
@@ -788,6 +813,7 @@ DAY-1380,2026-12-11,Fri,all,readings,reading1.responsory,starts_with,Н. Пан 
 DAY-1381,2026-12-11,Fri,all,readings,reading2,contains_heading,"Трактат «Супраць ерасяў» св. Ірэнэя, біскупа",doc3,1358,45,R-TEMP,DOC,,,
 DAY-1382,2026-12-11,Fri,all,readings,reading2.responsory,starts_with,"Н. Бог паслаў анёла Габрыэля да † Дзевы,",doc3,1367-1369,46,R-TEMP,DOC,,,
 HYM-1356,2026-12-11,Fri,all,readings,hymn,starts_with,"Слова з неба нам паслана,",doc3,40,2,R-HYMN,DOC,,,
+HYM-1356,2026-12-11,Fri,all,readings,hymn,allowed_alternative,"Слова з неба нам паслана,",doc3,40,2,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 OWN-2627,2026-12-11,Fri,all,readings,reading2,contains_heading,"«Трактат супраць Фауста» св. Аўгустына, біскупа",doc7,462,22,R-MEM,DOC,,own second reading (required when this memorial is chosen),sv-damasus-i
 OWN-2628,2026-12-11,Fri,all,readings,collect,starts_with,"Пане, наш Божа, святы папа Дамас меў асаблівую",doc7,476,23,R-MEM,DOC,,own collect,sv-damasus-i
 PS-1363,2026-12-11,Fri,all,readings,psalms,psalm_set,Псальм 38 (37),doc5,4372-4441,127-129,R-TEMP,DOC,,,
@@ -817,12 +843,18 @@ COM-2565,2026-12-11,Fri,all,vespers,gospelAntiphon,allowed_alternative,"Дзяк
 COM-2566,2026-12-11,Fri,all,vespers,intercessions,allowed_alternative,"Праслаўляем Хрыста, Найвышэйшага Святара, і пакорна просім:",doc8,2958,103,R-COMMON,DOC,,Common of Pastors.,sv-damasus-i
 COM-2648,2026-12-11,Fri,all,vespers,gospelAntiphon,allowed_alternative,"Ты спадабаўся Пану, святар Найвышэйшага, * бо",doc8,2476,84,R-COMMON-MAG1,DOC,,"Common of Pastors (pope), I Vespers antiphon (doc8 l.2, l.4740)",sv-damasus-i
 DAY-1398,2026-12-11,Fri,all,vespers,shortReading.citation,citation,"2 П 3, 8b-9",doc3,1412,47,R-TEMP,DOC,,,
+DAY-1398,2026-12-11,Fri,all,vespers,shortReading.citation,allowed_alternative,"2 П 3, 8b-9",doc3,1412,47,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1399,2026-12-11,Fri,all,vespers,shortReading.text,starts_with,"У Пана адзін дзень, як тысяча гадоў, і",doc3,1413,47,R-TEMP,DOC,,,
+DAY-1399,2026-12-11,Fri,all,vespers,shortReading.text,allowed_alternative,"У Пана адзін дзень, як тысяча гадоў, і",doc3,1413,47,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1400,2026-12-11,Fri,all,vespers,responsory,starts_with,"К. Прыйдзі, каб вызваліць нас, * Пане, Божа",doc3,1415,47,R-TEMP,DOC,,,
+DAY-1400,2026-12-11,Fri,all,vespers,responsory,allowed_alternative,"К. Прыйдзі, каб вызваліць нас, * Пане, Божа",doc3,1415,47,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1401,2026-12-11,Fri,all,vespers,gospelAntiphon,contains,Вы з радасцю будзеце чэрпаць ваду * з,doc3,1416,47,R-TEMP,DOC,,,
+DAY-1401,2026-12-11,Fri,all,vespers,gospelAntiphon,allowed_alternative,Вы з радасцю будзеце чэрпаць ваду * з,doc3,1416,47,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1402,2026-12-11,Fri,all,vespers,intercessions,starts_with,"Горача просім нашага Адкупіцеля, які прыйшоў абвяшчаць Добрую",doc3,1418,47,R-TEMP,DOC,,,
+DAY-1402,2026-12-11,Fri,all,vespers,intercessions,allowed_alternative,"Горача просім нашага Адкупіцеля, які прыйшоў абвяшчаць Добрую",doc3,1418,47,R-TEMP,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 DAY-1403,2026-12-11,Fri,all,vespers,collect,starts_with,"Усемагутны Божа, дай народу Твайму ў дбайным чуванні",doc3,1432,47,R-TEMP,DOC,,,
 HYM-1362,2026-12-11,Fri,all,vespers,hymn,starts_with,"О жыццядайны Творца зор,",doc3,9,2,R-HYMN,DOC,,,
+HYM-1362,2026-12-11,Fri,all,vespers,hymn,allowed_alternative,"О жыццядайны Творца зор,",doc3,9,2,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-damasus-i
 OWN-2630,2026-12-11,Fri,all,vespers,collect,starts_with,"Пане, наш Божа, святы папа Дамас меў асаблівую",doc7,476,23,R-MEM,DOC,,own collect,sv-damasus-i
 PS-1374,2026-12-11,Fri,all,vespers,psalms,psalm_set,"Псальм 116, 1-9 (114) | Псальм 121 (120) | Песня Ап 15, 3-4",doc5,4640-4705,134-135,R-TEMP,DOC,,,
 PS-1375,2026-12-11,Fri,all,vespers,antiphon1,starts_with,"Пане, выратуй душу маю ад смерці, *",doc5,4644,134,R-TEMP,DOC,,,
@@ -933,6 +965,8 @@ PS-1459,2026-12-13,Sun,all,terce,psalms,psalm_set,Псальм 118 (117),doc5,52
 PS-1462,2026-12-13,Sun,all,vespers,psalms,psalm_set,"Псальм 110 (109), 1-5. 7 | Псальм 111 (110) | Песня пар. Ап 19, 1-2. 5-7",doc5,5354-5433,154-156,R-TEMP,DOC,,,
 COMP-1549,2026-12-14,Mon,all,compline,set,equals,weekday: Псальм 86 (85) (or the Sunday psalms),doc6,225-291,7-9,R-COMPWD,DOC,,,
 COMP-1550,2026-12-14,Mon,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,34,2,R-COMPHYM,DOC,,,
+COM-2567,2026-12-14,Mon,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,
+COM-2585,2026-12-14,Mon,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / крыніцы мудрасці.",doc8,2998,105,R-COMMON,DOC,,Common of Doctors. or the weekday antiphon,
 INV-1503,2026-12-14,Mon,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / які прыйдзе валадарыць.",doc4,13-22,1,R-INV,DOC,,"weekday text: one of the allowed choices for a memorial (doc4:165,270,280,319,387-434)",
 COM-2570,2026-12-14,Mon,all,lauds,hymn,allowed_alternative,"Гімнам пастыра праславім,",doc8,2730,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра аднаго пастыра»,
 COM-2571,2026-12-14,Mon,all,lauds,hymn,allowed_alternative,"Ён настаўнікам быў слаўным,",doc8,2746,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра прэзбітэра»,
@@ -1679,6 +1713,7 @@ HF-0478,2026-12-27,Sun,all,vespers,responsory,starts_with,К. Хрыстус п�
 HF-0479,2026-12-27,Sun,all,vespers,gospelAntiphon,contains,"Дзіця Езус расло і ўмацоўвалася, * і напаўнялася",doc3,4113,130,R-HF,DOC,,,
 HF-0480,2026-12-27,Sun,all,vespers,intercessions,starts_with,"Паклонімся Сыну Бога жывога, які захацеў стаць Сынам",doc3,4116,130,R-HF,DOC,,,
 HF-0481,2026-12-27,Sun,all,vespers,collect,starts_with,"Божа, Ты даў нам Святую Сям’ю як прыклад,",doc3,4130,130,R-HF,DOC,,,
+COMP-1953,2026-12-28,Mon,all,compline,set,one_of,one of the Sunday sets (alternately),doc6,46,1,R-COMPOCT,AMBIGUOUS,,,
 COMP-1954,2026-12-28,Mon,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,3229,107,R-COMPHYM,DOC,,,
 OCT-0552,2026-12-28,Mon,all,compline,set,one_of,"one of the Sunday sets (after I or after II Vespers), alternately",doc6,46,1,R-COMPOCT,AMBIGUOUS,,,
 INV-2486,2026-12-28,Mon,all,invitatory,antiphon,starts_with,"Хадземце, паклонімся народжанаму Хрысту, /",doc7,915,42,R-OCT,DOC,,,
@@ -1722,6 +1757,7 @@ OCT-0488,2026-12-28,Mon,all,vespers,intercessions,starts_with,"Бог пасла
 OCT-0489,2026-12-28,Mon,all,vespers,collect,starts_with,"Божа, Ты дзівосным чынам стварыў чалавека і яшчэ",doc3,4199,132,R-OCTVES,DOC,,"Vespers of the octave day, NOT II Vespers of Holy Innocents",
 OCT-0490,2026-12-28,Mon,all,vespers,antiphons+psalms+hymn,same_as,II Vespers of Christmas,doc3,4180,132,R-OCTVES,DOC+ORDO,,,
 OCT-2413,2026-12-28,Mon,all,vespers,psalms,same_as,"II Vespers of Christmas (hymn, antiphons, psalms)",doc3,3761-3860,121-123,R-OCTVES,DOC+ORDO,,,
+COMP-2000,2026-12-29,Tue,all,compline,set,one_of,one of the Sunday sets (alternately),doc6,46,1,R-COMPOCT,AMBIGUOUS,,,
 COMP-2001,2026-12-29,Tue,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,3229,107,R-COMPHYM,DOC,,,
 OCT-0553,2026-12-29,Tue,all,compline,set,one_of,"one of the Sunday sets (after I or after II Vespers), alternately",doc6,46,1,R-COMPOCT,AMBIGUOUS,,,
 INV-0348,2026-12-29,Tue,all,invitatory,antiphon,equals,"Хрыстус нарадзіўся, / хадземце, паклонімся Яму.",doc4,13-22,1,R-INV,DOC,,,
@@ -1773,6 +1809,7 @@ OCT-0521,2026-12-29,Tue,all,vespers,intercessions,starts_with,"Просім мі
 OCT-0522,2026-12-29,Tue,all,vespers,collect,starts_with,"Божа ўсемагутны і нябачны, прыйсцем Езуса Хрыста –",doc3,4377,137,R-OCT,DOC,,,
 OCT-0550,2026-12-29,Tue,all,vespers,antiphons+psalms+hymn,same_as,II Vespers of Christmas,doc3,4356,137,R-OCTVES,DOC,,,
 OCT-2414,2026-12-29,Tue,all,vespers,psalms,same_as,"II Vespers of Christmas (hymn, antiphons, psalms)",doc3,3761-3860,121-123,R-OCTVES,DOC,,,
+COMP-2047,2026-12-30,Wed,all,compline,set,one_of,one of the Sunday sets (alternately),doc6,46,1,R-COMPOCT,AMBIGUOUS,,,
 COMP-2048,2026-12-30,Wed,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,3229,107,R-COMPHYM,DOC,,,
 OCT-0554,2026-12-30,Wed,all,compline,set,one_of,"one of the Sunday sets (after I or after II Vespers), alternately",doc6,46,1,R-COMPOCT,AMBIGUOUS,,,
 INV-2007,2026-12-30,Wed,all,invitatory,antiphon,equals,"Хрыстус нарадзіўся, / хадземце, паклонімся Яму.",doc4,13-22,1,R-INV,DOC,,,
@@ -1927,6 +1964,7 @@ MMG-0607,2027-01-01,Fri,all,vespers,collect,starts_with,"Божа, Ты праз
 COMP-2134,2027-01-02,Sat,all,compline,set,equals,after I Vespers: Ps 4; Ps 134 (133),doc6,110-163,4-5,R-COMP,DOC,,,
 COMP-2135,2027-01-02,Sat,all,compline,hymn,contains,"Цябе, Стварыцель сусвету",doc3,3229,107,R-COMPHYM,DOC,,,
 COM-2596,2027-01-02,Sat,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,
+COM-2604,2027-01-02,Sat,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / крыніцы мудрасці.",doc8,2998,105,R-COMMON,DOC,,Common of Doctors. or the weekday antiphon,
 INV-2099,2027-01-02,Sat,all,invitatory,antiphon,allowed_alternative,"Хрыстус нарадзіўся, / хадземце, паклонімся Яму.",doc4,20,1,R-INV,DOC,,"weekday text: one of the allowed choices for a memorial (doc4:165,270,280,319,387-434)",
 COM-2598,2027-01-02,Sat,all,lauds,hymn,allowed_alternative,Святары Найвышэйшага Бога,doc8,2760,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра некалькіх пастыраў»,
 COM-2599,2027-01-02,Sat,all,lauds,shortReading.citation,allowed_alternative,"Гбр 13, 7-9а",doc8,2780,97,R-COMMON,DOC,,Common of Pastors,
@@ -2173,7 +2211,7 @@ EPI-0696,2027-01-06,Wed,all,readings,reading1,contains_heading,"Кніга пр�
 EPI-0697,2027-01-06,Wed,all,readings,reading1.responsory,starts_with,"Н. Устань, свяціся, Ерузалем, бо прыйшло тваё святло.",doc3,6138-6140,188,R-EPI,DOC+ORDO,,,
 EPI-0698,2027-01-06,Wed,all,readings,reading2,contains_heading,"Казанне св. Льва Вялікага, папы",doc3,6142,188,R-EPI,DOC+ORDO,,,
 EPI-0699,2027-01-06,Wed,all,readings,reading2.responsory,starts_with,"Н. Гэта цудоўны дзень, калі з’явіўся Збаўца свету,",doc3,6153-6155,189,R-EPI,DOC+ORDO,,,
-EPI-0714,2027-01-06,Wed,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6297,192,R-EPI,DOC+ORDO,,,
+EPI-0714,2027-01-06,Wed,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6297,192,R-EPI,AMBIGUOUS,,doc3 l.6218 «Езус» vs l.5827 «Хрыстус»: editor decides,
 EPI-0715,2027-01-06,Wed,all,sext,shortReading.citation,citation,"Іс 49, 6",doc3,6298,192,R-EPI,DOC+ORDO,,,
 EPI-0716,2027-01-06,Wed,all,sext,shortReading.text,starts_with,"Пан сказаў мне: Таго мала, каб ты быў",doc3,6299,192,R-EPI,DOC+ORDO,,,
 EPI-0732,2027-01-06,Wed,all,sext,psalms,psalm_set,complementary psalmody,doc3,6289,192,R-EPI,DOC,,,
@@ -2198,6 +2236,7 @@ COMP-2299,2027-01-07,Thu,all,compline,set,equals,weekday: Псальм 16 (15) (
 COMP-2300,2027-01-07,Thu,all,compline,hymn,contains,", О Хрыстэ, Ты дзень поўны бляску, c. 973.",doc3,5729,178,R-COMPHYM,DOC,,,
 COM-2607,2027-01-07,Thu,all,invitatory,antiphon,allowed_alternative,"Хадземце, паклонімся Пану, / Валадару пастыраў.",doc8,2507,85,R-COMMON,DOC,,Common of Pastors. or the weekday antiphon,sv-raymond-penyafort
 INV-0349,2027-01-07,Thu,all,invitatory,antiphon,equals,"Хрыстус аб’явіўся, / хадземце, паклонімся Яму.",doc4,13-22,1,R-INV,DOC,,,
+INV-0349,2027-01-07,Thu,all,invitatory,antiphon,allowed_alternative,"Хрыстус аб’явіўся, / хадземце, паклонімся Яму.",doc4,13-22,1,R-INV,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 COM-2610,2027-01-07,Thu,all,lauds,hymn,allowed_alternative,"Гімнам пастыра праславім,",doc8,2730,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра аднаго пастыра»,sv-raymond-penyafort
 COM-2611,2027-01-07,Thu,all,lauds,hymn,allowed_alternative,"Ён настаўнікам быў слаўным,",doc8,2746,96,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра прэзбітэра»,sv-raymond-penyafort
 COM-2614,2027-01-07,Thu,all,lauds,shortReading.citation,allowed_alternative,"Гбр 13, 7-9а",doc8,2780,97,R-COMMON,DOC,,Common of Pastors,sv-raymond-penyafort
@@ -2206,11 +2245,17 @@ COM-2616,2027-01-07,Thu,all,lauds,responsory,allowed_alternative,"К. Над т�
 COM-2617,2027-01-07,Thu,all,lauds,gospelAntiphon,allowed_alternative,"Не вы будзеце гаварыць, * а Дух",doc8,2784,97,R-COMMON,DOC,,Common of Pastors.,sv-raymond-penyafort
 COM-2618,2027-01-07,Thu,all,lauds,intercessions,allowed_alternative,"З удзячнасцю праславім Хрыста – добрага пастыра,",doc8,2786,97,R-COMMON,DOC,,Common of Pastors.,sv-raymond-penyafort
 HYM-2249,2027-01-07,Thu,all,lauds,hymn,starts_with,"Усе, хто Хрыста шукае,",doc3,5765,179,R-HYMN,DOC,,,
+HYM-2249,2027-01-07,Thu,all,lauds,hymn,allowed_alternative,"Усе, хто Хрыста шукае,",doc3,5765,179,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0739,2027-01-07,Thu,all,lauds,shortReading.citation,citation,"Іс 9, 5",doc3,6451,196,R-AFTEREPI,DOC,,,
+JAN-0739,2027-01-07,Thu,all,lauds,shortReading.citation,allowed_alternative,"Іс 9, 5",doc3,6451,196,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0740,2027-01-07,Thu,all,lauds,shortReading.text,starts_with,"Дзіця нарадзілася нам, Сын дадзены нам; і ўлада",doc3,6452,196,R-AFTEREPI,DOC,,,
+JAN-0740,2027-01-07,Thu,all,lauds,shortReading.text,allowed_alternative,"Дзіця нарадзілася нам, Сын дадзены нам; і ўлада",doc3,6452,196,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0741,2027-01-07,Thu,all,lauds,responsory,starts_with,К. Паклоняцца Яму * ўсе зямныя каралі. Н.,doc3,6454,197,R-AFTEREPI,DOC,,,
+JAN-0741,2027-01-07,Thu,all,lauds,responsory,allowed_alternative,К. Паклоняцца Яму * ўсе зямныя каралі. Н.,doc3,6454,197,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0742,2027-01-07,Thu,all,lauds,gospelAntiphon,contains,"Мудрацы прыйшлі з усходу ў Бэтлеем, каб пакланіцца",doc3,6455,197,R-AFTEREPI,DOC,,,
+JAN-0742,2027-01-07,Thu,all,lauds,gospelAntiphon,allowed_alternative,"Мудрацы прыйшлі з усходу ў Бэтлеем, каб пакланіцца",doc3,6455,197,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0743,2027-01-07,Thu,all,lauds,intercessions,starts_with,"Праславім Хрыста, у якім усе межы зямлі ўбачылі",doc3,6457,197,R-AFTEREPI,DOC,,,
+JAN-0743,2027-01-07,Thu,all,lauds,intercessions,allowed_alternative,"Праславім Хрыста, у якім усе межы зямлі ўбачылі",doc3,6457,197,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0744,2027-01-07,Thu,all,lauds,collect,starts_with,"Божа, наш Ойча, Тваё спрадвечнае Слова, прыняўшы з",doc3,6469,197,R-AFTEREPI,DOC,,,
 OWN-2633,2027-01-07,Thu,all,lauds,collect,starts_with,"Божа, Ты надзяліў святога Раймунда вялікай міласэрнасцю да",doc7,1157,55,R-MEM,DOC,,own collect,sv-raymond-penyafort
 PS-2256,2027-01-07,Thu,all,lauds,psalms,psalm_set,"Псальм 80 (79) | Песня Іс 12, 1-6 | Псальм 81 (80)",doc5,4074-4191,118-121,R-TEMP,DOC,,,
@@ -2226,6 +2271,7 @@ PS-2265,2027-01-07,Thu,all,none,psalms,psalm_set,"Псальм 119 (118), 65-72 
 COM-2608,2027-01-07,Thu,all,readings,hymn,allowed_alternative,"Ты, Хрыстэ, для пастыраў прыклад,",doc8,2512,85,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра аднаго пастыра»,sv-raymond-penyafort
 COM-2609,2027-01-07,Thu,all,readings,hymn,allowed_alternative,"Ты выбраў яго, каб быў верным",doc8,2528,86,R-COMMON,DOC,,Common of Pastors. hymn variant «Пра прэзбітэра»,sv-raymond-penyafort
 HYM-2248,2027-01-07,Thu,all,readings,hymn,starts_with,"Да Немаўляці прыйшлі мудрацы,",doc3,5735,178,R-HYMN,DOC,,,
+HYM-2248,2027-01-07,Thu,all,readings,hymn,allowed_alternative,"Да Немаўляці прыйшлі мудрацы,",doc3,5735,178,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0734,2027-01-07,Thu,all,readings,verse,starts_with,К. Нябёсы абвясцілі справядлівасць Пана.,doc3,6418,195,R-AFTEREPI,DOC,,,
 JAN-0735,2027-01-07,Thu,all,readings,reading1,contains_heading,"Кніга прарока Ісаі 61, 1-11",doc3,6421,195,R-AFTEREPI,DOC,,,
 JAN-0736,2027-01-07,Thu,all,readings,reading1.responsory,starts_with,"Н. Дух Пана Бога на Мне, бо Пан",doc3,6430-6432,196,R-AFTEREPI,DOC,,,
@@ -2239,7 +2285,7 @@ PS-2261,2027-01-07,Thu,all,readings,antiphon2,starts_with,"Пашкадуй, П�
 PS-2262,2027-01-07,Thu,all,readings,antiphon3,starts_with,"Паўстань, Пане, * і адкупі нас дзеля",doc5,4049,117,R-TEMP,DOC,,,
 DAY-2297,2027-01-07,Thu,all,sext,collect,starts_with,"Божа, наш Ойча, Тваё спрадвечнае Слова, прыняўшы з",doc3,6469,197,R-DAYCOLL,DOC,,«Малітва з Ютрані»,
 HYM-2251,2027-01-07,Thu,all,sext,hymn,starts_with,"Ужо настала шостая гадзіна,",doc3,5811,180,R-HYMN,DOC,,,
-JAN-0748,2027-01-07,Thu,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6478,197,R-AFTEREPI,DOC,,,
+JAN-0748,2027-01-07,Thu,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6478,197,R-AFTEREPI,AMBIGUOUS,,doc3 l.6218 «Езус» vs l.5827 «Хрыстус»: editor decides,
 JAN-0749,2027-01-07,Thu,all,sext,shortReading.citation,citation,"Іс 12, 5-6",doc3,6479,197,R-AFTEREPI,DOC,,,
 JAN-0750,2027-01-07,Thu,all,sext,shortReading.text,starts_with,"Спявайце Пану, бо Ён учыніў вялікія рэчы, абвясціце",doc3,6480,197,R-AFTEREPI,DOC,,,
 PS-2264,2027-01-07,Thu,all,sext,psalms,psalm_set,"Псальм 119 (118), 65-72 | Псальм 56 (55), 2-7b. 9-14 | Псальм 57 (56)",doc5,4192-4280,121-123,R-DAY,DOC,,current psalmody (one Hour); with several Hours the others use complementary psalmody,
@@ -2259,11 +2305,17 @@ COM-2623,2027-01-07,Thu,all,vespers,gospelAntiphon,allowed_alternative,"Дзяк
 COM-2624,2027-01-07,Thu,all,vespers,intercessions,allowed_alternative,"Праслаўляем Хрыста, Найвышэйшага Святара, і пакорна просім:",doc8,2958,103,R-COMMON,DOC,,Common of Pastors.,sv-raymond-penyafort
 COM-2651,2027-01-07,Thu,all,vespers,gospelAntiphon,allowed_alternative,"Для ўсіх я стаў усім, * каб",doc8,2477,84,R-COMMON-MAG1,DOC,,"Common of Pastors (priest), I Vespers antiphon (doc8 l.2, l.4740)",sv-raymond-penyafort
 HYM-2254,2027-01-07,Thu,all,vespers,hymn,starts_with,"Што ж ты, бязбожны Ірад,",doc3,5708,178,R-HYMN,DOC,,,
+HYM-2254,2027-01-07,Thu,all,vespers,hymn,allowed_alternative,"Што ж ты, бязбожны Ірад,",doc3,5708,178,R-HYMN,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0754,2027-01-07,Thu,all,vespers,shortReading.citation,citation,"пар. 2 П 1, 3-4",doc3,6491,198,R-AFTEREPI,DOC,,,
+JAN-0754,2027-01-07,Thu,all,vespers,shortReading.citation,allowed_alternative,"пар. 2 П 1, 3-4",doc3,6491,198,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0755,2027-01-07,Thu,all,vespers,shortReading.text,starts_with,Ад сваёй боскай сілы Хрыстус адарыў нас усім,doc3,6492,198,R-AFTEREPI,DOC,,,
+JAN-0755,2027-01-07,Thu,all,vespers,shortReading.text,allowed_alternative,Ад сваёй боскай сілы Хрыстус адарыў нас усім,doc3,6492,198,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0756,2027-01-07,Thu,all,vespers,responsory,starts_with,К. Благаслаўлёныя будуць у Ім * усе плямёны,doc3,6494,198,R-AFTEREPI,DOC,,,
+JAN-0756,2027-01-07,Thu,all,vespers,responsory,allowed_alternative,К. Благаслаўлёныя будуць у Ім * усе плямёны,doc3,6494,198,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0757,2027-01-07,Thu,all,vespers,gospelAntiphon,contains,"Убачыўшы зорку, * мудрацы вельмі ўсцешыліся / і,",doc3,6495,198,R-AFTEREPI,DOC,,,
+JAN-0757,2027-01-07,Thu,all,vespers,gospelAntiphon,allowed_alternative,"Убачыўшы зорку, * мудрацы вельмі ўсцешыліся / і,",doc3,6495,198,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0758,2027-01-07,Thu,all,vespers,intercessions,starts_with,"Благаслаўляем Хрыста Пана, які наведаў тых, хто жыў",doc3,6497,198,R-AFTEREPI,DOC,,,
+JAN-0758,2027-01-07,Thu,all,vespers,intercessions,allowed_alternative,"Благаслаўляем Хрыста Пана, які наведаў тых, хто жыў",doc3,6497,198,R-AFTEREPI,DOC,,weekday text: allowed choice for the memorial,sv-raymond-penyafort
 JAN-0759,2027-01-07,Thu,all,vespers,collect,starts_with,"Божа, наш Ойча, Тваё спрадвечнае Слова, прыняўшы з",doc3,6511,198,R-AFTEREPI,DOC,,,
 OWN-2634,2027-01-07,Thu,all,vespers,collect,starts_with,"Божа, Ты надзяліў святога Раймунда вялікай міласэрнасцю да",doc7,1157,55,R-MEM,DOC,,own collect,sv-raymond-penyafort
 PS-2266,2027-01-07,Thu,all,vespers,psalms,psalm_set,"Псальм 72 (71) | Песня Ап 11, 17-18; 12, 10b-12a",doc5,4281-4367,123-126,R-TEMP,DOC,,,
@@ -2300,7 +2352,7 @@ PS-2308,2027-01-08,Fri,all,readings,psalms,psalm_set,Псальм 38 (37),doc5,4
 PS-2313,2027-01-08,Fri,all,readings,antiphon1,starts_with,"У гневе сваім * не карай мяне,",doc5,4377,127,R-TEMP,DOC,,,
 PS-2314,2027-01-08,Fri,all,readings,antiphon2,starts_with,"Перад Табою, Пане, * усе мае жаданні.",doc5,4394,127,R-TEMP,DOC,,,
 PS-2315,2027-01-08,Fri,all,readings,antiphon3,starts_with,Пра сваю несправядлівасць раскажу Табе; * не,doc5,4417,128,R-TEMP,DOC,,,
-DAY-2337,2027-01-08,Fri,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6576,200,R-TEMP,DOC,,,
+DAY-2337,2027-01-08,Fri,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6576,200,R-TEMP,AMBIGUOUS,,doc3 l.6218 «Езус» vs l.5827 «Хрыстус»: editor decides,
 DAY-2338,2027-01-08,Fri,all,sext,shortReading.citation,citation,"Іс 48, 20",doc3,6577,200,R-TEMP,DOC,,,
 DAY-2339,2027-01-08,Fri,all,sext,shortReading.text,starts_with,"Абвяшчайце гэта радасным голасам, прапаведуйце гэта, перадайце гэта",doc3,6578,200,R-TEMP,DOC,,,
 DAY-2350,2027-01-08,Fri,all,sext,collect,starts_with,"Божа, Твой Сын Адзінародны прыйшоў на свет у",doc3,6567,200,R-DAYCOLL,DOC,,«Малітва з Ютрані»,
@@ -2356,7 +2408,7 @@ PS-2366,2027-01-09,Sat,all,readings,antiphon2,starts_with,"Сцеражыся, �
 PS-2367,2027-01-09,Sat,all,readings,antiphon3,starts_with,"Уратуй нас, Пане, * і збяры з",doc5,4796,138,R-TEMP,DOC,,,
 DAY-2392,2027-01-09,Sat,all,sext,collect,starts_with,"Божа, Светач усіх народаў, надзялі нас трывалым супакоем",doc3,6663,203,R-DAYCOLL,DOC,,«Малітва з Ютрані»,
 HYM-2357,2027-01-09,Sat,all,sext,hymn,starts_with,"Ужо настала шостая гадзіна,",doc3,5811,180,R-HYMN,DOC,,,
-JAN-0774,2027-01-09,Sat,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6672,203,R-AFTEREPI,DOC,,,
+JAN-0774,2027-01-09,Sat,all,sext,antiphon,starts_with,"Прыйшоўшы, Езус абвясціў спакой вам, якія далёка, *",doc3,6672,203,R-AFTEREPI,AMBIGUOUS,,doc3 l.6218 «Езус» vs l.5827 «Хрыстус»: editor decides,
 JAN-0775,2027-01-09,Sat,all,sext,shortReading.citation,citation,"Ап 21, 23-24",doc3,6673,204,R-AFTEREPI,DOC,,,
 JAN-0776,2027-01-09,Sat,all,sext,shortReading.text,starts_with,"І гораду не патрэбны ні сонца, ні месяц,",doc3,6674,204,R-AFTEREPI,DOC,,,
 PS-2369,2027-01-09,Sat,all,sext,psalms,psalm_set,"Псальм 119 (118), 81-88 | Псальм 61 (60) | Псальм 64 (63)",doc5,4950-5023,142-144,R-DAY,DOC,,current psalmody (one Hour); with several Hours the others use complementary psalmody,
@@ -2430,7 +2482,7 @@ BAP-0831,2027-01-10,Sun,all,vespers,intercessions,starts_with,"Просім на
 BAP-0832,2027-01-10,Sun,all,vespers,collect,starts_with,"Усемагутны вечны Божа, пасля хрышчэння ў Ярдане Ты",doc3,7269,221,R-BAP,DOC+ORDO,,,
 ORD-0836,2027-01-11,Mon,all,office,season,equals,"Ordinary Time, week 1 (no Advent/Christmas texts)",doc3,6412,195,R-AFTEREPI,DOC+ORDO,,,
 EXC-0878,2027-12-19,Sun,all,readings,verse+reading1+reading2,same_as,texts of 19 December,doc3,"2176,2625-2720",73-90,R-SUN4,DOC,,,
-EXC-0872,2028-12-16,Sat,all,vespers,gospelAntiphon+intercessions,same_as,"III Sunday falls on 17 Dec: antiphon to Magnificat and intercessions of 17 December (pp. 297-303), hymns of the post-16 section",doc3,1504,51,R-SUN3-17,DOC,,,
+EXC-0872,2028-12-16,Sat,all,vespers,gospelAntiphon+intercessions,same_as,III Sunday falls on 17 Dec: whether I Vespers (16 Dec) already takes the Magnificat antiphon of 17 December is not stated for I Vespers,doc3,1504,51,R-SUN3-17,AMBIGUOUS,,,
 EXC-0873,2028-12-17,Sun,all,lauds,gospelAntiphon,starts_with,"Ведайце, што блізка Валадарства Божае;",doc3,"1598,2472",54-82,R-SUN3-17,DOC,,,
 EXC-0874,2028-12-17,Sun,all,vespers,gospelAntiphon,starts_with,"Мудрасць, што паходзіш з вуснаў",doc3,"1648,2513",55-83,R-SUN3-17,DOC,,,
 EXC-0876,2028-12-24,Sun,all,lauds,whole_hour,same_as,"everything as 24 December (pp. 346-352), not Sunday IV",doc3,2181,73,R-SUN4-24,DOC,,,
