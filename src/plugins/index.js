@@ -1,6 +1,5 @@
 import vuetify from './vuetify'
 import router from '../router'
-import { scheduleSentryInit } from './sentry';
 
 import { createPinia } from 'pinia'
 
@@ -12,6 +11,4 @@ export function registerPlugins (app) {
     .use(pinia)
     .use(vuetify)
     .use(router)
-
-  scheduleSentryInit(app, router)
 }

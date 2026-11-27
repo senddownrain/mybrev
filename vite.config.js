@@ -133,8 +133,9 @@ export default defineConfig(({ command, mode }) => {
       workbox: {
         importScripts: ['/priest-cache-cleanup.js'],
         cleanupOutdatedCaches: true,
-        // Legal page must bypass the SPA navigation fallback in installed PWAs.
-        navigateFallbackDenylist: [/^\/privacy(?:\.html)?\/?$/],
+        // Use the installed shell offline. A recovery navigation asks Hosting
+        // for a fresh shell, and asset URLs must never receive an HTML fallback.
+        navigateFallbackDenylist: [/^\/(?:privacy(?:\.html)?\/?(?:\?|$)|assets\/)/, /\/[^/?]*\.[^/?]+(?:\?|$)/, /[?&]app-retry=/],
         globPatterns: ['index.html', 'registerSW.js', 'manifest.webmanifest', 'assets/*.{js,css,woff2}'],
         manifestTransforms: [(entries) => ({
           manifest: entries.filter(({ url }) => !url.startsWith('assets/') || offlineAssets.has(url)),
@@ -145,7 +146,29 @@ export default defineConfig(({ command, mode }) => {
               && ['script', 'style', 'font'].includes(request.destination),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'mybrev-opened-assets-v1',
+              cacheName: 'mybrev-opened-assets-v2',
+              cacheableResponse: { statuses: [200] },
+              plugins: [{
+                cacheWillUpdate: async ({ request, response }) => {
+                  const type = response.headers.get('content-type') || '';
+                  const types = {
+                    script: /\b(?:java|ecma)script\b/i,
+                    style: /^text\/css\b/i,
+                    font: /^(?:font\/|application\/(?:font-|octet-stream))/i,
+                  };
+                  if (response.status !== 200 || !types[request.destination]?.test(type)) return null;
+                  if (request.destination !== 'script' || !response.body) return response;
+                  const reader = response.clone().body.getReader();
+                  try {
+                    const { value } = await reader.read();
+                    const prefix = new globalThis.TextDecoder().decode(value?.subarray(0, 200));
+                    return /^\s*(?:<!doctype html|<html[\s>])/i.test(prefix) ? null : response;
+                  } finally {
+                    // Awaiting cancellation of a tee can wait on the consumer.
+                    reader.cancel().catch(() => {});
+                  }
+                },
+              }],
               expiration: { maxEntries: 160, maxAgeSeconds: 60 * 60 * 24 * 180 },
             },
           },

@@ -115,7 +115,7 @@ watch(
       }
     };
     try {
-      show(await getLiturgicalContentForDate(date.clone().add(1, 'day').toDate(), undefined, { onCached: show }));
+      show(await getLiturgicalContentForDate(date.clone().add(1, 'day').toDate(), undefined, { onCached: show, onUpdated: show }));
     } catch (error) {
       // The current day's Vespers remain usable if preloading tomorrow failed.
       logger.error('[Vesper] tomorrow first-Vespers lookup failed:', error);

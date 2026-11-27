@@ -32,17 +32,18 @@ function fixture({ hidden = false, pathname = '/', offline = false, dataSaver = 
   const bindings = {
     useLiturgicalStore: () => store,
     buildDateWarmupOrder, CACHE_DAYS_AHEAD: 7, CACHE_DAYS_BEHIND: 1,
-    publicContentCache: null, contentKey: hoursKey, readingsKey,
+    publicContentCache: null, contentKey: hoursKey, readingsKey, legacyReaderKey: () => undefined,
+    hasCorrectedHours: () => true,
     currentOrdoDiocese: () => diocese, isFirestoreQuotaBlocked,
     logger: { log() {}, error() {} },
     navigator: nav, document: doc, window: win,
   };
   const api = new Function(...Object.keys(bindings),
-    `${source}\nreturn { warmupExtendedDateWindow, mayPrefetchExtendedContent, EXTENDED_CACHE_RECHECK_MS };`)(
+    `${source}\nreturn { warmupExtendedDateWindow, mayPrefetchExtendedContent };`)(
     ...Object.values(bindings));
   const cache = {
     prime: async () => {},
-    hasRecentComplete: (key) => cached.has(key),
+    hasComplete: (key) => cached.has(key),
   };
   const store = {
     async fetchContentByDate(date, options) {
@@ -144,9 +145,8 @@ test('a complete cache is not touched if it already contains all nine days', asy
 });
 
 
-test('startup can enable speculative prefetch only in development', async () => {
+test('startup can schedule speculative prefetch after observing the first prayer', async () => {
   const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
-  assert.match(main, /import.meta.env.DEV && import.meta.env.VITE_ENABLE_EXTENDED_CACHE_WARMUP === 'true'/);
-  assert.match(main, /delay: 20000, idleTimeout: 12000/);
+  assert.match(main, /observeFirstPrayerText\(\(\) => \{[\s\S]+?VITE_ENABLE_EXTENDED_CACHE_WARMUP !== 'false'[\s\S]+?warmupExtendedDateWindow/);
   assert.doesNotMatch(main, /warmupCache\(/);
 });

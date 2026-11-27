@@ -22,9 +22,16 @@ test('About links to privacy route and Hosting returns static page', () => {
   const hosting = JSON.parse(read('../firebase.json'));
   assert.match(about, /href="\/privacy"/);
   const i = hosting.hosting.rewrites.findIndex((r) => r.source === '/privacy');
-  const fallback = hosting.hosting.rewrites.findIndex((r) => r.source === '**');
+  const fallback = hosting.hosting.rewrites.findIndex((r) => r.destination === '/index.html');
   assert.ok(i >= 0 && i < fallback, 'privacy rewrite must precede SPA fallback');
   assert.equal(hosting.hosting.rewrites[i].destination, '/privacy.html');
+  const routes = new RegExp(hosting.hosting.rewrites[fallback].regex);
+  for (const path of ['/', '/readings/2026-11-27', '/day/2026-11-27/ora/ordinary-w34-d6/laudes']) {
+    assert.match(path, routes);
+  }
+  for (const path of ['/privacy', '/privacy.html', '/assets/stale.js', '/registerSW.js']) {
+    assert.doesNotMatch(path, routes);
+  }
 });
 
 test('privacy policy describes the actual feedback collection and Cloudflare processing', () => {

@@ -1,6 +1,5 @@
 <template>
     <v-container class="prayer-content-area">
-        <v-alert v-if="!pending && error" type="warning" variant="tonal" class="mb-4" role="alert">{{ error }}</v-alert>
         <v-row lign="center"
       justify="center">
             <v-col class="liturgical-hour-column" v-if="!pending && day">
@@ -38,7 +37,7 @@ import LastPrayer from '@/components/oraparts/LastPrayer.vue';
 import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
-const { day, pending, error } = useResolvedLiturgicalDay();
+const { day, pending } = useResolvedLiturgicalDay();
 
 </script>
 

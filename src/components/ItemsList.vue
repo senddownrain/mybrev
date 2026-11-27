@@ -238,14 +238,17 @@ const fetchItemsForDate = async (date) => {
   loading.value = true;
   error.value = null;
   try {
-    const results = await Promise.all(list.map((diocese, index) =>
-      getLiturgicalContentForDate(date.toDate(), diocese, {
-        onCached(result) {
-          cached[index] = result;
-          if (cached.every(Boolean)) show(cached);
-        },
-      })));
-    if (results.some((result, index) => result !== cached[index])) show(results);
+    const update = (index, result) => {
+      cached[index] = result;
+      if (cached.every(Boolean)) show(cached);
+    };
+    await Promise.all(list.map(async (diocese, index) => {
+      const result = await getLiturgicalContentForDate(date.toDate(), diocese, {
+        onCached: (value) => update(index, value),
+        onUpdated: (value) => update(index, value),
+      });
+      if (!cached[index]) update(index, result);
+    }));
   } catch (e) {
     if (fetchId !== _currentFetchId) return;
     logger.error('[ItemsList] Critical error loading data:', e);

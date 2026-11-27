@@ -5,7 +5,8 @@ import { LITURGICAL_DAYS_COLLECTION, LITURGICAL_PROPER_TEXTS_COLLECTION } from '
 import { isSparseDayDocument } from '@/constants/officeFields';
 import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
-import { applyWebLiturgicalCorrections } from '@/utils/webLiturgicalCorrections';
+import { createReadSession } from '@/utils/contentCache';
+import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
 import { calculatePsalterWeek } from '@/utils/liturgicalPsalter';
 import {
   getPeriodDayDocumentId,
@@ -65,44 +66,40 @@ export function getDaysByFeastQuery(feastCode) {
 
 // Query results (the `_date`/`_feast` lookups and the feast list) skip
 // documents retired by a migration; single-document reads by id do not.
-async function snapshotToDocs(snapshot, webCorrections = true) {
-  return withoutObsoleteDocuments(await Promise.all(snapshot.docs.map((item) =>
-    webCorrections ? applyWebLiturgicalCorrections(item.ref.parent.id, { id: item.id, ...item.data() }) : { id: item.id, ...item.data() })));
+function snapshotToDocs(snapshot) {
+  return withoutObsoleteDocuments(snapshot.docs.map(dayDocument));
 }
 
-const correctedDay = (snapshot) => applyWebLiturgicalCorrections(
-  LITURGICAL_DAYS_COLLECTION, { id: snapshot.id, ...snapshot.data() },
-);
+const dayDocument = (snapshot) => ({ id: snapshot.id, ...snapshot.data() });
 
-async function queryDocs(q, session, webCorrections) {
-  return snapshotToDocs(await getDocsOfflineAware(q, session), webCorrections);
+async function queryDocs(q, session) {
+  return snapshotToDocs(await getDocsOfflineAware(q, session));
 }
 
-async function queryAll(queries, session, webCorrections) {
-  const results = await Promise.all(queries.map((q) => queryDocs(q, session, webCorrections)));
+async function queryAll(queries, session) {
+  const results = await Promise.all(queries.map((q) => queryDocs(q, session)));
   const merged = new Map();
   results.flat().forEach((item) => merged.set(item.id, item));
   return [...merged.values()];
 }
 
-async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek, session, webCorrections) {
+async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek, session) {
   const resolved = resolveDayAgainstPeriod(day, null);
   const fallbackId = periodPsalterFallbackId(resolved, periodType, periodWeekNumber, dayOfWeek);
   if (!fallbackId) return resolved;
   try {
     const snapshot = await getDocOfflineAware(doc(getDaysCollection(), fallbackId), session);
     if (!snapshot.exists()) return resolved;
-    return applyPeriodPsalterFallback(resolved, (webCorrections ? await correctedDay(snapshot) : { id: snapshot.id, ...snapshot.data() }), periodType);
+    return applyPeriodPsalterFallback(resolved, dayDocument(snapshot), periodType);
   } catch (error) {
     logger.error(`[liturgicalDayService] psalter fallback failed (${fallbackId}):`, error);
     return resolved;
   }
 }
 
-// Editor/picker keeps original source values; only public Hours opt into the layer.
-export const findDayByPeriod = (type, week, day, session) => findPeriodDay(type, week, day, session, false);
+export const findDayByPeriod = (type, week, day, session) => findPeriodDay(type, week, day, session);
 
-async function findPeriodDay(periodType, periodWeekNumber, dayOfWeek, session, webCorrections = true) {
+async function findPeriodDay(periodType, periodWeekNumber, dayOfWeek, session) {
   // Prefer the canonical document. Besides being cheaper than two compound
   // queries, this can read a day that is already present in IndexedDB while
   // Firestore is temporarily unavailable or its quota is exhausted.
@@ -113,9 +110,9 @@ async function findPeriodDay(periodType, periodWeekNumber, dayOfWeek, session, w
     try {
       const snapshot = await getDocOfflineAware(doc(getDaysCollection(), canonicalId), session);
       if (snapshot.exists()) {
-        canonicalDay = webCorrections ? await correctedDay(snapshot) : { id: snapshot.id, ...snapshot.data() };
+        canonicalDay = dayDocument(snapshot);
         return withPeriodPsalterFallback(
-          canonicalDay, periodType, periodWeekNumber, dayOfWeek, session, webCorrections,
+          canonicalDay, periodType, periodWeekNumber, dayOfWeek, session,
         );
       }
     } catch (error) {
@@ -134,18 +131,18 @@ async function findPeriodDay(periodType, periodWeekNumber, dayOfWeek, session, w
         where('_dayOfWeek', '==', Number(dayOfWeek)),
         where('_periodWeekNumber', '==', Number(periodWeekNumber)),
       ),
-    ], session, webCorrections);
+    ], session);
   } catch (error) {
     queryError = error;
   }
   if (variants[0]) {
     return withPeriodPsalterFallback(
-      variants[0], periodType, periodWeekNumber, dayOfWeek, session, webCorrections,
+      variants[0], periodType, periodWeekNumber, dayOfWeek, session,
     );
   }
   if (canonicalDay) {
     return withPeriodPsalterFallback(
-      canonicalDay, periodType, periodWeekNumber, dayOfWeek, session, webCorrections,
+      canonicalDay, periodType, periodWeekNumber, dayOfWeek, session,
     );
   }
   if (canonicalError) throw canonicalError;
@@ -159,12 +156,17 @@ async function getSeasonalException(mDate, periodType, session) {
   const id = getSeasonalDateExceptionId(mDate, periodType) || getSeasonalDateDocumentId(mDate);
   if (!id) return null;
   const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, id), session);
-  return snapshot.exists() ? correctedDay(snapshot) : null;
+  return snapshot.exists() ? dayDocument(snapshot) : null;
 }
 
 async function getOfficeForDead(session) {
-  const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, OFFICE_FOR_DEAD_ID), session);
-  return snapshot.exists() ? correctedDay(snapshot) : null;
+  const entry = await publicContentCache.read(publicContentKey('office-for-dead'), async () => {
+    const documentSession = createReadSession(session?.deadline);
+    const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, OFFICE_FOR_DEAD_ID), documentSession);
+    return { data: snapshot.exists() ? dayDocument(snapshot) : null, complete: documentSession.complete };
+  }, { maxAge: 24 * 60 * 60 * 1000 });
+  if (session && !entry.complete) session.complete = false;
+  return entry.data;
 }
 
 function dynamicFeastVariants(code) {
