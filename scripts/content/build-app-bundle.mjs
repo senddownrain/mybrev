@@ -26,6 +26,8 @@ import zlib from 'node:zlib';
 import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
 import {
   APP_CONTENT_COLLECTIONS,
+  OPTIONAL_CONTENT_COLLECTIONS,
+  PRAYER_DEPENDENT_COLLECTIONS,
   PRAYER_EXPORT_GUARDS,
   CONTENT_SCHEMA_VERSION,
   describeDocuments,
@@ -51,8 +53,8 @@ function parseArgs(argv) {
 export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTIONS) {
   const found = new Map();
   const versions = new Map();
-  const readsPrayers = names.includes('prayers') || names.includes('prayerCategories');
-  const sources = readsPrayers ? [...new Set([...names, ...PRAYER_EXPORT_GUARDS])] : names;
+  const readsPrayers = PRAYER_DEPENDENT_COLLECTIONS.some((name) => names.includes(name));
+  const sources = readsPrayers ? [...new Set([...names, 'prayers', 'prayerCategories', ...PRAYER_EXPORT_GUARDS])] : names;
   for (const dir of snapshotDirs) {
     const snapshot = await openFirestoreSnapshot(dir);
     if (readsPrayers && ['prayers', 'prayerCategories'].some((name) => snapshot.collectionPaths.includes(name))) {
@@ -72,6 +74,12 @@ export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTI
       versions.set(name, Date.parse(snapshot.manifest.exportedAt));
     }
   }
+  for (const name of names.filter((item) => OPTIONAL_CONTENT_COLLECTIONS.includes(item) && !found.has(item))) {
+    // Stamped with the oldest snapshot, so any later publication is newer.
+    console.warn(`${name}: not in the snapshots, treated as empty`);
+    found.set(name, []);
+    versions.set(name, Math.min(...versions.values()));
+  }
   const missing = names.filter((name) => !found.has(name));
   if (missing.length) throw new Error(`Not in the snapshots: ${missing.join(', ')}`);
   return { collections: found, versions, contentVersion: Math.max(...versions.values()) };
@@ -82,8 +90,8 @@ export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTI
  * collection file and manifest entry carries the version of that collection
  * (its snapshot time), never a shared minimum.
  */
-export function writeBundle(collections, versions, contentVersion, out, { log = console.log } = {}) {
-  collections = publicAppCollections(collections);
+export function writeBundle(collections, versions, contentVersion, out, { log = console.log, project = publicAppCollections } = {}) {
+  collections = project(collections);
   fs.mkdirSync(out, { recursive: true });
   const manifest = {
     schemaVersion: CONTENT_SCHEMA_VERSION,

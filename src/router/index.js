@@ -241,6 +241,14 @@ const routes = [
         component: () => import('@/views/admin/PrayerDraftEditor.vue'),
       },
       {
+        path: 'novenas', name: 'AdminNovenas',
+        component: () => import('@/views/admin/Novenas.vue'),
+      },
+      {
+        path: 'novenas/:id', name: 'AdminNovenaEditor',
+        component: () => import('@/views/admin/NovenaEditor.vue'),
+      },
+      {
         path: 'ordo/year-overrides',
         name: 'AdminYearOverrides',
         component: () => import('@/views/admin/YearOverrides.vue'),

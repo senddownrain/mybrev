@@ -35,6 +35,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import {
   APP_CONTENT_COLLECTIONS,
+  PRAYER_DEPENDENT_COLLECTIONS,
   PRAYER_EXPORT_GUARDS,
   CONTENT_SCHEMA_VERSION,
   classifyPatch,
@@ -149,7 +150,7 @@ async function main() {
     if (firestore) {
       const collections = new Map();
       const selected=options.collections.length?options.collections:APP_CONTENT_COLLECTIONS;
-      const includesPrayers = selected.includes('prayers') || selected.includes('prayerCategories');
+      const includesPrayers = PRAYER_DEPENDENT_COLLECTIONS.some((name) => selected.includes(name));
       const readNames = [...new Set([...selected, ...(includesPrayers ? ['prayers', 'prayerCategories', ...PRAYER_EXPORT_GUARDS] : [])])];
       let scopedReads = 0;
       const before = includesPrayers ? (await firestore.doc(CONTENT_CONTROL).get()).data() : null;
