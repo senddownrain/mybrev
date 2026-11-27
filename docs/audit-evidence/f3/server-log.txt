@@ -1,0 +1,15 @@
+analytics staging local fallback listening on 127.0.0.1:8799
+{"code":"ok","status":204,"cells":7,"rowsWritten":8}
+{"code":"ingest_disabled","status":503}
+analytics staging local fallback listening on 127.0.0.1:8799
+{"code":"ingest_disabled","status":503}
+{"code":"ingest_disabled","status":503}
+{"code":"ingest_disabled","status":503}
+{"code":"ingest_disabled","status":503}
+{"code":"ingest_disabled","status":503}
+{"code":"ok","status":204,"cells":3,"rowsWritten":4}
+{"code":"unsupported_schema","status":426}
+{"code":"invalid_packet","status":400,"errors":1}
+{"code":"bad_json","status":400}
+{"code":"payload_too_large","status":413}
+{"code":"day_out_of_range","status":400}
