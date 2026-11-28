@@ -21,6 +21,7 @@ const offlineReaders = new Set([
   'src/components/ItemsList.vue', 'src/components/OrasList.vue', 'src/components/common/CustomDatePicker.vue',
   'src/components/readings/ReadingsView.vue', 'src/components/prayers/PrayerView.vue',
   'src/components/prayers/PrayersList.vue', 'src/views/Prayers.vue', 'src/views/FavoritePrayers.vue',
+  'src/components/BackToTop.vue', 'src/components/common/FeedbackPrompt.vue',
   'src/services/liturgicalContentService.js', 'src/services/readingsService.js',
   // An offline launch still needs to register the calendar's online listener.
   'src/services/ordoCalendarService.js',
@@ -31,6 +32,40 @@ function collectOfflineAssets(root, entries) {
   return {
     name: 'mybrev-offline-assets',
     apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(_html, { bundle }) {
+        const sources = Object.fromEntries(Object.values(bundle || {}).filter((chunk) => chunk.type === 'chunk'
+          && chunk.facadeModuleId).map((chunk) => [chunk.facadeModuleId.replaceAll('\\', '/').replace(base, ''), chunk.fileName]));
+        const hours = Object.fromEntries(Object.entries(sources).filter(([source]) => /^src\/components\/oras\/[^/]+\.vue$/.test(source))
+          .map(([source, file]) => [source.split('/').at(-1).slice(0, -4).toLowerCase(), '/' + file]));
+        if (!hours.laudes) return [];
+        hours.invitatorium = hours.invit;
+        const layout = ['src/layouts/simple/One.vue', 'src/layouts/default/OraBar.vue']
+          .map((source) => sources[source]).filter(Boolean).map((file) => '/' + file);
+        const content = sources['src/services/liturgicalContentService.js'];
+        return [{
+          tag: 'script', injectTo: 'head-prepend',
+          children: `(() => {
+            const hour = location.pathname.match(/^\\/day\\/[^/]+\\/ora\\/[^/]+\\/([^/]+)\\/?$/)?.[1];
+            const files = ${JSON.stringify(hours)};
+            if (!Object.hasOwn(files, hour)) return;
+            const preload = (href) => {
+              const link = document.createElement('link');
+              link.rel = 'modulepreload';
+              link.crossOrigin = 'anonymous';
+              link.href = href;
+              document.head.appendChild(link);
+            };
+            for (const href of [...${JSON.stringify(layout)}, files[hour]]) preload(href);
+            const coldContent = ${JSON.stringify(content ? '/' + content : '')};
+            if (coldContent) window.indexedDB?.databases?.().then(databases => {
+              if (!databases.some(database => database.name?.startsWith('mybrev-public-'))) preload(coldContent);
+            }).catch(() => {});
+          })()`,
+        }];
+      },
+    },
     generateBundle(_options, bundle) {
       const add = (chunk) => {
         if (entries.has(chunk.fileName)) return;

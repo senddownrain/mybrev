@@ -24,14 +24,14 @@
       </div>
     </Transition>
     <TextScaleControl v-if="isHour" class="ora-action-start" />
-    <v-btn v-if="auth.isAdmin" icon variant="flat" class="ora-circle-btn" :class="{ 'ora-action-start': !isHour }" aria-label="Рэдагаваць" @click="onEditClick"><PhPencilSimple :size="21" /></v-btn>
+    <v-btn v-if="auth?.isAdmin" icon variant="flat" class="ora-circle-btn" :class="{ 'ora-action-start': !isHour }" aria-label="Рэдагаваць" @click="onEditClick"><PhPencilSimple :size="21" /></v-btn>
   </v-app-bar>
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/auth.js';
+import { afterContentPaint, firstPrayerPaint } from '@/utils/afterContentPaint';
 import { PhArrowLeft, PhCaretDown, PhPencilSimple } from '@phosphor-icons/vue';
 import { trackFeature } from '@/utils/trackFeature';
 import TextScaleControl from '@/components/TextScaleControl.vue';
@@ -42,7 +42,7 @@ import { LITURGICAL_HOUR_TITLES } from '@/constants/liturgicalHours';
 
 const router = useRouter();
 const route = useRoute();
-const auth = useAuthStore();
+const auth = shallowRef(null);
 const hours = useLiturgicalHours();
 const isHour = computed(() => route.name !== 'oras');
 const hourTitle = computed(() => LITURGICAL_HOUR_TITLES[route.name] || 'Літургія гадзінаў');
@@ -51,6 +51,7 @@ let headingObserver;
 let contentObserver;
 let heading;
 let authTimer;
+let unmounted = false;
 function isCurrentHour(hour) {
   return hour.path.name === route.name && (hour.path.query.firstVespersDayId || '') === (route.query.firstVespersDayId || '');
 }
@@ -67,8 +68,19 @@ function observeHeading() {
   headingObserver.observe(heading);
 }
 onMounted(async () => {
-  // The editor action can resolve the saved account after the reader opens.
-  authTimer = window.setTimeout(() => { void auth.init().catch(() => {}); }, 1500);
+  const scheduleAuth = () => {
+    if (unmounted) return;
+    authTimer = window.setTimeout(async () => {
+      try {
+        const { useAuthStore } = await import('@/stores/auth.js');
+        if (unmounted) return;
+        auth.value = useAuthStore();
+        await auth.value.init();
+      } catch { /* The editor action stays hidden when auth is unavailable. */ }
+    }, 1500);
+  };
+  if (isHour.value) firstPrayerPaint.then(scheduleAuth);
+  else afterContentPaint(scheduleAuth);
   await nextTick();
   contentObserver = new window.MutationObserver(observeHeading);
   contentObserver.observe(document.querySelector('.v-main'), { childList: true, subtree: true });
@@ -82,6 +94,7 @@ watch(() => route.fullPath, async () => {
   observeHeading();
 });
 onBeforeUnmount(() => {
+  unmounted = true;
   window.clearTimeout(authTimer);
   headingObserver?.disconnect();
   contentObserver?.disconnect();

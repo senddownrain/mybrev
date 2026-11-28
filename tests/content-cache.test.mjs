@@ -80,6 +80,36 @@ test('a blocked IndexedDB open is retried after the storage recovers', async (t)
   assert.equal(opens, 2);
 });
 
+test('a late existing IndexedDB connection is shared and supplies the saved day before Firestore', async () => {
+  let opens = 0;
+  const entry = { ...complete('saved'), revision: '1' };
+  const indexedDB = {
+    databases: async () => [{ name: 'test' }],
+    open() {
+      opens += 1;
+      const request = { result: {
+        transaction() {
+          const tx = { objectStore: () => ({ get: () => ({ result: JSON.stringify(entry) }) }) };
+          queueMicrotask(() => tx.oncomplete());
+          return tx;
+        },
+      } };
+      setTimeout(() => request.onsuccess(), 500);
+      return request;
+    },
+  };
+  const storage = createContentCacheStorage('test', indexedDB);
+  const cache = createContentCache({ storage, getRevision: () => '1', isOnline: () => true });
+  const ordinary = assert.rejects(storage.get('another-key'), /open timed out/);
+  const read = () => cache.read('day', () => assert.fail('a saved reader day must avoid the network'), {
+    revalidateInBackground: () => assert.fail('the current day is fresh'),
+  });
+  const [first, second] = await Promise.all([read(), read(), ordinary]);
+  assert.equal(first.data, 'saved');
+  assert.equal(second, first);
+  assert.equal(opens, 1);
+});
+
 test('a new app instance restores a complete day with zero network reads, regardless of age', async () => {
   const f = fixture();
   let reads = 0;

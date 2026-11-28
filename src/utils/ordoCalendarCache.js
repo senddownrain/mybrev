@@ -10,8 +10,8 @@ export const CALENDAR_CACHE_KEY = publicContentKey('ordo-calendar');
 export const YEAR_OVERRIDES_CACHE_KEY = publicContentKey('ordo-year-overrides');
 export const NOTES_CACHE_KEY = publicContentKey('ordo-notes');
 
-export async function restoreCalendarCache() {
-  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY]);
+export async function restoreCalendarCache(options) {
+  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY], options);
   applyCachedCalendar();
 }
 

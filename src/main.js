@@ -9,7 +9,9 @@ import { rememberLegacyCalendarKey } from '@/utils/publicContentCache'
 import { scheduleSentryInit } from './plugins/sentry'
 import router from '@/router'
 
-const calendarReady = restoreCalendarCache()
+const liturgicalEntry = window.location.pathname === '/'
+  || /^\/(?:day|readings|ordo|picker)(?:\/|$)/.test(window.location.pathname)
+const calendarReady = restoreCalendarCache({ preferExisting: liturgicalEntry })
   .catch(error => console.warn('[main] Local calendar unavailable:', error.message))
   .then(rememberLegacyCalendarKey)
 const app = createApp(App, { calendarReady })

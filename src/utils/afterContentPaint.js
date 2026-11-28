@@ -4,6 +4,8 @@ export function afterContentPaint(task) {
 }
 
 const prayerTextSelector = '.liturgical-hour-column .ora-text, .readings-content .parsed-reading, .prayer-view-container .prayer-text';
+let resolveFirstPrayerPaint;
+export const firstPrayerPaint = new Promise((resolve) => { resolveFirstPrayerPaint = resolve; });
 
 export function observeFirstPrayerText(task) {
   function check() {
@@ -12,6 +14,7 @@ export function observeFirstPrayerText(task) {
     observer.disconnect();
     afterContentPaint(() => {
       performance.mark('malitounik:first-prayer-text');
+      resolveFirstPrayerPaint();
       task();
     });
   }
