@@ -152,3 +152,27 @@ test('partial or different whole-verse antiphon does not omit a psalm stanza', (
     noContinuation,
   );
 });
+
+// ADV-01/07/08: opening verses of Psalms 18, 81 and 147 (doc5 l.1122, 4148, 4535).
+const flexaCases = [
+  ['ADV-01 02.12', '1 ант. Буду любіць Цябе, Пане, моц мая.',
+    '<p>Буду любіць Цябе, Пане, моц мая. &dagger;<br />&dagger; Пан &ndash; мая скала i мая цвярдыня, *<br />Ён мой Збаўца.</p>',
+    /^†\s+Пан – мая скала i мая цвярдыня, \*\s*Ён мой Збаўца\.$/u],
+  ['ADV-07 10.12', '3 ант. Радасна спявайце Богу, нашай моцы.',
+    '<p>Радасна спявайце Богу, нашай моцы, *<br />&dagger; усклікайце Богу Якуба.</p>', /^†\s+усклікайце Богу Якуба\.$/u],
+  ['ADV-08 11.12', '3 ант. Хвалі, Ерузалем, Пана.',
+    '<p>Хвалі, Ерузалем, Пана, *<br />&dagger; праслаўляй, Сіён, твайго Бога.</p>', /^†\s+праслаўляй, Сіён, твайго Бога\.$/u],
+];
+
+for (const [name, antiphon, source, expected] of flexaCases) {
+  test(`${name}: one † opens the continuation without a break after it`, () => {
+    const prepared = formatPsalmHtml(`${source}<p>Другі верш &dagger; пасярэдзіне, *<br />канец.</p>`);
+    const [first, second] = strophes(formatPsalmOpening(prepared, antiphon));
+    assert.match(first.text.trim(), expected);
+    assert.equal(first.text.match(/†/gu).length, 1);
+    assert.match(first.innerHTML, /psalm-opening-flexa[^>]*>†<\/span>&nbsp;/u);
+    assert.equal(second.toString(), strophes(prepared)[1].toString());
+    // No opening antiphon, or a different one: the source stays whole.
+    for (const other of ['', 'Ант. Іншая антыфона.']) assert.equal(formatPsalmOpening(prepared, other), prepared);
+  });
+}

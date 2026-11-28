@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import moment from '../src/utils/moment-be.js';
 import {
   applySeasonalWeekdayAntiphons,
+  resolveAdventDateAgainstPeriod,
   getFixedCelebrationKey,
   getFixedDayTemplateKey,
   getDaytimeHourField,
@@ -400,4 +401,44 @@ test('detects one antiphon surrounding a complete group of three psalms', () => 
   assert.equal(hasSingleAntiphonPsalmody({
     ant1: '<p>Антыфона</p>', ant2: '', ant3: '', ps1: '1', ps2: '', ps3: '3',
   }), false);
+});
+
+test('ADV-12: a dated Advent document keeps its own Lauds antiphons over the weekday set', () => {
+  const period = { id: 'advent-w4-d5', laudesHymn: '<p>Гімн</p>' };
+  const weekdaySet = '<p>1 ант. Тыдзень</p><p>2 ант. Тыдзень</p><p>3 ант. Тыдзень</p>';
+  const own = resolveAdventDateAgainstPeriod({
+    id: 'advent-24-12',
+    laudesAnt1: '<p>1 ант. Ты, Бэтлеем</p>',
+    laudesAnt2: '<p>2 ант. Падыміце</p>',
+    laudesAnt3: '<p>3 ант. Заўтра</p>',
+    thursday: weekdaySet,
+  }, period, 5);
+  assert.match(own.laudesAnt1, /Ты, Бэтлеем/u);
+  assert.match(own.laudesAnt3, /Заўтра/u);
+  // 17–23 December: no own antiphons, the weekday set still applies.
+  const plain = resolveAdventDateAgainstPeriod({ id: 'advent-19-12', thursday: weekdaySet }, period, 5);
+  assert.match(plain.laudesAnt1, /Тыдзень/u);
+  assert.match(plain.vesperAnt2, /Тыдзень/u);
+});
+
+test('ADV-10: Sunday IV of Advent takes verse and readings from the calendar date, the rest from the Sunday', () => {
+  const sunday = {
+    id: 'advent-w4-d1', _periodType: 'advent', _periodWeekNumber: 4,
+    officeOfReadingsHymn: '<p>Гімн нядзелі</p>',
+    officeOfReadingsVers: '<p>Верш 21</p>', officeOfReadingsR1: '<p>Чытанне 21.12</p>', officeOfReadingsR2: '<p>Чытанне 2 21.12</p>',
+  };
+  const dated = {
+    id: 'advent-20-12',
+    officeOfReadingsVers: '<p>Верш 20</p>', officeOfReadingsR1: '<p>Чытанне 20.12</p>', officeOfReadingsR2: '<p>Чытанне 2 20.12</p>',
+    officeOfReadingsHymn: '<p>Гімн даты</p>',
+  };
+  const resolved = resolveAdventDateAgainstPeriod(dated, sunday, 1, { periodWeek: 4 });
+  assert.equal(resolved.officeOfReadingsR1, '<p>Чытанне 20.12</p>');
+  assert.equal(resolved.officeOfReadingsR2, '<p>Чытанне 2 20.12</p>');
+  assert.equal(resolved.officeOfReadingsVers, '<p>Верш 20</p>');
+  assert.equal(resolved.officeOfReadingsHymn, '<p>Гімн нядзелі</p>');
+  assert.equal(resolved._fieldSources.officeOfReadingsR1.document, 'advent-20-12');
+  // A missing dated reading never blanks the Hour: the Sunday's text stays.
+  const fallback = resolveAdventDateAgainstPeriod({ id: 'advent-20-12' }, sunday, 1, { periodWeek: 4 });
+  assert.equal(fallback.officeOfReadingsR1, '<p>Чытанне 21.12</p>');
 });

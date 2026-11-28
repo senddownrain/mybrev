@@ -65,6 +65,7 @@ const FIXED_METADATA = Object.freeze({
   '17.09|хільдэгарды': { id: 'sv-hildegard-bingen', category: 'saint' },
   '05.10|фаўстыны': { id: 'sv-faustina-kowalska', category: 'saint' },
   '11.10|яна xxiii': { id: 'sv-john-xxiii', category: 'saint' },
+  '09.12|куаўтлатаацына': { id: 'sv-juan-diego', category: 'saint' },
   '10.12|ларэтанскай': { id: 'our-lady-loreto', category: 'mary' },
   '25.12|нараджэнне пана': { id: 'nativity-lord', category: 'lord', precedence: 2 },
   '26.12|стэфана': { id: 'sv-stephen-protomartyr', category: 'saint', color: 'ruber' },

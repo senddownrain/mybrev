@@ -66,6 +66,17 @@ function placeOpeningDagger(paragraph, cadence) {
     const siblings = node.parentNode.childNodes;
     if (trimLeadingSpace(siblings.slice(siblings.indexOf(node) + 1))) break;
   }
+  // A source may print both crosses: one closing the echoed words and one
+  // opening the continuation. Once the echo is omitted they meet; show one.
+  const repeated = paragraph.querySelectorAll('.psalm-marker')
+    .find((other) => other !== marker && other.text.trim() === '†'
+      && !precedingText(paragraph, other).replace(/^\s*†\s*$/u, ''));
+  if (repeated) {
+    repeated.set_content('');
+    const siblings = repeated.parentNode.childNodes;
+    trimLeadingSpace(siblings.slice(siblings.indexOf(repeated) + 1));
+    repeated.remove();
+  }
   marker.insertAdjacentHTML('afterend', '&nbsp;');
   paragraph.setAttribute('data-psalm-strophe', '');
 }
