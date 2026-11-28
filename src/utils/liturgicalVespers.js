@@ -128,9 +128,14 @@ export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requeste
     if (vespers.type === 'first') {
       const option = findFirstVespersOption(tomorrowContent, vespers.celebrationId);
       if (!option?.day) return none;
+      // I Vespers of an Advent Sunday (I–III) are stored in the preceding
+      // Saturday's `vesper*` fields (the Sunday document holds II Vespers and
+      // has no `vesper1*`), exactly like the ordinary Sunday.
+      const adventSunday = /^temporal:advent-w[1-3]-d1$/.test(String(vespers.celebrationId || ''))
+        && !hasFirstVespers(option.day);
       const ordinarySunday = Number(isoWeekday) === 6
         && option.ordo?.officeKind === 'sunday'
-        && String(vespers.celebrationId || '').startsWith('temporal:ordinary-');
+        && (String(vespers.celebrationId || '').startsWith('temporal:ordinary-') || adventSunday);
       const firstDay = ordinarySunday
         ? assembleOrdinarySundayFirstVespers(option.day, periodDay)
         : assembleFirstVespers(option.day);
