@@ -56,17 +56,20 @@ export function useReadings() {
     items.value = [];
     context.value = null;
     try {
-      const results = await Promise.all(dioceses.map((diocese, index) =>
-        liturgicalStore.fetchReadingsByDate(date, {
+      const update = (index, result) => {
+        cached[index] = result;
+        if (cached.every(Boolean)) show(cached);
+      };
+      await Promise.all(dioceses.map(async (diocese, index) => {
+        const result = await liturgicalStore.fetchReadingsByDate(date, {
           ...request,
           diocese,
-          onCached(result) {
-            cached[index] = result;
-            if (cached.every(Boolean)) show(cached);
-          },
-        })));
+          onCached: (value) => update(index, value),
+          onUpdated: (value) => update(index, value),
+        });
+        if (!cached[index]) update(index, result);
+      }));
       if (sequence !== loadSequence) return null;
-      if (results.some((result, index) => result !== cached[index])) show(results);
       return { items: items.value, context: context.value };
     } catch (err) {
       if (sequence !== loadSequence) return null;

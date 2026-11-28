@@ -5,6 +5,8 @@ import zlib from 'node:zlib';
 import { isDeepStrictEqual } from 'node:util';
 import { APP_CONTENT_COLLECTIONS } from './app-content.mjs';
 import { binarySha256, valueSha256, describeCatalog, coordinatedManifestPlan, publishCoordinatedManifest, manifestReceipt } from '../../liturgy/lib/coordinated-release.mjs';
+// The frozen plans below describe the collections that existed when they were reviewed.
+const REVIEWED_COLLECTIONS = APP_CONTENT_COLLECTIONS.filter((name) => name !== 'novenaDefinitions');
 export const REVIEWED_PLAN_SHA = '707e13042ed74996cf996aacbd9564c2dc3200448f05eca11946abe502d1e95a';
 export const REVIEWED_DIR = 'docs/releases/final-test-2026-11-17';
 export const FINAL_REVIEWED_DIR = 'docs/releases/final-test-2026-11-18';
@@ -24,7 +26,7 @@ export function loadReviewedManifest(file, expectedSha) {
     && plan.ownerApproved === true && plan.contentWrites === 0 && plan.maxUncachedDocumentReads === 0 && plan.maxManifestWrites === 12
     && plan.bundleSha256 === '19ed6b4b8247baa4d97e20a8404975b6f539a9531bf9061e1b063f73c9e9152c'
     && plan.compatibility.mobileReleasePerformed === false && plan.compatibility.installedClientInventory === 'not-available', 'Invalid final-test metadata policy');
-  check(isDeepStrictEqual([...APP_CONTENT_COLLECTIONS].sort(), plan.collections), 'Only all existing public app collections may be described');
+  check(isDeepStrictEqual([...REVIEWED_COLLECTIONS].sort(), plan.collections), 'Only all existing public app collections may be described');
   check(valueSha256(JSON.parse(fs.readFileSync(REVIEWED_DIR + '/owner-question-plan.json'))) === plan.ownerQuestionPlanSha256, 'Owner question plan changed');
   const proofBytes = fs.readFileSync(REVIEWED_DIR + '/compatibility.json');
   check(binarySha256(proofBytes) === 'd9589d61bbbf10c910b46f3af10f38baf374e6ffaa67089c9a851d27a2e74b14', 'Full-bundle compatibility proof changed');
@@ -55,7 +57,7 @@ export function loadFinalReviewedManifest(file,expectedSha){
  check(plan.schema===1&&plan.project==='ibreviaryby'&&plan.policy==='final-test-manifest-after-verified-calendar5-2026-11-18'&&plan.ownerApproved===true
    &&plan.ownerAuthorization==='все разрешаю. делай больше и даже максимум; Разрешаю обе календарные операции'&&plan.contentWrites===0&&plan.maxUncachedDocumentReads===0&&plan.maxManifestWrites===11
    &&plan.bundleSha256==='203f7ef439bb1b9d90cb8e6a4e9d8efec7a34e6fb7a3c41850eeca7f20838184'&&plan.protectedOrDraftIncluded===0&&plan.publicPolicyCount===8&&/^[a-f0-9]{64}$/u.test(plan.publicPolicySha256),'Final publication scope differs');
- check(isDeepStrictEqual([...APP_CONTENT_COLLECTIONS].sort(),plan.collections)&&plan.compatibility.mobileReleasePerformed===false&&plan.compatibility.installedClientInventory==='not-available','Only existing public schema1 collections; no fabricated release');
+ check(isDeepStrictEqual([...REVIEWED_COLLECTIONS].sort(),plan.collections)&&plan.compatibility.mobileReleasePerformed===false&&plan.compatibility.installedClientInventory==='not-available','Only existing public schema1 collections; no fabricated release');
  const catalogBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/catalog.json.gz'),beforeBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/manifest-before.json');
  check(binarySha256(catalogBytes)===plan.catalogSha256&&binarySha256(beforeBytes)===plan.manifestRecordsSha256,'Final catalog/manifest SHA mismatch');
  const proofBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/compatibility.json');check(binarySha256(proofBytes)===plan.compatibilitySha256,'Final updater proof SHA mismatch');const proof=JSON.parse(proofBytes);

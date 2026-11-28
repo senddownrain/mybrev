@@ -59,6 +59,12 @@ const editors = [
     to: { name: 'AdminPrayerDrafts' },
   },
   {
+    title: 'Навэнны',
+    description: 'Трэкер навэнн: парадак дзён, сувязі, даты пачатку, праверка і публікацыя.',
+    icon: 'mdi-hands-pray',
+    to: { name: 'AdminNovenas' },
+  },
+  {
     title: 'Катэгорыі малітваў',
     description: 'Праглядзець, дадаць, выдаліць і выбраць катэгорыі па змаўчанні.',
     icon: 'mdi-folder-cog-outline',

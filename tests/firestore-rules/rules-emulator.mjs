@@ -5,12 +5,13 @@
 
 import { initializeApp, deleteApp } from 'firebase/app';
 import assert from 'node:assert/strict';
-import { getFirestore, connectFirestoreEmulator, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, connectFirestoreEmulator, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, where, documentId, limit } from 'firebase/firestore';
 
 // `firebase emulators:exec` exports the emulator address.
 const [HOST, PORT] = (process.env.FIRESTORE_EMULATOR_HOST || '127.0.0.1:8089').split(':');
 assert.ok(['127.0.0.1', 'localhost'].includes(HOST), 'Local Firestore Emulator required; live tests forbidden');
 const P = 'demo-rules';
+const emergency = process.argv.includes('--emergency');
 const base = `http://${HOST}:${PORT}/v1/projects/${P}/databases/(default)/documents`;
 // Seed bypassing rules.
 async function seed(path, fields) {
@@ -64,10 +65,17 @@ const cases = [
   ['anon cannot list future private collection', () => getDocs(collection(anon.db, 'futureUserData')), false],
   ['signed-in nonadmin cannot get future private collection', () => getDoc(doc(user.db, 'futureUserData/record1')), false],
   ['admin can read a future private collection for maintenance', () => getDoc(doc(dbAdmin.db, 'futureUserData/record1')), true],
+  ['admin can list a future private collection for maintenance', () => getDocs(collection(dbAdmin.db, 'futureUserData')), true],
   ['anon cannot read nested private data below public days', () => getDoc(doc(anon.db, 'days/x/privateNotes/record1')), false],
   ['anon cannot list nested private data below public days', () => getDocs(collection(anon.db, 'days/x/privateNotes')), false],
   ['anon cannot read a missing future collection document', () => getDoc(doc(anon.db, 'yetUncreated/record1')), false],
-  ['anon lists templates', () => getDocs(collection(anon.db, 'liturgicalTemplates')), true],
+  ['legacy Flutter ID batch follows the incident list policy', () => getDocs(query(
+    collection(anon.db, 'days'), where(documentId(), 'in', ['x'])
+  )), !emergency],
+  ['ordinary signed-in user follows the same list policy', () => getDocs(query(
+    collection(user.db, 'days'), limit(1)
+  )), !emergency],
+  ['editor follows the same list policy on days', () => getDocs(collection(dbAdmin.db, 'days')), !emergency],
   ['anon writes days', () => setDoc(doc(anon.db, 'days/x'), { a: 2 }), false],
   ['anon creates prayer', () => setDoc(doc(anon.db, 'prayers/p'), { a: 2 }), false],
   ['user writes prayer', () => setDoc(doc(user.db, 'prayers/p'), { a: 2 }), false],
@@ -104,10 +112,15 @@ const cases = [
   ['superadmin reads own role', () => getDoc(doc(superAdmin.db, 'admins/superadmin')), true],
   ['catch-all subpath cannot write admins', () => setDoc(doc(superAdmin.db, 'admins/superadmin/extra/x'), { a: 1 }), false],
 ];
+for (const path of ['days', 'readings', 'liturgicalProperTexts', 'liturgicalOrdoNotes', 'liturgicalTemplates']) {
+  cases.push([`public list of ${path}`, () => getDocs(collection(anon.db, path)), !emergency]);
+  cases.push([`public get of ${path}`, () => getDoc(doc(anon.db, path, 'one')), true]);
+}
+cases.push(['public list of unaffected calendar metadata', () => getDocs(collection(anon.db, 'liturgicalCalendarMeta')), true]);
 let failed = 0;
 for (const [name, fn, allowed] of cases) {
   let ok;
-  try { await fn(); ok = true; } catch (e) { ok = false; if (e.code !== 'permission-denied') console.log('  error', e.code, e.message); }
+  try { await fn(); ok = true; } catch (e) { if (e.code !== 'permission-denied') throw e; ok = false; }
   const pass = ok === allowed; if (!pass) failed++;
   console.log(pass ? 'PASS' : 'FAIL', name, allowed ? '(allow)' : '(deny)');
 }

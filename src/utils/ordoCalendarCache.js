@@ -2,7 +2,7 @@
  * Locally cached calendar publication → engine. No Firestore import here:
  * Startup restores these definitions before a route can resolve any dates.
  */
-import { publicContentCache, publicContentKey, requestContentRefresh } from './publicContentCache.js';
+import { publicContentCache, publicContentKey } from './publicContentCache.js';
 import { getBundledCalendarDefinitions, getCalendarDefinitions, setCalendarDefinitions } from './ordo/definitions.js';
 import { selectCalendarSource, sameDefinitions } from './ordoCalendarSource.js';
 
@@ -10,8 +10,8 @@ export const CALENDAR_CACHE_KEY = publicContentKey('ordo-calendar');
 export const YEAR_OVERRIDES_CACHE_KEY = publicContentKey('ordo-year-overrides');
 export const NOTES_CACHE_KEY = publicContentKey('ordo-notes');
 
-export async function restoreCalendarCache() {
-  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY]);
+export async function restoreCalendarCache(options) {
+  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY], options);
   applyCachedCalendar();
 }
 
@@ -36,15 +36,13 @@ export function definitionsFromCache({ calendar, overrides, bundled }) {
 }
 
 /** Apply what is already in the local cache. Synchronous after `prime`. */
-export function applyCachedCalendar({ markContentStale = false } = {}) {
+export function applyCachedCalendar() {
   const next = definitionsFromCache({
     calendar: publicContentCache.peek(CALENDAR_CACHE_KEY),
     overrides: publicContentCache.peek(YEAR_OVERRIDES_CACHE_KEY),
     bundled: getBundledCalendarDefinitions(),
   });
   if (!next || sameDefinitions(getCalendarDefinitions(), next)) return false;
-  // Invalidate before listeners rerender the already open day.
-  if (markContentStale) requestContentRefresh();
   setCalendarDefinitions(next);
   return true;
 }

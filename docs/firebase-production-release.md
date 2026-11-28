@@ -11,6 +11,8 @@
 
 При выпуске только кода можно передать `published_catalog_sha256` с проверенным lowercase SHA‑256 текущего публичного каталога. Hosting workflow повторно использует опубликованный файл только при совпадении контрольной суммы и пропускает прямой экспорт из Firestore.
 
-Два целевых workflow для Issue 198 и XI Sunday выполняют свои существующие действия с данными и Hosting. Для них также требуется отдельный ручной запуск с approved_sha. Все три workflow делят очередь публикации. Изменения в main и метки сообщений коммитов сами по себе job публикации не запускают.
+Целевые workflow для Issue 198, XI Sunday, Basilicas и High Priest запускаются вручную с `approved_sha`. Issue 198, XI Sunday и Deploy Web делят очередь публикации. Для записи через Basilicas и High Priest при запуске выберите `apply`.
+
+При всплеске трафика Firestore используйте [аварийный порядок](firebase-finops.md).
 
 На момент подготовки PR у окружения production не настроены required reviewers и ограничения ветки. В репозитории действует gate ручного события, репозитория, ветки и SHA. Для независимого подтверждения владельцем на уровне GitHub до первого V2-выпуска требуется настроить required reviewer, запрет self-review и допуск только main. Настройки GitHub environment и Firebase IAM контролируются владельцем. [GitHub environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).

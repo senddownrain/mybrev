@@ -23,6 +23,8 @@ const publicCatalog = buildPublicPrayerCatalog({
           '> Чытайце павольна і ўважліва.',
           '- Знайдзіце ціхую хвіліну.\n- Прачытайце _тэкст_ да канца.',
           ':::rubric\nМожна зрабіць кароткую паўзу.\n:::',
+          '[Адкрыць прыклад малітвы](/prayer/public-prayer)',
+          ...Array(24).fill('Каментарый можна працягваць чытаць, не губляючы месца ў спісе малітваў.'),
         ].join('\n\n'),
         sourceId: 'ojcha-nash-2022',
       },
@@ -38,7 +40,7 @@ let page;
 let documentRequests = 0;
 const errors = [];
 const pendingRequests = new Set();
-try {
+catalogSmoke: try {
   await build({
     configFile: false, publicDir: false, logLevel: 'warn',
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
@@ -106,6 +108,68 @@ try {
 
   await page.goto('http://127.0.0.1:' + server.address().port + '/#/home', { waitUntil: 'commit', timeout: 60_000 });
   await page.getByText('Synthetic home').waitFor({ timeout: 120_000 });
+  const commentReader = page.getByRole('dialog', { name: 'Пра гэты раздзел' });
+  const commentClose = commentReader.getByRole('button', { name: 'Закрыць' });
+  const atComment = () => go({ name: 'Prayers', query: { category: 'comment-only' } });
+  async function checkPublicCommentReader() {
+    await atComment();
+    await page.getByRole('heading', { name: 'Прыклад раздзела', exact: true }).waitFor();
+    assert.equal(await commentToggle.getAttribute('aria-haspopup'), 'dialog');
+    assert.equal(await page.locator('.prayer-list-item').count(), 0);
+    assert.equal(await page.getByText('Малітвы не знойдзены', { exact: true }).count(), 0);
+    for (const [width, theme, label, scale] of [[390, 'dark', 'mobile', 1.8], [1280, 'light', 'wide', 1]]) {
+      await page.setViewportSize({ width, height: 840 });
+      await page.evaluate(([name, size]) => {
+        window.catalogHarness.theme(name);
+        window.catalogHarness.fontSize(size);
+      }, [theme, scale]);
+      await page.locator(`.v-theme--${theme}`).first().waitFor();
+      await noOverflow();
+      const before = await counts();
+      const categoryScroll = await page.evaluate(() => window.scrollY);
+      await commentToggle.press('Space');
+      await commentReader.waitFor();
+      assert.equal(await commentClose.evaluate((button) => button === document.activeElement), true);
+      const bounds = await commentReader.boundingBox();
+      assert.ok(width < 600 ? bounds.width === width && bounds.height === 840 : bounds.width >= 760 && bounds.width <= 900,
+        `Reader at ${width}px viewport: ${bounds.width}×${bounds.height}`);
+      const prose = commentReader.locator('.category-comment__prose');
+      await prose.getByRole('heading', { name: 'Перад пачаткам' }).waitFor();
+      assert.equal(await prose.locator('blockquote, ul, strong, em, .prayer-rubric').count(), 5);
+      assert.ok(await prose.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)) >= 16 * scale);
+      await screenshot(`reader-${label}`);
+      const viewport = commentReader.locator('.category-comment__viewport');
+      assert.ok(await viewport.evaluate((el) => { el.scrollTop = el.scrollHeight; return el.scrollTop > 0 && el.scrollWidth <= el.clientWidth + 1; }));
+      await commentReader.getByText(/Малітоўнік «Ойча наш»/).waitFor();
+      await page.keyboard.press('Escape');
+      await commentReader.waitFor({ state: 'hidden' });
+      await commentReader.locator('.category-comment__prose').waitFor({ state: 'detached' });
+      assert.equal(await commentToggle.evaluate((button) => button === document.activeElement), true);
+      assert.equal(await page.evaluate(() => window.scrollY), categoryScroll);
+      assert.deepEqual(await counts(), before);
+    }
+    await commentToggle.click();
+    await commentReader.getByRole('link', { name: 'Адкрыць прыклад малітвы' }).click();
+    await page.getByText('Synthetic public body', { exact: true }).waitFor();
+    await page.goBack();
+    await commentToggle.waitFor();
+    assert.equal(await commentReader.count(), 0);
+  }
+
+  if (process.argv.includes('--comments-only')) {
+    await checkPublicCommentReader();
+    await rights(['marian']);
+    await go({ name: 'Prayers', query: { category: 'marian-category-0' } });
+    await commentToggle.click();
+    const protectedBody = commentReader.getByText('Synthetic marian category commentary', { exact: true });
+    await protectedBody.waitFor();
+    await rights('suspended');
+    await protectedBody.waitFor({ state: 'detached' });
+    await commentReader.waitFor({ state: 'hidden' });
+    assert.deepEqual(errors, []);
+    console.log('PASS Chromium: mobile and wide comment reader, long text, source, focus, link and access revocation.');
+    break catalogSmoke;
+  }
   assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
   await menu();
   await drawerToggle.waitFor();
@@ -157,6 +221,7 @@ try {
   assert.equal(await page.locator('.subcategory-link').count(), 0);
   await commentToggle.click();
   await page.getByText('Synthetic marian category commentary', { exact: true }).waitFor();
+  await commentClose.click();
   await page.getByText('marian prayer 1', { exact: true }).click();
   await page.getByText('marian synthetic prayer text 1', { exact: true }).waitFor();
   await page.locator('.prayer-text').evaluate((element) => { element.dataset.focusProbe = 'same-document'; });
@@ -228,36 +293,7 @@ try {
   await category('Для чытання і разважання').click();
   await page.getByRole('link', { name: 'Прыклад раздзела', exact: true }).click();
   await page.getByRole('heading', { name: 'Прыклад раздзела', exact: true }).waitFor();
-  assert.equal(await commentToggle.getAttribute('aria-expanded'), 'false');
-  assert.equal(await page.locator('.prayer-list-item').count(), 0);
-  assert.equal(await page.getByText('Малітвы не знойдзены', { exact: true }).count(), 0);
-  for (const [width, theme, label] of [[390, 'light', 'mobile'], [768, 'marian', 'tablet'], [1280, 'dark', 'wide']]) {
-    await page.setViewportSize({ width, height: 900 });
-    await page.evaluate((theme) => window.catalogHarness.theme(theme), theme);
-    await page.locator(`.v-theme--${theme}`).first().waitFor();
-    await noOverflow();
-    await screenshot(`comment-${label}-collapsed`);
-    await commentToggle.press('Space');
-    const prose = page.locator('.category-comment__prose');
-    await prose.getByRole('heading', { name: 'Перад пачаткам' }).waitFor();
-    assert.equal(await prose.locator('blockquote, ul, strong, em, .prayer-rubric').count(), 5);
-    await page.getByText(/Малітоўнік «Ойча наш»/).waitFor();
-    await noOverflow();
-    await screenshot(`comment-${label}-expanded`);
-    await commentToggle.press('Enter');
-  }
-  await page.setViewportSize({ width: 320, height: 780 });
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await commentToggle.click();
-  const proseSize = () => page.locator('.category-comment__prose').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  const normalSize = await proseSize();
-  await page.evaluate(() => window.catalogHarness.fontSize(1.8));
-  assert.ok(await proseSize() > normalSize * 1.7);
-  await noOverflow();
-  await page.locator('.category-parent-link').click();
-  await page.getByRole('link', { name: 'Прыклад раздзела', exact: true }).click();
-  assert.equal(await commentToggle.getAttribute('aria-expanded'), 'false');
-  await page.evaluate(() => window.catalogHarness.fontSize(1));
+  await checkPublicCommentReader();
 
   await go('/settings');
   const settingsToggle = page.getByRole('button', { name: 'Катэгорыі ў меню', exact: true });

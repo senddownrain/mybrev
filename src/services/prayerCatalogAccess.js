@@ -3,10 +3,10 @@ import { collection, doc, getDoc, getDocs } from 'firebase/firestore/lite';
 import { getPriestActivationDb } from '@/plugins/priestFirebase';
 import { s2Session } from './s2AccessFirebase';
 import { createAccessSetsCatalogSession } from './accessSetsCatalogSession.mjs';
+import { advancePrayerCatalogRevision } from './prayerCatalogRevision.js';
 import { isFirestoreQuotaBlocked, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
-const revision = ref(0);
-export const prayerCatalogRevision = readonly(revision);
+export { prayerCatalogRevision } from './prayerCatalogRevision.js';
 const demand = ref(0);
 export const prayerCatalogDemand = readonly(demand);
 export function retainPrayerCatalog() {
@@ -52,7 +52,7 @@ const sessionProvider = {
 let provider = sessionProvider;
 export const prayerCatalogAccess = createAccessSetsCatalogSession({
   confirm: () => provider.confirm(), canRead: canReadPrayerCatalog,
-  perform: withFirestoreQuota, onInvalidated: () => { revision.value++; },
+  perform: withFirestoreQuota, onInvalidated: advancePrayerCatalogRevision,
 });
 const invalidateForEntitlements = () => {
   if (!paused) prayerCatalogAccess.invalidate();
@@ -91,7 +91,7 @@ function resumeCatalog() {
     paused = false;
     // The old generation was discarded on pause. Wake consumers only after
     // the current permissions have been confirmed for this foreground view.
-    revision.value++;
+    advancePrayerCatalogRevision();
   }).catch(() => {}).finally(() => {
     if (resumeRequest === request) {
       resumeRequest = undefined;

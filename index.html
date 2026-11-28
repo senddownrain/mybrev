@@ -33,12 +33,89 @@
       --app-viewport-background: #0F0E0C;
       color-scheme: dark;
     }
+    #app-startup {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: CanvasText;
+      font: 1rem system-ui, sans-serif;
+    }
   </style>
+  <script>
+    // Install recovery before the module graph starts loading.
+    (() => {
+      const parameter = 'app-retry'
+      const url = new URL(location.href)
+      const retried = url.searchParams.has(parameter)
+      let ready = false
+      let navigating = false
+      let failedRoute
+      const timeout = setTimeout(() => showError(), 12000)
+
+      function showError(target) {
+        failedRoute = target
+        const status = document.getElementById('app-startup')
+        if (!status) return
+        status.hidden = false
+        status.querySelector('p').textContent = 'Не ўдалося адкрыць Малітоўнік.'
+        status.querySelector('a').hidden = false
+      }
+
+      function navigate(target, bypassWorker) {
+        const destination = new URL(target || location.href, location.href)
+        const next = destination.origin === location.origin ? destination : new URL(location.href)
+        if (bypassWorker) next.searchParams.set(parameter, Date.now().toString(36))
+        else next.searchParams.delete(parameter)
+        location.replace(next.href)
+      }
+
+      function recover(target) {
+        if (navigating) return
+        if (retried || navigator.onLine === false) {
+          showError(target)
+          return
+        }
+        navigating = true
+        navigate(target, true)
+      }
+
+      addEventListener('error', (event) => {
+        if (ready) return
+        const source = event.target?.tagName === 'SCRIPT' ? event.target.src : event.filename
+        if (source?.startsWith(location.origin + '/assets/') || event.target?.type === 'module') recover()
+      }, true)
+      addEventListener('vite:preloadError', () => { if (!ready) recover() })
+
+      function recoverModuleError(error, target) {
+        if (!/dynamically imported module|importing a module script|loading (?:css chunk|chunk)|failed to load module|module script load failed|unexpected token '<'|expected expression, got '<'/i.test(error?.message || '')) return false
+        recover(target)
+        return true
+      }
+
+      window.malitounikStartup = {
+        recoverModuleError,
+        routeError(error, target) {
+          if (!recoverModuleError(error, target)) showError(target)
+        },
+        retry(event) {
+          event.preventDefault()
+          navigate(failedRoute, navigator.onLine !== false)
+        },
+        ready() {
+          ready = true
+          clearTimeout(timeout)
+          document.getElementById('app-startup').hidden = true
+        },
+      }
+    })()
+  </script>
   <script>
     // Apply the saved appearance immediately, before Vue finishes loading.
     // This controls the browser/status-bar colour, not the PWA splash screen.
-    const saved = localStorage.getItem('themePreference')
-    const legacy = localStorage.getItem('theme')
+    const startupPreference = (key) => {
+      try { return localStorage.getItem(key) } catch { return null }
+    }
+    const saved = startupPreference('themePreference')
+    const legacy = startupPreference('theme')
     const preference = ['system', 'light', 'dark', 'marian'].includes(saved)
       ? saved : ['light', 'dark', 'marian'].includes(legacy) ? legacy : 'system'
     const initialTheme = preference === 'system'
@@ -77,7 +154,7 @@
   <script>
     // Load the two UI families plus only the reader family selected by the user.
     // This avoids downloading every font offered by the settings screen on startup.
-    const savedReaderFont = localStorage.getItem('fontFamily') || ''
+    const savedReaderFont = startupPreference('fontFamily') || ''
     const selectedReaderFont = savedReaderFont.includes('Source Serif 4')
       ? 'Source Serif 4'
       : savedReaderFont.includes('Old Standard TT')
@@ -112,6 +189,10 @@
 </head>
 
 <body>
+  <div id="app-startup" role="status">
+    <p>Загрузка…</p>
+    <a href="" hidden onclick="window.malitounikStartup.retry(event)">Паўтарыць</a>
+  </div>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 </body>

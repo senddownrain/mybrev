@@ -1,22 +1,15 @@
 /**
- * Optional, deliberately opt-in nine-day OFFLINE warmup.
- *
- * This development-only experiment runs after startup and browser idle time.
- * It never touches protected prayers, admin data, or the Bible.
- *
- * Extended content is re-prefetched no more often than once every seven days
- * at the same publication revision. Opening a page still uses the existing
- * 15-minute online revalidation policy: this longer interval only prevents
- * unnecessary speculative reads on every launch.
+ * Fill missing offline Hours and Readings after the first prayer is visible.
+ * Existing complete results are revalidated when the reader opens them.
  */
 import { useLiturgicalStore } from '@/stores/liturgical';
 import { buildDateWarmupOrder, CACHE_DAYS_AHEAD, CACHE_DAYS_BEHIND } from './cacheWarmup.js';
-import { publicContentCache, contentKey, readingsKey } from './publicContentCache.js';
+import { publicContentCache, legacyReaderKey } from './publicContentCache.js';
+import { contentKey, readingsKey, hasCorrectedHours } from './readerCacheKeys.js';
 import { currentOrdoDiocese } from './ordoDiocese.js';
 import { isFirestoreQuotaBlocked } from './firestoreErrors.mjs';
 import { logger } from './logger.js';
 
-export const EXTENDED_CACHE_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 const QUIET_BEFORE_REQUEST_MS = 3500;
 const BACKGROUND_IDLE_ATTEMPTS = 25;
 const BACKGROUND_LOCK_NAME = 'mybrev-public-week-prefetch';
@@ -26,7 +19,7 @@ export function mayPrefetchExtendedContent() {
   if (typeof navigator !== 'undefined') {
     if (navigator.onLine === false) return false;
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (connection?.saveData || ['slow-2g', '2g'].includes(connection?.effectiveType)) return false;
+    if (connection?.saveData || ['slow-2g', '2g', '3g'].includes(connection?.effectiveType)) return false;
   }
   if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return false;
   if (typeof window !== 'undefined' && /^\/(admin|login)(\/|$)/.test(window.location.pathname)) return false;
@@ -92,10 +85,13 @@ async function fillWindow(baseDate, { eligible, cache, store, waitForSlot }) {
       ];
       for (const task of tasks) {
         if (!allowed()) { result.stopped = true; break outer; }
-        // IndexedDB read only: skip the real Firestore read for a complete
-        // current-revision entry, even if its UI recheck TTL has expired.
-        await cache.prime([task.key]);
-        if (cache.hasRecentComplete(task.key, EXTENDED_CACHE_RECHECK_MS)) {
+        // IndexedDB read only. A deployment or editorial refresh still leaves
+        // a complete offline copy available until the reader opens this date.
+        const legacy = legacyReaderKey(task.key);
+        const keys = legacy ? [task.key, legacy] : [task.key];
+        await cache.prime(keys);
+        const acceptCached = task.type === 'hours' ? hasCorrectedHours : undefined;
+        if (keys.some((key) => cache.hasComplete(key, acceptCached))) {
           result.alreadyCached += 1;
           continue;
         }
@@ -112,7 +108,7 @@ async function fillWindow(baseDate, { eligible, cache, store, waitForSlot }) {
           break outer; // No repeated queries on network/quota failures.
         }
         if (!allowed()) { result.stopped = true; break outer; }
-        if (!cache.hasRecentComplete(task.key, EXTENDED_CACHE_RECHECK_MS)) {
+        if (!cache.hasComplete(task.key, acceptCached)) {
           result.incomplete += 1;
           result.stopped = true;
           break outer; // Never mark a partial SDK/offline result as ready.
