@@ -19,15 +19,16 @@ test('Belarus calendar is a closed PDF inventory: no extra fixed memorials in an
     const expected = new Set(refs.filter(row => !row.dioceses || row.dioceses.split(';').includes(diocese))
       .map(row => row.celebration_id));
     if (diocese === 'vitebsk') expected.delete('nativity-blessed-virgin-mary');
+    expected.add('sv-juan-diego'); // owner decision 28.11.2026: restored on top of the PDF inventory
     const actual = [...buildCalendarLayers({ diocese }).celebrations.values()]
       .filter(item => item.date?.type === 'fixed' && !item.suppressedBy);
     const unexpected = actual.filter(item => !expected.has(item.id))
       .map(item => `${item.id}@${item.date.month}-${item.date.day}`);
     assert.deepEqual(unexpected, [], `${diocese}: only fixed celebrations printed in the approved PDF`);
     assert.equal(actual.length, [...expected].filter(id => actual.some(item => item.id === id)).length);
-    for (const date of ['2026-12-09', '2027-12-09', '2026-12-12', '2027-12-12']) {
+    for (const date of ['2026-12-12', '2027-12-12']) {
       const day = resolveLiturgicalDate(date, { diocese });
-      assert.ok(!visible(day).some(item => ['sv-juan-diego', 'our-lady-guadalupe'].includes(item.id)), `${diocese} ${date}`);
+      assert.ok(!visible(day).some(item => item.id === 'our-lady-guadalupe'), `${diocese} ${date}`);
     }
   }
 });
