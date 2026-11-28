@@ -12,7 +12,10 @@ import { getLiturgicalAlternatives } from '../src/utils/liturgicalAlternatives.j
 const dir='docs/audits/liturgical-common-texts-2026-11',gz=f=>JSON.parse(zlib.gunzipSync(fs.readFileSync(dir+'/'+f))),proof=gz('v3/editorial-source-proofs.json.gz');
 const ownerProof=gz('v4/source-proofs.json.gz');
 const historicalOwnerValue=(value,file,field)=>{const r=ownerProof.records.find(r=>r.file===file&&r.field===field&&r.afterHtml===value);return r?r.beforeHtml:value;};
-const historicalOwnerDoc=(doc,file)=>{const d=structuredClone(doc);for(const r of ownerProof.records.filter(r=>r.file===file)){const keys=r.field.split('.'),last=keys.pop(),node=keys.reduce((v,k)=>v[k],d);node[last]=historicalOwnerValue(node[last],file,r.field);}return d;};
+const historicalOwnerDoc=(doc,file)=>{const d=structuredClone(doc);for(const r of ownerProof.records.filter(r=>r.file===file)){const keys=r.field.split('.'),last=keys.pop(),node=keys.reduce((v,k)=>v[k],d);node[last]=historicalOwnerValue(node[last],file,r.field);}return restoreAdventPsalms(d,file);};
+// ADV-06 (28.11.2026): the three 8 December psalm slots held only the substitution rubric.
+// The rubric stays, followed by the psalm; compare the proof baseline with the rubric alone.
+const restoreAdventPsalms=(d,file)=>{if(!file.endsWith('feasts/08-12-immaculate-conception.json'))return d;for(const f of ['sext1Ps1','sext2Ps1','sext3Ps1']){const rubric=/^<p data-liturgical-subheading[^>]*><span[^>]*>([^<]+)<\/span><\/p>\n<p/u.exec(d[f]);assert.ok(rubric,f);d[f]=[rubric[1]];}return d;};
 const baseline=gz('v3/source-baseline.json.gz'),at=(d,p)=>p.split('.').reduce((v,k)=>v?.[k],d);
 const words=s=>(s.toLocaleLowerCase('be').match(/[\p{L}\p{N}]+(?:[’'ʼ][\p{L}\p{N}]+)*/gu)||[]);
 for(const kind of ['short','long'])test('every '+kind+' field has exact local span copies, reversible source and idempotent output',()=>{

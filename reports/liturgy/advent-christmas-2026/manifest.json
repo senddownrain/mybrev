@@ -1,0 +1,514 @@
+{
+ "schema": 1,
+ "project": "ibreviaryby",
+ "baseline": "Flutter content bundle (days contentVersion 1794938108754; calendar revision 6), NOT live Firestore",
+ "documents": [
+  "days/01-01-holy-mary-mother-of-god",
+  "days/08-12-immaculate-conception",
+  "days/advent-w2-d4",
+  "days/advent-w2-d5",
+  "days/advent-w3-d4",
+  "days/advent-w4-d1",
+  "days/christmas-01-01",
+  "days/christmas-02-01",
+  "days/christmas-03-01",
+  "days/christmas-04-01",
+  "days/christmas-05-01",
+  "days/christmas-07-01",
+  "days/christmas-08-01",
+  "days/christmas-09-01",
+  "days/christmas-26-12",
+  "days/christmas-27-12",
+  "days/christmas-28-12",
+  "days/christmas-29-12",
+  "days/christmas-30-12",
+  "days/christmas-31-12",
+  "liturgicalCalendarMeta/current",
+  "liturgicalCelebrations/sv-juan-diego",
+  "liturgicalProperTexts/01-01-holy-mary-mother-of-god",
+  "liturgicalProperTexts/08-12-immaculate-conception"
+ ],
+ "patchSha256": "18333c16c89b21caa526f52e25d0fb876496702c5c4c68eede25e714addfa7f0",
+ "rollbackSha256": "0d89ebab7d0240c862ec2ded8f5a2274b29a6091a7df37e8089526ae49060023",
+ "counts": {
+  "documents": 24,
+  "fields": 50,
+  "byId": {
+   "ADV-06": 6,
+   "ADV-11": 3,
+   "CAL-01": 3,
+   "NEW-01": 5,
+   "NEW-02": 1,
+   "XMAS-DAYANT": 18,
+   "XMAS-RESP": 14
+  }
+ },
+ "changes": [
+  {
+   "id": "ADV-06",
+   "collection": "liturgicalProperTexts",
+   "document": "08-12-immaculate-conception",
+   "field": "sext1Ps1",
+   "source": "identical value in 15-08, 25-03, 19-03, 24-06 (days and liturgicalProperTexts); psalm text = doc5 complementary psalmody; rubric doc7 l.408 kept",
+   "beforeSha256": "a155197da1b0fc601546295bedfa5536c3ef38d81ce6b046ed5d3655a8889fe6",
+   "afterSha256": "ab4bd2b4c1fd638bc75640670cd28edd747ecb7fbc9c31824b1df5965dcdd459"
+  },
+  {
+   "id": "ADV-06",
+   "collection": "days",
+   "document": "08-12-immaculate-conception",
+   "field": "sext1Ps1",
+   "source": "identical value in 15-08, 25-03, 19-03, 24-06 (days and liturgicalProperTexts); psalm text = doc5 complementary psalmody; rubric doc7 l.408 kept",
+   "beforeSha256": "a155197da1b0fc601546295bedfa5536c3ef38d81ce6b046ed5d3655a8889fe6",
+   "afterSha256": "ab4bd2b4c1fd638bc75640670cd28edd747ecb7fbc9c31824b1df5965dcdd459"
+  },
+  {
+   "id": "ADV-06",
+   "collection": "liturgicalProperTexts",
+   "document": "08-12-immaculate-conception",
+   "field": "sext2Ps1",
+   "source": "identical value in 15-08, 25-03, 19-03, 24-06 (days and liturgicalProperTexts); psalm text = doc5 complementary psalmody; rubric doc7 l.408 kept",
+   "beforeSha256": "a155197da1b0fc601546295bedfa5536c3ef38d81ce6b046ed5d3655a8889fe6",
+   "afterSha256": "83834ef6bf704c6e90afa368e3874a06c6a3c207d5dad02ac9ac25ef6c9bf77d"
+  },
+  {
+   "id": "ADV-06",
+   "collection": "days",
+   "document": "08-12-immaculate-conception",
+   "field": "sext2Ps1",
+   "source": "identical value in 15-08, 25-03, 19-03, 24-06 (days and liturgicalProperTexts); psalm text = doc5 complementary psalmody; rubric doc7 l.408 kept",
+   "beforeSha256": "a155197da1b0fc601546295bedfa5536c3ef38d81ce6b046ed5d3655a8889fe6",
+   "afterSha256": "83834ef6bf704c6e90afa368e3874a06c6a3c207d5dad02ac9ac25ef6c9bf77d"
+  },
+  {
+   "id": "ADV-06",
+   "collection": "liturgicalProperTexts",
+   "document": "08-12-immaculate-conception",
+   "field": "sext3Ps1",
+   "source": "identical value in 15-08, 25-03, 19-03, 24-06 (days and liturgicalProperTexts); psalm text = doc5 complementary psalmody; rubric doc7 l.408 kept",
+   "beforeSha256": "a155197da1b0fc601546295bedfa5536c3ef38d81ce6b046ed5d3655a8889fe6",
+   "afterSha256": "8ba7e0264680c5a2e0a27eb75a362b9b5ec42111c7c01ffd6a1a5af6765762f2"
+  },
+  {
+   "id": "ADV-06",
+   "collection": "days",
+   "document": "08-12-immaculate-conception",
+   "field": "sext3Ps1",
+   "source": "identical value in 15-08, 25-03, 19-03, 24-06 (days and liturgicalProperTexts); psalm text = doc5 complementary psalmody; rubric doc7 l.408 kept",
+   "beforeSha256": "a155197da1b0fc601546295bedfa5536c3ef38d81ce6b046ed5d3655a8889fe6",
+   "afterSha256": "8ba7e0264680c5a2e0a27eb75a362b9b5ec42111c7c01ffd6a1a5af6765762f2"
+  },
+  {
+   "id": "ADV-11",
+   "collection": "days",
+   "document": "advent-w4-d1",
+   "field": "sext1R",
+   "source": "doc3.txt l.2214-2215 (IV нядзеля Адвэнту, Малітва перад поўднем); verse К./Н. unchanged (already equals doc3)",
+   "beforeSha256": "026cde5c1084f8f7a3e586a05d0f1d5437c10cd33db3a6d5f9fd80ed55441252",
+   "afterSha256": "795d50765203940dc1fb231e7dc134c8c2b77aa06b9a0e165221230efaa7caae"
+  },
+  {
+   "id": "ADV-11",
+   "collection": "days",
+   "document": "advent-w4-d1",
+   "field": "sext2R",
+   "source": "doc3.txt l.2220-2221 (IV нядзеля Адвэнту, Малітва апоўдні); verse К./Н. unchanged (already equals doc3)",
+   "beforeSha256": "d763e108b01fc1efcc695268f6d4739d252e10cc1f562ed7ebd696db84653647",
+   "afterSha256": "7f7971bf596ef50356f1f302848848961ff287d872c8c6c3c9019e436b70ba68"
+  },
+  {
+   "id": "ADV-11",
+   "collection": "days",
+   "document": "advent-w4-d1",
+   "field": "sext3R",
+   "source": "doc3.txt l.2226-2227 (IV нядзеля Адвэнту, Малітва пасля поўдня); verse К./Н. unchanged (already equals doc3)",
+   "beforeSha256": "61e00493c624d95a359893fe04c8e6edec4cfa7394ea320df3dbd13f776b5e04",
+   "afterSha256": "a004d6920ad960f2e0e621b6730a35d25618685cc6b65848c63acd6400fd3519"
+  },
+  {
+   "id": "NEW-01",
+   "collection": "days",
+   "document": "advent-w2-d4",
+   "field": "laudesR",
+   "source": "doc3.txt contains U+00AD soft hyphens; «&not;» is an HTML entity for ¬ (visible)",
+   "beforeSha256": "b468a08326c935b848523ba6c7ef8acc28170a50be86258c1bea5e84921caa3c",
+   "afterSha256": "fa902b73811e954f49bbbbb66e062b4b6eb42b6ec3e6432c32eedd394a02d264"
+  },
+  {
+   "id": "NEW-01",
+   "collection": "days",
+   "document": "advent-w3-d4",
+   "field": "sext2R",
+   "source": "doc3.txt contains U+00AD soft hyphens; «&not;» is an HTML entity for ¬ (visible)",
+   "beforeSha256": "63cc973b4f7c029d5a8e41616c8f28b2db2c3ef0790b4e9cef99aab09c7076fb",
+   "afterSha256": "0f2a4bd29cf9df3e8a68438217d5fd1641b9c309162a2a5d02145262535b336b"
+  },
+  {
+   "id": "NEW-01",
+   "collection": "days",
+   "document": "christmas-04-01",
+   "field": "officeOfReadingsR2",
+   "source": "doc3.txt contains U+00AD soft hyphens; «&not;» is an HTML entity for ¬ (visible)",
+   "beforeSha256": "78d08dc6f0625aae56df226a777b133c602cef862153f3f4d839662f81cb973f",
+   "afterSha256": "7b6fa5bf3235d2e9dc37de3c8c5d3d081856580a71cc5c9c5e70b7ff6c7ef2f1"
+  },
+  {
+   "id": "NEW-01",
+   "collection": "days",
+   "document": "christmas-26-12",
+   "field": "officeOfReadingsR1",
+   "source": "doc3.txt contains U+00AD soft hyphens; «&not;» is an HTML entity for ¬ (visible)",
+   "beforeSha256": "3a876b08689fa03995f41550b5d41a5f39e16967251ed7be586f49a0d2ec46ab",
+   "afterSha256": "70500ac0ee007412c63b7a1dac023b0ce89cfa952ed4fe74eecf5a2cf425d236"
+  },
+  {
+   "id": "NEW-01",
+   "collection": "days",
+   "document": "christmas-31-12",
+   "field": "officeOfReadingsR2",
+   "source": "doc3.txt contains U+00AD soft hyphens; «&not;» is an HTML entity for ¬ (visible)",
+   "beforeSha256": "4071aa1707afea040b13313a94b3c3dff1c2b7bf228e5f755e8ab544eeb3c031",
+   "afterSha256": "dee34b5e4aeeb2c1cdfa2617359ec939cc943252d3397816626f392d8f586a1a"
+  },
+  {
+   "id": "NEW-02",
+   "collection": "days",
+   "document": "advent-w2-d5",
+   "field": "officeOfReadingsR1",
+   "source": "doc3.txt l.1241",
+   "beforeSha256": "e32a29665c8194cd8cf2e5bcb2062de7da8d2b9ee7efe68e6da184265ce6a105",
+   "afterSha256": "7b06632529d549a9d7c6e6408319690477075fdb666ab068e86f8f3afd9741a3"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-02-01",
+   "field": "sext1Ant1",
+   "source": "doc3 l.3300; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "38db1f30526d8017b0692597ab283bf2aa2b927e4af598da00484fe1236742ff"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-02-01",
+   "field": "sext2Ant1",
+   "source": "doc3 l.3315; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "fe718b0b4ab4d93ca8105f4dc5cf685d260ba5db687a4ec074d96475f544b352"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-02-01",
+   "field": "sext3Ant1",
+   "source": "doc3 l.3330; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "85563c5cec5a711e6c86a656904b4790df5dca9b7678fac5086a7309a92c1414"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-03-01",
+   "field": "sext1Ant1",
+   "source": "doc3 l.3300; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "38db1f30526d8017b0692597ab283bf2aa2b927e4af598da00484fe1236742ff"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-03-01",
+   "field": "sext2Ant1",
+   "source": "doc3 l.3315; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "fe718b0b4ab4d93ca8105f4dc5cf685d260ba5db687a4ec074d96475f544b352"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-03-01",
+   "field": "sext3Ant1",
+   "source": "doc3 l.3330; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "85563c5cec5a711e6c86a656904b4790df5dca9b7678fac5086a7309a92c1414"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-04-01",
+   "field": "sext1Ant1",
+   "source": "doc3 l.3300; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "38db1f30526d8017b0692597ab283bf2aa2b927e4af598da00484fe1236742ff"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-04-01",
+   "field": "sext2Ant1",
+   "source": "doc3 l.3315; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "fe718b0b4ab4d93ca8105f4dc5cf685d260ba5db687a4ec074d96475f544b352"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-04-01",
+   "field": "sext3Ant1",
+   "source": "doc3 l.3330; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "85563c5cec5a711e6c86a656904b4790df5dca9b7678fac5086a7309a92c1414"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-05-01",
+   "field": "sext1Ant1",
+   "source": "doc3 l.3300; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "38db1f30526d8017b0692597ab283bf2aa2b927e4af598da00484fe1236742ff"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-05-01",
+   "field": "sext2Ant1",
+   "source": "doc3 l.3315; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "fe718b0b4ab4d93ca8105f4dc5cf685d260ba5db687a4ec074d96475f544b352"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-05-01",
+   "field": "sext3Ant1",
+   "source": "doc3 l.3330; same value as christmas-29-12",
+   "beforeSha256": "7b149f6f6b2308ed3654d86a0666714a255d8f45f80f16845ac74d2f51c102fb",
+   "afterSha256": "85563c5cec5a711e6c86a656904b4790df5dca9b7678fac5086a7309a92c1414"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-07-01",
+   "field": "sext2Ant1",
+   "source": "existing sext1Ant2 (doc3 l.5827 «Хрыстус»; l.6478 reads «Езус» — editor list)",
+   "beforeSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+   "afterSha256": "fccac3be729ba6792cc5b892b4536578a71033c0e7a2b1659a565cfe306f9a1f"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-07-01",
+   "field": "sext3Ant1",
+   "source": "existing sext1Ant3 = doc3 l.6484",
+   "beforeSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+   "afterSha256": "61042f7118f56fb162b0e504ed610d65fdae24e0c847260ce6a5f3e2c62e48b4"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-08-01",
+   "field": "sext2Ant1",
+   "source": "existing sext1Ant2 (doc3 l.5827 «Хрыстус»; l.6478 reads «Езус» — editor list)",
+   "beforeSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+   "afterSha256": "fccac3be729ba6792cc5b892b4536578a71033c0e7a2b1659a565cfe306f9a1f"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-08-01",
+   "field": "sext3Ant1",
+   "source": "existing sext1Ant3 = doc3 l.6484",
+   "beforeSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+   "afterSha256": "61042f7118f56fb162b0e504ed610d65fdae24e0c847260ce6a5f3e2c62e48b4"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-09-01",
+   "field": "sext2Ant1",
+   "source": "existing sext1Ant2 (doc3 l.5827 «Хрыстус»; l.6478 reads «Езус» — editor list)",
+   "beforeSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+   "afterSha256": "fccac3be729ba6792cc5b892b4536578a71033c0e7a2b1659a565cfe306f9a1f"
+  },
+  {
+   "id": "XMAS-DAYANT",
+   "collection": "days",
+   "document": "christmas-09-01",
+   "field": "sext3Ant1",
+   "source": "existing sext1Ant3 = doc3 l.6484",
+   "beforeSha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+   "afterSha256": "61042f7118f56fb162b0e504ed610d65fdae24e0c847260ce6a5f3e2c62e48b4"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-26-12",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "a28eec834e4d944f064f381e7239b3dc2306d5e01077da0b2665b1e4e8b1f383",
+   "afterSha256": "0ef8ab52d7bfe1bfd0e510439041a3c654ae6f882dcd05666a1d36758ecabb0d"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-27-12",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "dbfe1516dee1f1f103517ecfd0d7344d2bb5ee6ba68fd707ded86ced6d73c347",
+   "afterSha256": "9bd94daeb2c37282f5838b4fe073f30eabc19ad5446c6774be8787798e92b47a"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-28-12",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "27bfd17497702870fda03255503310ca9a8a9f4d61b89eaf2638827eb2cfb4f1",
+   "afterSha256": "4bcaaf4a4e641156c4ff3f3cc1e98ac85bbbb38707a210b1c7b86f9a4e9f578e"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-29-12",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "7a0754b68818595d7bfe2bf2d34ef087c6409d586b16123f39d6100fb9d1915e",
+   "afterSha256": "1dd2a74a247bb6ddc78100d926d30839c28a9964d30df073316361d360cd5e73"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-30-12",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "5dec48d2b0cd10ecdde7da5c379273899a8c273e16f59f8d912c099de9276547",
+   "afterSha256": "284c0ccbcf5172b0c2ee01e7862ae319068796cc7f392c32aa5a171ef0978a6c"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-31-12",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "8c2cf29b2118d7fb9b08879c1a007a428c430bd8d66405d68d5dee95d4cbc909",
+   "afterSha256": "cb7382c029c1b490d19f2bb91c4d51f07e12be78c9a2b65ed495b56f152fcd39"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-01-01",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "8c2cf29b2118d7fb9b08879c1a007a428c430bd8d66405d68d5dee95d4cbc909",
+   "afterSha256": "cb7382c029c1b490d19f2bb91c4d51f07e12be78c9a2b65ed495b56f152fcd39"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-02-01",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "577a5a11152e3e1d4bd233a3b14539f7d211f4661cf24258bf425dbe7e6d8840",
+   "afterSha256": "0f7904a66ea1caf40ea90f4dadecf25106be4c8b0b3f2da399ef2c459d621707"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-03-01",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "a28eec834e4d944f064f381e7239b3dc2306d5e01077da0b2665b1e4e8b1f383",
+   "afterSha256": "0ef8ab52d7bfe1bfd0e510439041a3c654ae6f882dcd05666a1d36758ecabb0d"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "christmas-04-01",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "47d14cf3ea1a2d5bdbf981b8d283b0f65ff36b61da57a7331b28fc858846081a",
+   "afterSha256": "44105baa76a0ee55e4972d9a7899283ff231696ff0daa1624f591a77032d927c"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "01-01-holy-mary-mother-of-god",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "8c2cf29b2118d7fb9b08879c1a007a428c430bd8d66405d68d5dee95d4cbc909",
+   "afterSha256": "cb7382c029c1b490d19f2bb91c4d51f07e12be78c9a2b65ed495b56f152fcd39"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "days",
+   "document": "01-01-holy-mary-mother-of-god",
+   "field": "vesper1R",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "8c2cf29b2118d7fb9b08879c1a007a428c430bd8d66405d68d5dee95d4cbc909",
+   "afterSha256": "cb7382c029c1b490d19f2bb91c4d51f07e12be78c9a2b65ed495b56f152fcd39"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "liturgicalProperTexts",
+   "document": "01-01-holy-mary-mother-of-god",
+   "field": "vesperR",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "8c2cf29b2118d7fb9b08879c1a007a428c430bd8d66405d68d5dee95d4cbc909",
+   "afterSha256": "cb7382c029c1b490d19f2bb91c4d51f07e12be78c9a2b65ed495b56f152fcd39"
+  },
+  {
+   "id": "XMAS-RESP",
+   "collection": "liturgicalProperTexts",
+   "document": "01-01-holy-mary-mother-of-god",
+   "field": "vesper1R",
+   "source": "doc3 l.4138/4184/4360/4564/4799/5047/5080/5161/5254/5347/5442 (abbreviated form expanded as in christmas-25-12)",
+   "beforeSha256": "8c2cf29b2118d7fb9b08879c1a007a428c430bd8d66405d68d5dee95d4cbc909",
+   "afterSha256": "cb7382c029c1b490d19f2bb91c4d51f07e12be78c9a2b65ed495b56f152fcd39"
+  },
+  {
+   "id": "CAL-01",
+   "collection": "liturgicalCelebrations",
+   "document": "sv-juan-diego",
+   "field": "enabled",
+   "source": "owner decision 28.11.2026",
+   "beforeSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+   "afterSha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+  },
+  {
+   "id": "CAL-01",
+   "collection": "liturgicalCelebrations",
+   "document": "sv-juan-diego",
+   "field": "title",
+   "source": "approved spelling (mybrev#237)",
+   "beforeSha256": "9c38aabfd8e38769bf6d178be23cbcb77cfe5676d1f33b24dda263c9270d7ed1",
+   "afterSha256": "d46a74be662d83d33872bff5938e31ec016a72e799475e0bd569f8ba0c4fea66"
+  },
+  {
+   "id": "CAL-01",
+   "collection": "liturgicalCalendarMeta",
+   "document": "current",
+   "field": "revision",
+   "source": "bundled calendar-definitions.json revision of the PR",
+   "beforeSha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683",
+   "afterSha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+  }
+ ],
+ "blocked": [
+  {
+   "id": "NEW-05",
+   "collection": "liturgicalProperTexts",
+   "document": "30-11-sv-andrew-apostle",
+   "field": "laudesHymn",
+   "source": "doc7.txt l.34-57"
+  },
+  {
+   "id": "NEW-05",
+   "collection": "days",
+   "document": "30-11-sv-andrew-apostle",
+   "field": "laudesHymn",
+   "source": "doc7.txt l.34-57"
+  }
+ ]
+}
