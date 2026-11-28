@@ -13,6 +13,7 @@ import { publicNovenaRows, validateSchedule, validateShape } from '../src/utils/
 import { bulkCandidates, generatedDraft, novenaSources, publicationDocument, publishInTurn } from '../src/utils/novena/drafts.mjs';
 import { countPlan, generateDrafts, planImport } from '../scripts/novena/lib.mjs';
 import { applyImport, parseArgs } from '../scripts/novena/import-drafts.mjs';
+import { publicationRows, publishDraft } from '../scripts/novena/publish.mjs';
 import { publicAppCollections, validateCollection } from '../scripts/content/lib/app-content.mjs';
 import { readCollections, writeBundle } from '../scripts/content/build-app-bundle.mjs';
 
@@ -239,6 +240,39 @@ test('bulk publication takes only ready, never published rows and stops on repea
 
   const failing = await publishInTurn(['1', '2', '3', '4', '5'].map((id) => row(id)), async () => { throw new Error('quota'); });
   assert.deepEqual([failing.published.length, failing.failed.length, failing.skipped], [0, 3, 2]);
+});
+
+test('a repeated import keeps calendar edits and a taken-down novena stays down', async () => {
+  const [created] = planImport(generateDrafts(prayers()).drafts);
+  const schedule = { enabled: true, extraDates: ['2027-01-02'], type: 'manual' };
+  const calendarEdit = new Map([[source.id, { ...created.data, schedule }]]);
+  assert.equal(planImport(generateDrafts(prayers()).drafts, calendarEdit)[0].action, 'protected');
+
+  const takenDown = { ...created.data, everPublished: true };
+  assert.equal(planImport(generateDrafts(prayers()).drafts, new Map([[source.id, takenDown]]))[0].action, 'noop');
+  assert.deepEqual(bulkCandidates(publicationRows(new Map([[source.id, takenDown]]), new Map(), prayers())), []);
+});
+
+test('release publication writes the validated draft once, with the tracker on', async () => {
+  const store = new Map();
+  const ref = (collection) => ({ doc: (id) => ({ path: `${collection}/${id}` }) });
+  const db = {
+    collection: ref,
+    runTransaction: (task) => task({
+      getAll: async (...refs) => refs.map(({ path: at }) => ({ exists: store.has(at), data: () => store.get(at) })),
+      set: ({ path: at }, data) => store.set(at, data),
+    }),
+  };
+  const [created] = planImport(generateDrafts(prayers()).drafts);
+  store.set(`novenaDrafts/${source.id}`, created.data);
+  const [row] = bulkCandidates(publicationRows(new Map([[source.id, created.data]]), new Map(), prayers()));
+  await publishDraft(db, { ...row.record, trackerEnabled: true }, row.stored);
+  const live = store.get(`novenaDefinitions/${source.id}`);
+  assert.deepEqual([live.status, live.trackerEnabled, live.contentVersion, 'blockers' in live], ['published', true, 1, false]);
+  assert.deepEqual(validateShape(live), []);
+  assert.equal(store.get(`novenaDrafts/${source.id}`).everPublished, true);
+  assert.equal(planImport(generateDrafts(prayers()).drafts, new Map([[source.id, store.get(`novenaDrafts/${source.id}`)]]))[0].action, 'noop');
+  await assert.rejects(publishDraft(db, row.record, store.get(`novenaDrafts/${source.id}`)), /already published/);
 });
 
 // The frozen contract fixtures hold full prayer texts and live outside the repository.

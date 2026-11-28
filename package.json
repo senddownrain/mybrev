@@ -87,6 +87,7 @@
     "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs tests/parsed-readings-content-integrity.test.mjs",
     "test:prayer-markdown": "node --test tests/prayer-markdown.test.mjs",
     "novena:import": "node scripts/novena/import-drafts.mjs",
+    "novena:publish": "node scripts/novena/publish.mjs",
     "novena:bundle": "node scripts/novena/build-bundle.mjs",
     "test:novena": "node --test tests/novena-*.test.mjs",
     "test:novena:rules": "firebase emulators:exec --only firestore --project demo-novena \"node --test tests/novena-rules.emulator.mjs\"",

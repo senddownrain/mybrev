@@ -1,10 +1,10 @@
 /**
- * Novena Tracker V1 — shared definition builder and day resolver (contract 1.2).
+ * Novena Tracker V1 — shared definition builder and day resolver (contract 1.3).
  * Pure functions, no I/O. The Dart resolver must match resolveDay() exactly
  * (see NOVENA_TRACKER_V1_SPEC.md §3 and contract/fixtures).
  */
 export const NOVENA_SCHEMA_VERSION = 1;
-export const EXCLUDED = { v4g6eUqZvze29v5vq4o1: 'Пампейская навэнна: 54 дня, вне V1' };
+export const EXCLUDED = { v4g6eUqZvze29v5vq4o1: 'Пампейская навэнна: убудаваны 54-дзённы трэкер праграмы, без дакументаў' };
 
 const HEADING = /^(?:(#{1,6})\s+\S.*|\*\*(?!Молімся)[^*]{1,140}\*\*)\s*$/;
 const level = (line) => { const m = HEADING.exec(line); return m ? (m[1] ? m[1].length : 7) : 0; };
@@ -99,8 +99,9 @@ export function validateDefinition(definition, prayers) {
 }
 
 /**
- * Owner's decisions of 2026-11-27 for novenas whose source does not say enough
- * for the parser (NOVENA_BLOCKED_DECISIONS.md, groups A–D). Source texts are
+ * Seed rules (owner, 2026-11-27 and 28) for novenas whose source does not say enough
+ * for the parser (NOVENA_BLOCKED_DECISIONS.md). They only fill the first draft: from then on
+ * `novenaDrafts` is edited in the admin like any other novena. Source texts are
  * never edited. A decision that no longer fits its source throws → blocked.
  */
 const LORETO = 'd_cn_5746a9036180a067';
@@ -159,12 +160,17 @@ export const DECISIONS = {
   XMJCWmBqkteNID7PxGeC: daysOnly,
   BwaAAX6vNeZ7EFbCEJW8: (prayer) => ({ template: [{ type: 'prayer', prayerId: prayer.id }], days: noDays() }),
   // C: a repeated text the book abbreviates is shown in full every day.
+  // Owner, 28.11: the prayer of day 1 closes all nine days, exactly once. The
+  // book repeats it in days 1–2 and abbreviates it in days 3–9.
   b9F5qGGznu8z0v3jlLM3: (prayer) => {
-    const full = excerpt(prayer.text, 'Пане Божа Усемагутны, праз', '**Дзень другі**');
-    return {
-      template: [{ type: 'daySection' }],
-      days: daysOf(prayer, (n) => (n >= 3 ? [inline(full)] : [])),
-    };
+    const common = excerpt(prayer.text, 'Пане Божа Усемагутны, праз', '**Дзень другі**');
+    const days = Array.from({ length: 9 }, (_, i) => {
+      const own = lines(need(sectionText(prayer.text, dayHeading(prayer, i + 1)), `day-${i + 1}`));
+      const last = own.pop().trim();
+      need(i < 2 ? last === common : /^Пане Божа Усемагутны\.{2,3}$/.test(last), `day-${i + 1}-ending`);
+      return { number: i + 1, blocks: [inline(own.join('\n'))] };
+    });
+    return { template: [{ type: 'daySection' }, inline(common)], days };
   },
   'import-10-navenna-za-pamerlykh-z-bl-a-hanaratam': (prayer) => {
     const chaplet = excerpt(prayer.text, '_Вяночак за канаючых і памерлых (', '**Другі дзень');
@@ -177,13 +183,23 @@ export const DECISIONS = {
   VhXYtz8MrvCYftvbIInu: (prayer) => ({
     template: [section(prayer, '**Уступная малітва**'), { type: 'daySection' }], days: daysOf(prayer),
   }),
-  zvkoIQoxh7ilXp7oUjFg: (prayer, built) => {
-    // Only what follows day 9: the same versicle also occurs earlier.
-    const last = need(sectionText(prayer.text, dayHeading(prayer, 9)), 'day-9');
-    const closing = excerpt(last, 'К. Пане, Твой святы Провід');
+  // The rewritten source numbers the days inline and says after day 1 that the
+  // prayers which follow it are read every day.
+  edc7LXLBYXd8qxqOaqrZ: (prayer) => {
+    const all = lines(prayer.text).map((l) => l.trim());
+    const at = (n) => need(all.findIndex((l) => l.startsWith(`**${n}.** `)), `day-${n}`);
+    need(at(1) >= 0, 'day-1');
+    const end = all.findIndex((l) => l.includes('Гэтыя малітвы чытаем кожны дзень'));
+    need(end > at(1) && end < at(2), 'daily-prayers-note');
+    const days = Array.from({ length: 9 }, (_, i) => ({ number: i + 1, blocks: [inline(all[at(i + 1)])] }));
+    const author = all.slice(0, at(1)).join('\n').trim();
     return {
-      template: built.template,
-      days: built.days.map((d) => (d.number < 9 ? { ...d, blocks: [...d.blocks, inline(closing)] } : d)),
+      template: [
+        ...(author ? [{ type: 'inline', kind: 'rubric', text: author }] : []),
+        { type: 'daySection' },
+        inline(all.slice(at(1) + 1, end + 1).join('\n')),
+      ],
+      days,
     };
   },
   d_bd_ab47a646f2736a83: (prayer) => ({

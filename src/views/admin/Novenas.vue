@@ -21,7 +21,7 @@
 
     <p class="muted" data-testid="novena-summary">
       Паказана {{ filtered.length }} з {{ rows.length }} · гатовых {{ count('ready') }} · з заўвагамі {{ count('blocked') }}
-      · без трэкера {{ count('excluded') }} · апублікавана {{ rows.filter((row) => row.published).length }}
+      · убудаваных {{ count('excluded') }} · апублікавана {{ rows.filter((row) => row.published).length }}
     </p>
 
     <div v-if="candidates.length || batch" class="bulk">
@@ -59,7 +59,7 @@
           <span class="row__main">
             <strong>{{ row.title }}</strong>
             <span class="muted">
-              <template v-if="row.check === 'excluded'">54 дні · звычайная малітва без трэкера</template>
+              <template v-if="row.check === 'excluded'">54 дні · трэкер убудаваны ў праграму, тут не рэдагуецца</template>
               <template v-else>{{ row.days }} дзён · {{ row.uniqueDays ? 'асобныя дні' : 'аднолькавыя дні' }} · сувязей: {{ row.links }} · {{ row.schedule }}</template>
             </span>
             <span v-if="row.problems.length" class="problems">{{ errorLabel(row.problems[0]) }}<template v-if="row.problems.length > 1"> (+{{ row.problems.length - 1 }})</template></span>
@@ -92,7 +92,7 @@ const state = ref('all');
 const check = ref('all');
 const type = ref('all');
 
-const checkLabels = { ready: 'Гатовая', blocked: 'Заўвагі', excluded: 'Без трэкера' };
+const checkLabels = { ready: 'Гатовая', blocked: 'Заўвагі', excluded: 'Убудаваная' };
 const stateLabels = { published: 'Апублікавана', changed: 'Апублікавана · ёсць змены', draft: 'Чарнавік', generated: 'Не захавана', none: '—' };
 const all = { value: 'all', title: 'Усе' };
 const stateItems = [all, ...Object.entries(stateLabels).slice(0, 4).map(([value, title]) => ({ value, title }))];
