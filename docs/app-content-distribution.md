@@ -6,7 +6,8 @@ Flutter-приложение (ibreviarybyapp) поставляется с пол
 
 Коллекции: `days`, `readings`, `liturgicalTemplates`, `invitatoriums`,
 `completoriums`, `prayers`, `prayerCategories`, `songs`, `compendium`,
-`compendiumMeta` (Кампендый: разделы и `current` с meta и parts), а также
+`compendiumMeta` (Кампендый: разделы и `current` с meta и parts),
+`novenaDefinitions` (трэкер навэнн, см. ниже), а также
 календарь Ordo и канонические Proper: `liturgicalCalendarMeta`,
 `liturgicalCelebrations`, `liturgicalDioceseOverrides`,
 `liturgicalYearOverrides`, `liturgicalProperTexts`, `liturgicalOrdoNotes`
@@ -111,6 +112,7 @@ songs 447 (~1 КБ). Обычный патч — до 1–2 МБ; пересбо
 | invitatoriums / completoriums | псалом (и период для камплеты) |
 | prayers | название и текст (или их версии) |
 | prayerCategories | `name` |
+| novenaDefinitions | поля и блоки по контракту (`validateShape`); в экспорт попадают только published + trackerEnabled, собирающиеся из публичных молитв |
 | songs | `title`, `text` |
 | compendium | `title`, `questions` |
 | compendiumMeta | `unitIds`, `parts`, целый `contentVersion` |
@@ -129,7 +131,8 @@ npm run db:backup -- --output backups/firestore-snapshot --collection days --col
   --collection liturgicalCalendarMeta --collection liturgicalCelebrations --collection liturgicalDioceseOverrides \
   --collection liturgicalYearOverrides --collection liturgicalProperTexts --collection liturgicalOrdoNotes
 npm run db:backup -- --output backups/firestore-snapshot-static --collection prayers \
-  --collection prayerCategories --collection songs --collection compendium --collection compendiumMeta
+  --collection prayerCategories --collection songs --collection compendium --collection compendiumMeta \
+  --collection novenaDefinitions
 npm run content:app-release -- --snapshot backups/firestore-snapshot \
   --snapshot backups/firestore-snapshot-static --out ../ibreviarybyapp/assets/content
 ```
@@ -168,3 +171,32 @@ sha256 (16 hex) канонического JSON (ключи отсортиров
 приложения), 2025–2032 × 4 дыяцэзіі. Flutter-тест `test/ordo_parity_test.dart`
 сверяет с ним Dart-порт (точное совпадение). Fixture — тестовый артефакт, не
 контент приложения.
+
+## Трэкер навэнн (`novenaDefinitions`, `novenaDrafts`)
+
+Дополнительный слой над обычными молитвами: тексты не копируются и не
+меняются. `src/utils/novena/` — общий генератор, сборка дня (Flutter повторяет
+`resolveDay`) и фильтр экспорта. Черновики видит только администратор;
+опубликованный документ содержит ровно поля контракта. Админка: «Навэнны».
+Снапшот без `novenaDefinitions` даёт пустую коллекцию.
+
+```bash
+npm run novena:import -- --prayers ../ibreviarybyapp/assets/content   # dry-run, без Firestore
+npm run novena:bundle -- --prayers ../ibreviarybyapp/assets/content --out <dir> [--dev]
+npm run test:novena && npm run test:novena:rules && npm run test:novena:ui   # эмуляторы: JDK 21
+```
+
+Выпуск (каждый шаг — отдельное разрешение владельца):
+
+1. Firestore Rules (`deploy-firebase-hosting`, target `firestore-rules`), затем Web (target `hosting`).
+2. Черновики: `novena:import … --apply --service-account <file> --project <id>`. Читает только
+   целевые документы `novenaDrafts`, пишет create/update, прежние версии — в `reports/novena/`.
+   Правленные вручную черновики не трогаются.
+3. Проверка и публикация навэнн в админке.
+4. Релиз Flutter, в бандле которого есть `novenaDefinitions`.
+5. `content:manifest -- --apply --introduce-collections`.
+
+Откат: «Зняць з публікацыі» (или выключить трэкер и опубликовать), затем
+`content:manifest -- --apply`; приложение удалит определение. Начатые сеансы
+хранят свой снимок текста. Черновики восстанавливаются из
+`reports/novena/rollback-*.json`. Правила — повторный выпуск предыдущей ревизии.

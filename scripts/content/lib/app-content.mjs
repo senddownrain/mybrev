@@ -15,6 +15,7 @@ import { validateCelebrationDefinition, validateDioceseOverride } from '../../..
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
 import { validateSeasonalVariants } from '../../../src/utils/ordo/commonSeasons.js';
+import { NOVENA_COLLECTION, publicNovenaRows, validateShape } from '../../../src/utils/novena/document.mjs';
 
 export const CONTENT_SCHEMA_VERSION = 1;
 
@@ -49,7 +50,12 @@ export const APP_CONTENT_COLLECTIONS = [
   'liturgicalYearOverrides',
   'liturgicalProperTexts',
   'liturgicalOrdoNotes',
+  // Novena Tracker definitions; they reference public `prayers` by id.
+  NOVENA_COLLECTION,
 ];
+
+/** A snapshot without them is an empty collection, not an error. */
+export const OPTIONAL_CONTENT_COLLECTIONS = Object.freeze([NOVENA_COLLECTION]);
 
 /**
  * Collections the app reads only through the Ordo engine / Hours assembler;
@@ -71,6 +77,9 @@ export const BOOKKEEPING_FIELDS = new Set(['updatedAt', 'importedAt', 'parsedAt'
 /** A string this long or longer is stored once per collection. */
 export const SHARED_STRING_MIN = 32;
 export const PRAYER_EXPORT_GUARDS = ['priestProtectedCategories', 'priestProtectedPrayers', 'protectedCategories', 'protectedPrayers'];
+/** Collections whose public projection needs the prayers and their access policy. */
+export const PRAYER_DEPENDENT_COLLECTIONS = Object.freeze(['prayers', 'prayerCategories', NOVENA_COLLECTION]);
+
 /** Apply the same inheritance policy to every public app bundle/manifest. */
 export function publicAppCollections(collections) {
   if (collections.has('prayers') && !collections.has('prayerCategories')) {
@@ -95,6 +104,20 @@ export function publicAppCollections(collections) {
       }
       result.set('prayerCategories', categories);
     }
+  }
+  // Only published, enabled definitions whose every text is a public prayer.
+  if (result.get(NOVENA_COLLECTION)?.length) {
+    if (!collections.has('prayers') || !collections.has('prayerCategories')) {
+      throw new Error('Exporting novenaDefinitions requires prayers and prayerCategories from the same snapshot set.');
+    }
+    const prayers = result.get('prayers') || publicPrayerRows({
+      prayers: collections.get('prayers'), categories: collections.get('prayerCategories'),
+      protectedCategories: PRAYER_EXPORT_GUARDS.filter((name) => name.endsWith('Categories')).flatMap((name) => collections.get(name) || []),
+      protectedPrayers: PRAYER_EXPORT_GUARDS.filter((name) => name.endsWith('Prayers')).flatMap((name) => collections.get(name) || []),
+    }).prayers;
+    const { rows, excluded } = publicNovenaRows(result.get(NOVENA_COLLECTION), prayers);
+    excluded.forEach((item) => console.warn(`novenaDefinitions/${item.id} left out of the export: ${item.errors.join(', ')}`));
+    result.set(NOVENA_COLLECTION, rows);
   }
   return result;
 }
@@ -227,6 +250,7 @@ export const DOCUMENT_RULES = {
   completoriums: (doc) => (filled(doc._periodType) && filled(doc.compPs1)) || 'no period/psalm',
   prayers: (doc) => (anyOf(doc, ['title', 'titleVersions']) && anyOf(doc, ['text', 'textVersions'])) || 'no title/text',
   prayerCategories: (doc) => filled(doc.name) || 'no name',
+  novenaDefinitions: ({ id: _id, ...doc }) => errorsOrTrue(validateShape(doc)),
   songs: (doc) => (filled(doc.title) && filled(doc.text)) || 'no title/text',
   compendium: (doc) => (filled(doc.title) && filled(doc.questions)) || 'no title/questions',
   compendiumMeta: (doc) => (filled(doc.unitIds) && filled(doc.parts) && Number.isInteger(doc.contentVersion)) || 'no unitIds/parts/contentVersion',
