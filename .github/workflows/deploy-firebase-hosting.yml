@@ -40,13 +40,13 @@ jobs:
           [[ "$GITHUB_REF" == refs/heads/main && "$APPROVED_SHA" == "$GITHUB_SHA" ]]
 
       - name: Checkout main
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
           cache: npm
@@ -131,11 +131,11 @@ jobs:
 
       - name: Deploy Firestore Rules only
         if: inputs.target == 'firestore-rules'
-        run: npx --yes firebase-tools@latest deploy --only firestore:rules --project ibreviaryby --non-interactive
+        run: npx --yes firebase-tools@15.28.1 deploy --only firestore:rules --project ibreviaryby --non-interactive
 
       - name: Deploy Hosting only
         if: inputs.target == 'hosting'
-        run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
+        run: npx --yes firebase-tools@15.28.1 deploy --only hosting --project ibreviaryby --non-interactive
 
       - name: Clean up credentials
         if: always()

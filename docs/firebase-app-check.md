@@ -1,8 +1,10 @@
 # Firebase App Check для «Малітоўніка»
 
-Проект Firebase `ibreviaryby` (`344097781816`), Blaze. На 24 ноября 2026 г.
-Cloud Billing активен, а Firestore App Check в режиме `UNENFORCED`.
-Firebase App Check API вернул Web-конфигурацию без поля `siteKey`.
+Проект Firebase `ibreviaryby` (`344097781816`), Blaze. На 27 ноября 2026 г.
+Cloud Billing активен, Firestore App Check в режиме `UNENFORCED`. Web App
+зарегистрирован с reCAPTCHA Enterprise и TTL 1 час, в GitHub есть переменная
+`VITE_FIREBASE_APP_CHECK_SITE_KEY`. При выпуске проверьте, что production Web
+получает токен. Состояние регистрации само по себе этого не подтверждает.
 Цель первого релиза — выпуск клиентов и наблюдение за успешностью аттестации.
 Параллельные изменения приложения описаны в [инструкции Flutter][flutter].
 
@@ -13,7 +15,7 @@ Firebase App Check API вернул Web-конфигурацию без поля
 | Web `[DEFAULT]` | Firestore с публичным кэшем для Библии, молитв, Песенника, Кампендыя, календаря, Часов и чтений. Firebase Auth и Firestore для роли, черновиков и редакторов. |
 | Web `mybrev-priest` | Отдельный анонимный Auth. Firestore Lite для активации, обычный Firestore с памятью для грантов и защищённых текстов. |
 | Web `mybrev-priest-editor` | Отдельный Auth с копией пользователя-администратора только в памяти. Firestore и Lite для защищённых редакторских операций. |
-| Flutter `[DEFAULT]`, `mybrev-priest` | Обновления контента, вход администратора для Песенника, отдельная анонимная сессия и Firestore для священников. Оба экземпляра активируют App Check. |
+| Flutter `[DEFAULT]`, `mybrev-priest` | Обновления контента, вход администратора для Песенника, отдельная анонимная сессия и Firestore для священников. Активация App Check для обоих экземпляров подготовлена в [Flutter PR #146][flutter-pr]. На 27 ноября PR открыт. |
 | Worker обратной связи | Для каждой админской операции проверяет ID-токен и читает `admins/{uid}` через Firestore REST с этим токеном. Web передаёт App Check, Worker пересылает его в Firestore. Публичная отправка использует D1. |
 | Firebase Admin SDK | Скрипты экспорта/публикации и серверный `priestApi` используют сервисные аккаунты и IAM. Для HTTP-функций и других внешних API защита App Check настраивается отдельно. |
 
@@ -29,10 +31,10 @@ reCAPTCHA ожидание токена ограничено. Локальная
 
 [Web PR #310][pr310] вошёл в `origin/main` как `c1359b02`.
 В [запуске Hosting после merge][hosting310] шаг Deploy Firestore rules
-пропущен. Независимая проверка через Firebase Rules API показала, что
-активный release `cloud.firestore` обновлён 23 ноября в 18:03 МСК,
-совпадает с `firestore.rules` из этого коммита и разрешает публичное
-чтение `contentManifest`. Для этого изменения повторная публикация
+пропущен. Проверка через Firebase Rules API после слияния показала, что
+release `cloud.firestore` на 23 ноября, 18:03 МСК, совпадал
+с `firestore.rules` из этого коммита и разрешал публичное чтение
+`contentManifest`. Для этого изменения повторная публикация
 правил не нужна. Доступ к документам и обновление на устройстве проверяются
 отдельно в smoke. Доступность манифеста зависит и от App Check после
 возможного включения Enforcement.
@@ -57,7 +59,12 @@ reCAPTCHA ожидание токена ограничено. Локальная
    В [App Check → Apps][console] выберите каждое соответствующее Web App,
    затем **Register → reCAPTCHA Enterprise**, укажите публичный site key,
    сохраните. Начальная точка — стандартные TTL 1 час и порог 0,5.
-   Сверьте объём assessments/стоимость в Cloud Billing после запуска.
+   Сверьте объём assessments и стоимость в Cloud Billing после запуска.
+   При отдельном согласовании TTL 6 часов автоматическое обновление для
+   длительной сессии происходит примерно раз в 3 часа вместо 30 минут.
+   Первая аттестация в сессии остаётся, а срок действия перехваченного
+   токена увеличивается до 6 часов. Сравните объём assessments и ошибки
+   аттестации при сопоставимом трафике. Для отката верните TTL 1 час.
    [Настройка Web App Check][web-provider]
 3. В GitHub Web-репозитория откройте **Settings → Secrets and variables
    → Actions → Variables → New repository variable**, задайте
@@ -148,7 +155,8 @@ reCAPTCHA ожидание токена ограничено. Локальная
   восстановление. Firebase предупреждает, что включение может
   распространяться до 15 минут.
 
-[flutter]: https://github.com/senddownrain/ibreviarybyapp/blob/main/docs/firebase-app-check.md
+[flutter]: https://github.com/senddownrain/ibreviarybyapp/blob/79461e93d02503a1f1f85ed2e5dc4d0e08ab2e40/docs/firebase-app-check.md
+[flutter-pr]: https://github.com/senddownrain/ibreviarybyapp/pull/146
 [pr310]: https://github.com/senddownrain/mybrev/pull/310
 [hosting310]: https://github.com/senddownrain/mybrev/actions/runs/45200273970
 [settings]: https://console.firebase.google.com/project/ibreviaryby/settings/general

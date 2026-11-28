@@ -87,7 +87,7 @@ const router = createRouter({ history: createWebHashHistory(), routes: [
   { path: '/home', component: { render: () => 'Synthetic home' }, name: 'Home' },
   { path: '/settings', component: Settings, name: 'Settings' },
   { path: '/all', component: PrayersList, name: 'PrayersList' },
-  { path: '/prayers/:id', component: PrayerView, name: 'PrayerView' },
+  { path: '/prayers/:id', alias: '/prayer/:id', component: PrayerView, name: 'PrayerView' },
   { path: '/favorites', component: { render: () => 'Favorites' }, name: 'FavoritePrayers' },
   { path: '/admin/prayers', component: PrayersList, name: 'AdminPrayers', props: { editorial: true } },
   { path: '/admin/categories', component: PrayerCategories, name: 'AdminPrayerCategories' },

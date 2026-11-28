@@ -2,7 +2,6 @@ import { getCalendarDefinitions, getDefinitionsEpoch } from './ordo/definitions.
 import { CONTENT_REVISION, CONTENT_CACHE_SCHEMA } from '../constants/contentRevision.js';
 import { createContentCache } from './contentCache.js';
 import { createContentCacheStorage } from './contentCacheStorage.js';
-import { currentOrdoDiocese } from './ordoDiocese.js';
 
 const namespace = `mybrev-public-${import.meta.env.VITE_FIREBASE_PROJECT_ID || 'unconfigured'}-v${CONTENT_CACHE_SCHEMA}`;
 const refreshKey = `${namespace}:refresh`;
@@ -31,16 +30,15 @@ export function requestContentRefresh() {
   try { localStorage.setItem(refreshKey, localRevision); } catch { /* Session-only fallback. */ }
 }
 
-// Hours and Readings are resolved for a diocese (Ordo layers), so the
-// diocese is part of the key.
-export const calendarContentVersion = () => `calendar:${getCalendarDefinitions().revision}:${getDefinitionsEpoch()}`;
-
-export function contentKey(date, diocese = currentOrdoDiocese(), referenceOptionId = '', periodOnly = false) {
-  if (periodOnly) return publicContentKey('period-content', date, diocese, calendarContentVersion());
-  return referenceOptionId ? publicContentKey('reference-content', date, diocese, referenceOptionId, calendarContentVersion()) : publicContentKey('content', date, diocese, calendarContentVersion());
+let previousCalendarKey;
+export function rememberLegacyCalendarKey() {
+  previousCalendarKey = `calendar:${getCalendarDefinitions().revision}:${getDefinitionsEpoch()}`;
 }
-export function readingsKey(date, options = {}) {
-  return publicContentKey(
-    ...(options.periodOnly ? ['period-readings'] : options.referenceOptionId ? ['reference-readings', options.referenceOptionId] : ['readings']), date, options.dayId || '', Boolean(options.includeAlternatives), options.diocese || currentOrdoDiocese(), calendarContentVersion(),
-  );
+
+// Only reuse the old per-epoch keys while the startup calendar is still active.
+export function legacyReaderKey(key) {
+  if (previousCalendarKey !== `calendar:${getCalendarDefinitions().revision}:${getDefinitionsEpoch()}`) return undefined;
+  const parts = JSON.parse(key);
+  parts[parts.length - 1] = previousCalendarKey;
+  return publicContentKey(...parts);
 }

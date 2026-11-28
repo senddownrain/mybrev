@@ -2,13 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setImmediate } from 'node:timers';
 import { createContentCache, createReadSession } from '../src/utils/contentCache.js';
+import { createContentCacheStorage } from '../src/utils/contentCacheStorage.js';
 import { createServer } from 'vite';
 import { fileURLToPath } from 'node:url';
 
 test('reference Office and readings caches cannot populate canonical day keys', async () => {
   const server = await createServer({ configFile: false, cacheDir: 'node_modules/.cache/cache-test-vite', server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, entries: [] }, root: fileURLToPath(new URL('../', import.meta.url)) });
   try {
-    const { contentKey, readingsKey, publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
+    const { publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
+    const { contentKey, readingsKey } = await server.ssrLoadModule('/src/utils/readerCacheKeys.js');
     const date = '2026-12-06', diocese = 'minsk-mohilev';
     const contentParts = JSON.parse(contentKey(date, diocese));
     const readingsParts = JSON.parse(readingsKey(date, { diocese }));
@@ -51,6 +53,62 @@ const deferred = () => {
   const promise = new Promise((res, rej) => { resolve = res; reject = rej; });
   return { promise, resolve, reject };
 };
+
+test('a blocked IndexedDB open is retried after the storage recovers', async (t) => {
+  t.mock.timers.enable({ apis: ['Date'] });
+  let opens = 0;
+  const indexedDB = {
+    open() {
+      opens += 1;
+      const request = { result: {
+        transaction() {
+          const tx = { objectStore: () => ({ get: () => ({ result: '"reader text"' }) }) };
+          queueMicrotask(() => tx.oncomplete());
+          return tx;
+        },
+      } };
+      queueMicrotask(() => opens === 1 ? request.onblocked() : request.onsuccess());
+      return request;
+    },
+  };
+  const storage = createContentCacheStorage('test', indexedDB);
+  await assert.rejects(storage.get('day'), /blocked/);
+  await assert.rejects(storage.get('day'), /temporarily unavailable/);
+  assert.equal(opens, 1);
+  t.mock.timers.setTime(Date.now() + 2100);
+  assert.equal(await storage.get('day'), 'reader text');
+  assert.equal(opens, 2);
+});
+
+test('a late existing IndexedDB connection is shared and supplies the saved day before Firestore', async () => {
+  let opens = 0;
+  const entry = { ...complete('saved'), revision: '1' };
+  const indexedDB = {
+    databases: async () => [{ name: 'test' }],
+    open() {
+      opens += 1;
+      const request = { result: {
+        transaction() {
+          const tx = { objectStore: () => ({ get: () => ({ result: JSON.stringify(entry) }) }) };
+          queueMicrotask(() => tx.oncomplete());
+          return tx;
+        },
+      } };
+      setTimeout(() => request.onsuccess(), 500);
+      return request;
+    },
+  };
+  const storage = createContentCacheStorage('test', indexedDB);
+  const cache = createContentCache({ storage, getRevision: () => '1', isOnline: () => true });
+  const ordinary = assert.rejects(storage.get('another-key'), /open timed out/);
+  const read = () => cache.read('day', () => assert.fail('a saved reader day must avoid the network'), {
+    revalidateInBackground: () => assert.fail('the current day is fresh'),
+  });
+  const [first, second] = await Promise.all([read(), read(), ordinary]);
+  assert.equal(first.data, 'saved');
+  assert.equal(second, first);
+  assert.equal(opens, 1);
+});
 
 test('a new app instance restores a complete day with zero network reads, regardless of age', async () => {
   const f = fixture();
@@ -220,7 +278,7 @@ test('offline stale Hours remain readable after revision bump without a network 
 });
 
 
-test('background-only seven-day freshness avoids rereads without weakening UI freshness', async () => {
+test('idle warmup keeps a complete window while foreground content expires', async () => {
   let currentTime = 100000000;
   let revision = 'published-v1';
   const records = new Map();
@@ -240,16 +298,43 @@ test('background-only seven-day freshness avoids rereads without weakening UI fr
   await next.prime(['week-day']);
   currentTime += 16 * 60 * 1000;
   assert.equal(next.peekFresh('week-day'), undefined, 'UI TTL still 15 minutes');
-  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), true,
+  assert.equal(next.hasComplete('week-day'), true,
     'speculative warmup must not reread a complete week');
   assert.equal(reads, 1);
   revision = 'published-v2';
-  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
-    'new publication invalidates speculative freshness immediately');
-  revision = 'published-v1';
+  assert.equal(next.peekFresh('week-day'), undefined);
   currentTime += 7 * 24 * 60 * 60 * 1000;
-  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
-    'an aged out entry can be refreshed on a later idle visit');
+  assert.equal(next.hasComplete('week-day'), true);
+});
+
+test('a saved day from the previous deployment returns before scheduling Firestore', async () => {
+  const f = fixture();
+  await f.create().read('old-key', async () => complete('saved'));
+  f.revision('2');
+  const cache = f.create();
+  const scheduled = [];
+  const updates = [];
+  const load = async () => complete('updated');
+  const options = { legacyKey: 'old-key', onUpdated: value => updates.push(value),
+    revalidateInBackground: task => scheduled.push(task) };
+  assert.equal((await cache.read('new-key', load, options)).data, 'saved');
+  assert.deepEqual(updates, []);
+  await scheduled[0]();
+  assert.deepEqual(updates, ['updated']);
+  assert.equal(cache.peek('new-key'), 'updated');
+});
+
+test('a source predating the approved corrections cannot be restored as reader text', async () => {
+  const f = fixture();
+  await f.create().read('old-key', async () => complete('before the correction'));
+  f.revision('2');
+  f.online(false);
+  const cache = f.create();
+  await assert.rejects(cache.read('new-key', async () => { throw new Error('offline'); }, {
+    legacyKey: 'old-key',
+    acceptCached: (entry) => entry.revision === '2',
+    revalidateInBackground: () => assert.fail('must not schedule a revalidation while offline'),
+  }), /offline/);
 });
 
 test('a reader sees an expired current-publication copy before one shared refresh completes', async () => {
